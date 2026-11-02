@@ -1,0 +1,3 @@
+#Built database: rebuilt from data/raw by ingest/build_db.py, too big for git
+data/*sqlite
+data/*.sqlite.building
