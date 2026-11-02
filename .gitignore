@@ -1,3 +1,21 @@
-#Built database: rebuilt from data/raw by ingest/build_db.py, too big for git
-data/*sqlite
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Throwaway scripts
+scratch/
+
+# Raw downloads: recorded in data/manifest.json, too big for git
+data/raw/
+
+# Probe output is pasted into chat, not committed
+probe_*.txt
+
+# Built database: rebuilt from data/raw by ingest/build_db.py, too big for git
+data/*.sqlite
 data/*.sqlite.building
+
+# Local secrets and editor files
+.env
+.vscode/
