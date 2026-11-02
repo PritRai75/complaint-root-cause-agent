@@ -1,0 +1,54 @@
+{
+  "archive_page": "https://www.consumerfinance.gov/foia-requests/foia-electronic-reading-room/cfpb-consumer-complaint-database-narratives-archive/",
+  "files": {
+    "CCDB_Export_15_January_2026_through_February_2026.zip": {
+      "bytes": 36832036,
+      "recorded_at": "2026-11-02T20:42:28Z",
+      "recorded_from": "local file",
+      "sha256": "437eee7adcc3e4342d1eafd8d716c4ef149e29c6a68c5ce3c379d1dc82c14b22",
+      "url": "https://files.consumerfinance.gov/f/documents/CCDB_Export_15_January_2026_through_February_2026.zip"
+    },
+    "CCDB_Export_16_March_2026.zip": {
+      "bytes": 22053643,
+      "recorded_at": "2026-11-02T20:42:28Z",
+      "recorded_from": "local file",
+      "sha256": "0d337dac973d1fdf874c1d9cd5909502bb29a71334543572f0b1aedcd5a58d24",
+      "url": "https://files.consumerfinance.gov/f/documents/CCDB_Export_16_March_2026.zip"
+    },
+    "CCDB_Export_17_April_2026.zip": {
+      "bytes": 22963936,
+      "recorded_at": "2026-11-02T20:42:29Z",
+      "recorded_from": "local file",
+      "sha256": "6f2ef5624c1bd76abcf2d39f693a0571c91fc8c08edf4dd7338516a3f913b30c",
+      "url": "https://files.consumerfinance.gov/f/documents/CCDB_Export_17_April_2026.zip"
+    },
+    "CCDB_Export_18_May_2026.zip": {
+      "bytes": 21033928,
+      "recorded_at": "2026-11-02T20:42:29Z",
+      "recorded_from": "local file",
+      "sha256": "311fe537afac63230d52f41529bb91361ce5a9844d7450866538bb0456bceade",
+      "url": "https://files.consumerfinance.gov/f/documents/CCDB_Export_18_May_2026.zip"
+    },
+    "CCDB_Export_19_June_2026.zip": {
+      "bytes": 19624767,
+      "recorded_at": "2026-11-02T20:42:29Z",
+      "recorded_from": "local file",
+      "sha256": "3021c8af9eeed4971a92f15be21c7ce08cf3c1337151de255e5b12bf782049df",
+      "url": "https://files.consumerfinance.gov/f/documents/CCDB_Export_19_June_2026.zip"
+    },
+    "CCDB_Export_20_July_2026.zip": {
+      "bytes": 16958404,
+      "recorded_at": "2026-11-02T20:42:29Z",
+      "recorded_from": "local file",
+      "sha256": "aafebbaaf0962c3d29532411ac2133c01bae830b7ea6ed1931a6e42278437d18",
+      "url": "https://files.consumerfinance.gov/f/documents/CCDB_Export_20_July_2026.zip"
+    },
+    "CCDB_Export_21_August_2026.zip": {
+      "bytes": 10501839,
+      "recorded_at": "2026-11-02T20:42:29Z",
+      "recorded_from": "local file",
+      "sha256": "c64b8147b499d6236d7d591bfdbe8db45af80694a1afb6bd6a739f2789b8b2b1",
+      "url": "https://files.consumerfinance.gov/f/documents/CCDB_Export_21_August_2026.zip"
+    }
+  }
+}
