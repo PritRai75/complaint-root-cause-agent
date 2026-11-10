@@ -1,0 +1,249 @@
+# Labels for the pilot set (30 narratives). Written by Prit.
+#
+# For each item set code to one code from eval/taxonomy.toml, chosen by its
+# primary_rule. uncertain = true leaves the item out of scoring. note is
+# optional: one line on why, or what made it hard.
+# Check with: python -m eval.labelset check pilot
+
+set = "pilot"
+taxonomy_version = "draft-1"   # the version these labels were made under
+
+[[item]]
+ref = "P01"
+complaint_id = 20371356
+product = "Checking or savings account"
+code = ""
+uncertain = false
+note = ""
+
+[[item]]
+ref = "P02"
+complaint_id = 23542903
+product = "Credit card"
+code = ""
+uncertain = false
+note = ""
+
+[[item]]
+ref = "P03"
+complaint_id = 21184577
+product = "Checking or savings account"
+code = ""
+uncertain = false
+note = ""
+
+[[item]]
+ref = "P04"
+complaint_id = 22391819
+product = "Checking or savings account"
+code = ""
+uncertain = false
+note = ""
+
+[[item]]
+ref = "P05"
+complaint_id = 21551792
+product = "Checking or savings account"
+code = ""
+uncertain = false
+note = ""
+
+[[item]]
+ref = "P06"
+complaint_id = 23896189
+product = "Credit card"
+code = ""
+uncertain = false
+note = ""
+
+[[item]]
+ref = "P07"
+complaint_id = 18646830
+product = "Credit card"
+code = ""
+uncertain = false
+note = ""
+
+[[item]]
+ref = "P08"
+complaint_id = 23216386
+product = "Credit card"
+code = ""
+uncertain = false
+note = ""
+
+[[item]]
+ref = "P09"
+complaint_id = 21637717
+product = "Credit card"
+code = ""
+uncertain = false
+note = ""
+
+[[item]]
+ref = "P10"
+complaint_id = 19576750
+product = "Credit card"
+code = ""
+uncertain = false
+note = ""
+
+[[item]]
+ref = "P11"
+complaint_id = 22291135
+product = "Credit card"
+code = ""
+uncertain = false
+note = ""
+
+[[item]]
+ref = "P12"
+complaint_id = 23264595
+product = "Checking or savings account"
+code = ""
+uncertain = false
+note = ""
+
+[[item]]
+ref = "P13"
+complaint_id = 22075224
+product = "Credit card"
+code = ""
+uncertain = false
+note = ""
+
+[[item]]
+ref = "P14"
+complaint_id = 23665020
+product = "Checking or savings account"
+code = ""
+uncertain = false
+note = ""
+
+[[item]]
+ref = "P15"
+complaint_id = 18668471
+product = "Checking or savings account"
+code = ""
+uncertain = false
+note = ""
+
+[[item]]
+ref = "P16"
+complaint_id = 18975088
+product = "Credit card"
+code = ""
+uncertain = false
+note = ""
+
+[[item]]
+ref = "P17"
+complaint_id = 22748477
+product = "Checking or savings account"
+code = ""
+uncertain = false
+note = ""
+
+[[item]]
+ref = "P18"
+complaint_id = 21233319
+product = "Credit card"
+code = ""
+uncertain = false
+note = ""
+
+[[item]]
+ref = "P19"
+complaint_id = 20187915
+product = "Checking or savings account"
+code = ""
+uncertain = false
+note = ""
+
+[[item]]
+ref = "P20"
+complaint_id = 18530222
+product = "Credit card"
+code = ""
+uncertain = false
+note = ""
+
+[[item]]
+ref = "P21"
+complaint_id = 21567482
+product = "Credit card"
+code = ""
+uncertain = false
+note = ""
+
+[[item]]
+ref = "P22"
+complaint_id = 21449162
+product = "Checking or savings account"
+code = ""
+uncertain = false
+note = ""
+
+[[item]]
+ref = "P23"
+complaint_id = 23877365
+product = "Checking or savings account"
+code = ""
+uncertain = false
+note = ""
+
+[[item]]
+ref = "P24"
+complaint_id = 20725439
+product = "Credit card"
+code = ""
+uncertain = false
+note = ""
+
+[[item]]
+ref = "P25"
+complaint_id = 20289042
+product = "Credit card"
+code = ""
+uncertain = false
+note = ""
+
+[[item]]
+ref = "P26"
+complaint_id = 18897666
+product = "Checking or savings account"
+code = ""
+uncertain = false
+note = ""
+
+[[item]]
+ref = "P27"
+complaint_id = 19068258
+product = "Checking or savings account"
+code = ""
+uncertain = false
+note = ""
+
+[[item]]
+ref = "P28"
+complaint_id = 19985922
+product = "Checking or savings account"
+code = ""
+uncertain = false
+note = ""
+
+[[item]]
+ref = "P29"
+complaint_id = 19571777
+product = "Checking or savings account"
+code = ""
+uncertain = false
+note = ""
+
+[[item]]
+ref = "P30"
+complaint_id = 20755697
+product = "Credit card"
+code = ""
+uncertain = false
+note = ""
