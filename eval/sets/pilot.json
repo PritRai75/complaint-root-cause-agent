@@ -1,0 +1,288 @@
+{
+ "set": "pilot",
+ "split": "dev",
+ "pool": "one narrative per distinct fingerprint (lowest complaint ID), leaving out every fingerprint in the excluded sets",
+ "excluded_sets": [
+  "reading"
+ ],
+ "excluded_fingerprints": 60,
+ "seed": 20261110,
+ "per_product": 15,
+ "taxonomy_version_at_draw": "draft-1",
+ "drawn_at": "2026-11-10T03:50:05Z",
+ "code_commit": "84780b8",
+ "database": {
+  "built_at": "2026-11-02T20:43:11Z",
+  "loader_commit": "77b81c7",
+  "complaints_rows": "125220",
+  "narratives_rows": "41770"
+ },
+ "allocation": [
+  {
+   "product": "Credit card",
+   "month": "2026-01",
+   "pool": 3744,
+   "drawn": 3
+  },
+  {
+   "product": "Credit card",
+   "month": "2026-02",
+   "pool": 1962,
+   "drawn": 1
+  },
+  {
+   "product": "Credit card",
+   "month": "2026-03",
+   "pool": 3343,
+   "drawn": 3
+  },
+  {
+   "product": "Credit card",
+   "month": "2026-04",
+   "pool": 3557,
+   "drawn": 3
+  },
+  {
+   "product": "Credit card",
+   "month": "2026-05",
+   "pool": 2968,
+   "drawn": 2
+  },
+  {
+   "product": "Credit card",
+   "month": "2026-06",
+   "pool": 2806,
+   "drawn": 2
+  },
+  {
+   "product": "Credit card",
+   "month": "2026-07",
+   "pool": 1805,
+   "drawn": 1
+  },
+  {
+   "product": "Checking or savings account",
+   "month": "2026-01",
+   "pool": 3781,
+   "drawn": 3
+  },
+  {
+   "product": "Checking or savings account",
+   "month": "2026-02",
+   "pool": 1966,
+   "drawn": 1
+  },
+  {
+   "product": "Checking or savings account",
+   "month": "2026-03",
+   "pool": 3439,
+   "drawn": 3
+  },
+  {
+   "product": "Checking or savings account",
+   "month": "2026-04",
+   "pool": 3764,
+   "drawn": 3
+  },
+  {
+   "product": "Checking or savings account",
+   "month": "2026-05",
+   "pool": 3037,
+   "drawn": 2
+  },
+  {
+   "product": "Checking or savings account",
+   "month": "2026-06",
+   "pool": 3261,
+   "drawn": 2
+  },
+  {
+   "product": "Checking or savings account",
+   "month": "2026-07",
+   "pool": 2021,
+   "drawn": 1
+  }
+ ],
+ "items": [
+  {
+   "ref": "P01",
+   "complaint_id": 20371356,
+   "product": "Checking or savings account",
+   "month": "2026-03"
+  },
+  {
+   "ref": "P02",
+   "complaint_id": 23542903,
+   "product": "Credit card",
+   "month": "2026-06"
+  },
+  {
+   "ref": "P03",
+   "complaint_id": 21184577,
+   "product": "Checking or savings account",
+   "month": "2026-04"
+  },
+  {
+   "ref": "P04",
+   "complaint_id": 22391819,
+   "product": "Checking or savings account",
+   "month": "2026-05"
+  },
+  {
+   "ref": "P05",
+   "complaint_id": 21551792,
+   "product": "Checking or savings account",
+   "month": "2026-04"
+  },
+  {
+   "ref": "P06",
+   "complaint_id": 23896189,
+   "product": "Credit card",
+   "month": "2026-07"
+  },
+  {
+   "ref": "P07",
+   "complaint_id": 18646830,
+   "product": "Credit card",
+   "month": "2026-01"
+  },
+  {
+   "ref": "P08",
+   "complaint_id": 23216386,
+   "product": "Credit card",
+   "month": "2026-06"
+  },
+  {
+   "ref": "P09",
+   "complaint_id": 21637717,
+   "product": "Credit card",
+   "month": "2026-04"
+  },
+  {
+   "ref": "P10",
+   "complaint_id": 19576750,
+   "product": "Credit card",
+   "month": "2026-02"
+  },
+  {
+   "ref": "P11",
+   "complaint_id": 22291135,
+   "product": "Credit card",
+   "month": "2026-05"
+  },
+  {
+   "ref": "P12",
+   "complaint_id": 23264595,
+   "product": "Checking or savings account",
+   "month": "2026-06"
+  },
+  {
+   "ref": "P13",
+   "complaint_id": 22075224,
+   "product": "Credit card",
+   "month": "2026-05"
+  },
+  {
+   "ref": "P14",
+   "complaint_id": 23665020,
+   "product": "Checking or savings account",
+   "month": "2026-06"
+  },
+  {
+   "ref": "P15",
+   "complaint_id": 18668471,
+   "product": "Checking or savings account",
+   "month": "2026-01"
+  },
+  {
+   "ref": "P16",
+   "complaint_id": 18975088,
+   "product": "Credit card",
+   "month": "2026-01"
+  },
+  {
+   "ref": "P17",
+   "complaint_id": 22748477,
+   "product": "Checking or savings account",
+   "month": "2026-05"
+  },
+  {
+   "ref": "P18",
+   "complaint_id": 21233319,
+   "product": "Credit card",
+   "month": "2026-04"
+  },
+  {
+   "ref": "P19",
+   "complaint_id": 20187915,
+   "product": "Checking or savings account",
+   "month": "2026-03"
+  },
+  {
+   "ref": "P20",
+   "complaint_id": 18530222,
+   "product": "Credit card",
+   "month": "2026-01"
+  },
+  {
+   "ref": "P21",
+   "complaint_id": 21567482,
+   "product": "Credit card",
+   "month": "2026-04"
+  },
+  {
+   "ref": "P22",
+   "complaint_id": 21449162,
+   "product": "Checking or savings account",
+   "month": "2026-04"
+  },
+  {
+   "ref": "P23",
+   "complaint_id": 23877365,
+   "product": "Checking or savings account",
+   "month": "2026-07"
+  },
+  {
+   "ref": "P24",
+   "complaint_id": 20725439,
+   "product": "Credit card",
+   "month": "2026-03"
+  },
+  {
+   "ref": "P25",
+   "complaint_id": 20289042,
+   "product": "Credit card",
+   "month": "2026-03"
+  },
+  {
+   "ref": "P26",
+   "complaint_id": 18897666,
+   "product": "Checking or savings account",
+   "month": "2026-01"
+  },
+  {
+   "ref": "P27",
+   "complaint_id": 19068258,
+   "product": "Checking or savings account",
+   "month": "2026-01"
+  },
+  {
+   "ref": "P28",
+   "complaint_id": 19985922,
+   "product": "Checking or savings account",
+   "month": "2026-03"
+  },
+  {
+   "ref": "P29",
+   "complaint_id": 19571777,
+   "product": "Checking or savings account",
+   "month": "2026-02"
+  },
+  {
+   "ref": "P30",
+   "complaint_id": 20755697,
+   "product": "Credit card",
+   "month": "2026-03"
+  }
+ ]
+}
