@@ -16,7 +16,6 @@ Usage (for trying a query by hand on the real database):
   python -m agent.tools sql "SELECT product, COUNT(*) FROM complaints_v GROUP BY product"
   python -m agent.tools textcheck     counts and timings only, never text
 """
-import ast
 import sqlite3
 import sys
 import time
@@ -169,12 +168,9 @@ def text_check():
     conn = sem.connect_text()
     wrapped = decoded = 0
     for (text,) in conn.execute(f"SELECT narrative FROM {textmod.TEXT_TABLE}"):
-        if textmod._BYTES_LITERAL.match(text):
+        if textmod.is_bytes_literal(text):
             wrapped += 1
-            try:
-                decoded += isinstance(ast.literal_eval(text), bytes)
-            except (ValueError, SyntaxError, MemoryError, RecursionError):
-                pass
+            decoded += textmod.decode_bytes_literal(text) is not None
     total = conn.execute(f"SELECT COUNT(*) FROM {textmod.TEXT_TABLE}").fetchone()[0]
     conn.close()
     print(f"narratives {total:,}; stored as b'...' {wrapped:,} "

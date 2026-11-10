@@ -1,6 +1,7 @@
 """text_has(), readable() and the first two tools: describe_tables and run_sql."""
 import shutil
 import sqlite3
+import warnings
 
 import pytest
 
@@ -76,6 +77,22 @@ def test_readable_leaves_ordinary_text_alone():
 def test_readable_decodes_a_bytes_literal():
     assert textmod.readable(ROWS[5][2]) == (
         "Zelle payment\nnever arrived. I didn't get my money ’")
+
+
+def test_readable_is_silent_about_redactions_after_a_backslash():
+    # Seen on the real data (S5): \XXXX inside b'...' made Python warn on every scan.
+    with warnings.catch_warnings(record=True) as caught:
+        warnings.simplefilter("always")
+        out = textmod.readable("b'charged \\XXXX on XX/XX/XXXX\\n'")
+    assert caught == []
+    assert out == "charged \\XXXX on XX/XX/XXXX\n"
+
+
+def test_must_contain_is_a_piece_every_match_has():
+    assert textmod.must_contain("late fee") == "late"
+    assert textmod.must_contain("refund*") == "refund"
+    assert textmod.must_contain("didn't pay") == "didn"
+    assert textmod.must_contain("Charge-Off") == "charge-off"
 
 
 def test_readable_falls_back_when_the_literal_is_broken():
