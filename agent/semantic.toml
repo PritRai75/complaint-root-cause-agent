@@ -4,10 +4,17 @@
 # data/agent.sqlite, built from data/complaints.sqlite. The agent's database
 # holds these tables and nothing else, so a rule written into a table (which
 # rows it keeps, which columns it leaves out) holds whatever SQL the agent
-# writes. Change this file, then bump version and rebuild; the agent refuses
-# a database built from a different version of this file.
+# writes. A table with hidden = true goes into data/agent_text.sqlite instead,
+# a file the agent's connection never opens. Change this file, then bump
+# version and rebuild; the agent refuses a database built from a different
+# version of this file.
+#
+# layer-2 (session 5): narrative text moved from narratives_v to the hidden
+# table narrative_text, in its own file, so the planning model never sees
+# consumer text. The agent filters by words with text_has(complaint_id,
+# phrase) instead.
 
-version = "layer-1"
+version = "layer-2"
 written = "2026-11-10"
 data_note = """CFPB Consumer Complaint Database, narratives archive files 15 to 21. \
 Credit card and Checking or savings account complaints received 1 Jan to 31 Aug 2026. \
@@ -162,7 +169,8 @@ from = "narratives JOIN complaints USING (complaint_id)"
 where = ""
 rows = """One row per published narrative, complaints received January to July 2026. \
 The join to complaints is already made here."""
-leaves_out = "Company response fields, as in complaints_v."
+leaves_out = """The narrative text itself, which the agent never sees: filter by words with \
+text_has(complaint_id, 'phrase'). Company response fields, as in complaints_v."""
 
 [[table.column]]
 name = "complaint_id"
@@ -190,13 +198,27 @@ name = "company"
 description = "Company the complaint is about."
 
 [[table.column]]
-name = "narrative"
-description = """The consumer's own account, as published. Personal details are redacted as XXXX \
-and dollar amounts are rounded by the CFPB, so amounts are approximate. Unverified and one-sided."""
-
-[[table.column]]
 name = "char_length"
 description = "Length of the narrative in characters."
+
+[[table]]
+name = "narrative_text"
+hidden = true
+window = "narratives"
+from = "narratives JOIN complaints USING (complaint_id)"
+where = ""
+rows = "One row per published narrative, January to July 2026: the text, for code only."
+leaves_out = "Everything but the ID and the text."
+
+[[table.column]]
+name = "complaint_id"
+description = "CFPB complaint ID."
+
+[[table.column]]
+name = "narrative"
+description = """The consumer's own account, exactly as published. Personal details are redacted \
+as XXXX and dollar amounts are rounded by the CFPB, so amounts are approximate. Unverified and \
+one-sided. Some are stored as a bytes literal b'...'; agent/text.py readable() decodes them."""
 
 # Metrics. kind is "count" (rows), "share" (rows in a group out of all rows that
 # match the filters) or "rate" (numerator over denominator, as a percentage).

@@ -12,12 +12,22 @@ and nothing else: no base tables, no July or August response fields. A window
 written into a table therefore holds whatever SQL the agent writes, including
 SQL that names a CTE after a table.
 
+A table marked hidden = true goes into a second file, data/agent_text.sqlite,
+never into data/agent.sqlite. Layer-2 uses this for narrative_text: the
+planner never sees consumer text (decision, session 5), and that holds because
+the text isn't in the agent's database at all, not because of the authorizer
+(testing showed SQLite doesn't report a hidden table's column read in a USING
+join). The agent filters by words with text_has(complaint_id, phrase), which
+returns 1, 0 or NULL and reads the text file on its own connection (see
+agent/text.py). Code that must read text uses connect_text().
+
 connect() opens data/agent.sqlite read-only and installs an authorizer that
 allows only SELECT, reads, functions and recursive CTEs. ATTACH (which could
 open another file, such as data/complaints.sqlite), PRAGMA and every write
-are refused, and so are reads of build_info and SQLite's own schema tables,
-so describe() is the agent's only view of the schema. connect() also refuses
-a database built from a different version of the layer file.
+are refused, and so are reads of build_info and SQLite's own schema
+tables, so describe() is the agent's only view of the schema.
+connect() also refuses a database built from a different version of the
+layer file.
 
 metric_sql() writes the SQL for a defined metric. The eval harness uses it for
 reference numbers; the agent sees the same definitions through describe().
@@ -31,6 +41,7 @@ import tomllib
 from datetime import datetime, timezone
 from pathlib import Path
 
+from agent import text as textmod
 from ingest import sources
 from ingest.build_db import git_commit
 
@@ -42,7 +53,7 @@ KINDS = ("count", "share", "rate")
 # The only FROM clauses a table may use: one base table, or the approved join.
 APPROVED_FROM = re.compile(
     r"^(complaints|narratives)( JOIN (complaints|narratives) USING \(complaint_id\))?$")
-HIDDEN_TABLES = ("build_info",)
+ALWAYS_HIDDEN = ("build_info",)
 # Authorizer action codes, for readable refusals. Result codes such as
 # SQLITE_MISUSE share these numbers, so the names are listed, not looked up.
 ACTION_NAMES = {getattr(sqlite3, "SQLITE_" + n): n.replace("_", " ") for n in (
@@ -96,10 +107,15 @@ def problems(layer):
     for t in tables:
         name = t.get("name", "")
         where = f"table {name or '(no name)'}"
-        if not (NAME.match(name) and name.endswith("_v")):
+        hidden = t.get("hidden", False)
+        if not isinstance(hidden, bool):
+            out.append(f"{where}: hidden must be true or false")
+        if not hidden and not (NAME.match(name) and name.endswith("_v")):
             out.append(f"{where}: name must be snake_case ending in _v")
-        if name in BASE_TABLES:
-            out.append(f"{where}: name clashes with a base table")
+        if hidden and not (NAME.match(name) and not name.endswith("_v")):
+            out.append(f"{where}: a hidden table's name must be snake_case, not ending in _v")
+        if name in BASE_TABLES or name in ALWAYS_HIDDEN:
+            out.append(f"{where}: name clashes with a base table or build_info")
         if t.get("window") not in windows:
             out.append(f"{where}: window {t.get('window')!r} is not defined")
         m = APPROVED_FROM.match(t.get("from", ""))
@@ -122,7 +138,8 @@ def problems(layer):
             if not str(c.get("description", "")).strip():
                 out.append(f"{where}: column {c.get('name')} has no description")
 
-    by_table = {t.get("name"): {c.get("name") for c in t.get("column", [])} for t in tables}
+    by_table = {t.get("name"): {c.get("name") for c in t.get("column", [])}
+                for t in tables if not t.get("hidden")}
     mnames = [m.get("name", "") for m in layer.get("metric", [])]
     for name in sorted({n for n in mnames if mnames.count(n) > 1}):
         out.append(f"metric {name} appears more than once")
@@ -131,7 +148,7 @@ def problems(layer):
         if not NAME.match(m.get("name", "")):
             out.append(f"{where}: name is not snake_case")
         if m.get("table") not in by_table:
-            out.append(f"{where}: table {m.get('table')!r} is not in the layer")
+            out.append(f"{where}: table {m.get('table')!r} is not a visible table of the layer")
         if m.get("kind") not in KINDS:
             out.append(f"{where}: kind must be one of {', '.join(KINDS)}")
         if m.get("kind") == "rate" and not (m.get("numerator") and m.get("denominator")):
@@ -150,7 +167,8 @@ def load(path=LAYER_PATH):
     if found:
         raise LayerError(f"{path}:\n  " + "\n  ".join(found))
     layer["sha256"] = file_sha256(path)
-    layer["tables"] = {t["name"]: t for t in layer["table"]}
+    layer["tables"] = {t["name"]: t for t in layer["table"] if not t.get("hidden")}
+    layer["hidden"] = [t["name"] for t in layer["table"] if t.get("hidden")]
     layer["metrics"] = {m["name"]: m for m in layer.get("metric", [])}
     return layer
 
@@ -185,50 +203,78 @@ def connect_source(path):
     return conn
 
 
-def build(source_path=sources.DB_PATH, agent_path=AGENT_DB_PATH, layer_path=LAYER_PATH,
-          force=False):
-    layer = load(layer_path)
-    if os.path.exists(agent_path) and not force:
-        raise LayerError(f"{agent_path} exists. Use --force to rebuild it")
-    tmp_path = agent_path + ".building"
-    if os.path.exists(tmp_path):
-        os.remove(tmp_path)
-    src = connect_source(source_path)
-    source_info = dict(src.execute("SELECT key, value FROM build_info"))
-    src.close()
+def text_path(agent_path):
+    """The hidden tables' file that goes with agent_path: x.sqlite -> x_text.sqlite."""
+    root, ext = os.path.splitext(agent_path)
+    return root + "_text" + ext
 
-    os.makedirs(os.path.dirname(agent_path) or ".", exist_ok=True)
-    conn = sqlite3.connect(uri(tmp_path, read_only=False), uri=True)
+
+def _build_file(path, tables, layer, source_path, info):
+    """Build one file holding tables, plus build_info. Returns row counts."""
+    conn = sqlite3.connect(uri(path, read_only=False), uri=True)
     try:
         conn.execute("PRAGMA journal_mode = OFF")
         conn.execute("ATTACH DATABASE ? AS src", (uri(source_path),))
         counts = {}
-        for t in layer["table"]:
+        for t in tables:
             conn.execute(f"CREATE TABLE {t['name']} AS {table_sql(layer, t, 'src')}")
             conn.execute(f"CREATE UNIQUE INDEX idx_{t['name']}_id ON {t['name']} (complaint_id)")
-            conn.execute(f"CREATE INDEX idx_{t['name']}_pm ON {t['name']} (product, month)")
+            if {"product", "month"} <= {c["name"] for c in t["column"]}:
+                conn.execute(f"CREATE INDEX idx_{t['name']}_pm ON {t['name']} (product, month)")
             counts[t["name"]] = conn.execute(f"SELECT COUNT(*) FROM {t['name']}").fetchone()[0]
             print(f"  {t['name']}: {counts[t['name']]:,} rows")
         conn.commit()
         conn.execute("DETACH DATABASE src")
         conn.execute("CREATE TABLE build_info (key TEXT PRIMARY KEY, value TEXT NOT NULL)")
-        info = {
-            "built_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
-            "code_commit": git_commit(),
-            "layer_version": layer["version"],
-            "layer_sha256": layer["sha256"],
-            "source_built_at": source_info.get("built_at", ""),
-            "source_loader_commit": source_info.get("loader_commit", ""),
-            **{f"rows_{name}": str(n) for name, n in counts.items()},
-        }
-        conn.executemany("INSERT INTO build_info VALUES (?, ?)", info.items())
+        rows = {**info, **{f"rows_{name}": str(n) for name, n in counts.items()}}
+        conn.executemany("INSERT INTO build_info VALUES (?, ?)", rows.items())
         conn.commit()
-    except BaseException:
+    finally:
         conn.close()
-        os.remove(tmp_path)
+    return counts
+
+
+def build(source_path=sources.DB_PATH, agent_path=AGENT_DB_PATH, layer_path=LAYER_PATH,
+          force=False):
+    """Build agent_path from the visible tables and, if the layer has hidden
+    tables, text_path(agent_path) from those. Both are replaced together."""
+    layer = load(layer_path)
+    targets = {agent_path: [t for t in layer["table"] if not t.get("hidden")]}
+    if layer["hidden"]:
+        targets[text_path(agent_path)] = [t for t in layer["table"] if t.get("hidden")]
+    for path in targets:
+        if os.path.exists(path) and not force:
+            raise LayerError(f"{path} exists. Use --force to rebuild it")
+    src = connect_source(source_path)
+    source_info = dict(src.execute("SELECT key, value FROM build_info"))
+    src.close()
+    info = {
+        "built_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "code_commit": git_commit(),
+        "layer_version": layer["version"],
+        "layer_sha256": layer["sha256"],
+        "source_built_at": source_info.get("built_at", ""),
+        "source_loader_commit": source_info.get("loader_commit", ""),
+    }
+
+    os.makedirs(os.path.dirname(agent_path) or ".", exist_ok=True)
+    tmp = {path: path + ".building" for path in targets}
+    try:
+        for path, tables in targets.items():
+            if os.path.exists(tmp[path]):
+                os.remove(tmp[path])
+            counts = _build_file(tmp[path], tables, layer, source_path, info)
+            info.update({f"rows_{name}": str(n) for name, n in counts.items()})
+    except BaseException:
+        for t in tmp.values():
+            if os.path.exists(t):
+                os.remove(t)
         raise
-    conn.close()
-    os.replace(tmp_path, agent_path)
+    for path in targets:
+        os.replace(tmp[path], path)
+    stale = text_path(agent_path)
+    if not layer["hidden"] and os.path.exists(stale):
+        os.remove(stale)
     return info
 
 
@@ -248,12 +294,15 @@ class Guard:
         self.tables = sorted(tables)
         self.last_denial = None
 
+    def deny(self, message):
+        self.last_denial = message
+
     def __call__(self, action, arg1, arg2, db_name, inner):
         if action not in ALLOWED_ACTIONS:
             what = ACTION_NAMES.get(action, f"action {action}")
             self.last_denial = f"only SELECT queries are allowed, not {what}"
             return sqlite3.SQLITE_DENY
-        if action == sqlite3.SQLITE_READ and (arg1 in HIDDEN_TABLES
+        if action == sqlite3.SQLITE_READ and (arg1 in ALWAYS_HIDDEN
                                               or (arg1 or "").startswith("sqlite_")):
             self.last_denial = (f"{arg1} is not part of the semantic layer; "
                                 f"the tables are {', '.join(self.tables)}")
@@ -261,24 +310,47 @@ class Guard:
         return sqlite3.SQLITE_OK
 
 
-def connect(agent_path=AGENT_DB_PATH, layer_path=LAYER_PATH):
-    """Read-only connection to the agent's database, guarded. Returns (conn, guard)."""
-    layer = load(layer_path)
-    if not os.path.exists(agent_path):
-        raise LayerError(f"{agent_path} not found. Run python -m agent.semantic build")
-    conn = sqlite3.connect(uri(agent_path), uri=True)
+def _open_checked(path, layer, layer_path):
+    """Read-only connection to a built file, refused if built from another layer."""
+    if not os.path.exists(path):
+        raise LayerError(f"{path} not found. Run python -m agent.semantic build")
+    conn = sqlite3.connect(uri(path), uri=True)
     conn.execute("PRAGMA query_only = ON")
     info = dict(conn.execute("SELECT key, value FROM build_info"))
     if info.get("layer_sha256") != layer["sha256"]:
         conn.close()
         raise LayerError(
-            f"{agent_path} was built from layer {info.get('layer_version')} "
+            f"{path} was built from layer {info.get('layer_version')} "
             f"({info.get('layer_sha256', '')[:12]}), but {layer_path} is now "
             f"{layer['version']} ({layer['sha256'][:12]}). "
             "Run python -m agent.semantic build --force")
+    return conn
+
+
+def connect(agent_path=AGENT_DB_PATH, layer_path=LAYER_PATH):
+    """Read-only connection to the agent's database, guarded. Returns (conn, guard).
+
+    With layer-2, text_has() is registered on it. The function reads the text
+    file on its own connection and returns only 1, 0 or NULL."""
+    layer = load(layer_path)
+    conn = _open_checked(agent_path, layer, layer_path)
     guard = Guard(layer["tables"])
+    if textmod.TEXT_TABLE in layer["hidden"]:
+        try:
+            _open_checked(text_path(agent_path), layer, layer_path).close()
+        except LayerError:
+            conn.close()
+            raise
+        index = textmod.TextIndex(uri(text_path(agent_path)), guard.deny)
+        conn.create_function("text_has", 2, index, deterministic=True)
     conn.set_authorizer(guard)
     return conn, guard
+
+
+def connect_text(agent_path=AGENT_DB_PATH, layer_path=LAYER_PATH):
+    """Read-only connection to the text file, for code that reads narratives
+    (the tagger, the report's quotes). Never hand it to the agent."""
+    return _open_checked(text_path(agent_path), load(layer_path), layer_path)
 
 
 # ---------- metrics ----------
@@ -336,16 +408,28 @@ def run_metric(conn, layer, name, by=(), filters=None):
 
 # ---------- what the agent is shown ----------
 
+TEXT_HAS_HELP = """\
+- text_has(complaint_id, 'phrase'): 1 if the complaint's published narrative \
+contains the phrase, 0 if it doesn't, NULL if the complaint has no narrative \
+(complaints received in August, or not submitted on the web). Whole words, \
+case-insensitive; a word ending in * matches any ending ('refund*' finds refund, \
+refunds, refunded). Letters, digits, spaces, apostrophes and hyphens only. \
+Example: SELECT product, SUM(text_has(complaint_id, 'zelle')) AS mentions, \
+COUNT(*) AS narratives FROM narratives_v GROUP BY product. You never see the \
+narrative text itself; root causes come from the tagging tool."""
+
 def describe(layer):
     """The layer as text, for describe_tables."""
     out = [f"Semantic layer {layer['version']}", "", layer["data_note"].strip(), "", "Windows:"]
     for wname, w in layer["window"].items():
         out.append(f"- {wname}: received {w['from']} to {w['to']}. {w['why'].strip()}")
-    for t in layer["table"]:
+    for t in layer["tables"].values():
         w = layer["window"][t["window"]]
         out += ["", f"Table {t['name']} (window {t['window']}, {w['from']} to {w['to']})",
                 t["rows"].strip(), f"Leaves out: {t['leaves_out'].strip()}", "Columns:"]
         out += [f"- {c['name']}: {c['description'].strip()}" for c in t["column"]]
+    if textmod.TEXT_TABLE in layer.get("hidden", []):
+        out += ["", "Functions:", TEXT_HAS_HELP]
     out += ["", "Metrics (use these definitions when a request names one):"]
     for m in layer["metrics"].values():
         if m["kind"] == "rate":
@@ -370,7 +454,9 @@ def main(argv):
             print(f"metrics {', '.join(layer['metrics'])}")
         elif cmd == "build":
             info = build(force="--force" in argv)
-            print(f"Built {AGENT_DB_PATH} from layer {info['layer_version']} "
+            built = AGENT_DB_PATH + (f" and {text_path(AGENT_DB_PATH)}"
+                                     if os.path.exists(text_path(AGENT_DB_PATH)) else "")
+            print(f"Built {built} from layer {info['layer_version']} "
                   f"at code commit {info['code_commit']}")
         elif cmd == "show":
             print(describe(load()))

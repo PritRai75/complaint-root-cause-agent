@@ -17,6 +17,7 @@ RESPONSES = ["Closed with explanation", "Closed with monetary relief",
 # here, and a database built from the old file is refused by connect().
 LAYER_SHA256 = {
     "layer-1": "1d51d469c6691eab011c0aaedfeff40361bf0cca3fbd82153f78fb6090d65d01",
+    "layer-2": "0617659d2dacbef7c7d70cae7afd11fea5d7d1cd07a0f061d8339a6738ef1996",
 }
 
 
@@ -83,6 +84,7 @@ def guarded(env):
 def test_layer_file_loads_and_is_pinned():
     layer = sem.load()
     assert list(layer["tables"]) == ["complaints_v", "responses_v", "narratives_v"]
+    assert layer["hidden"] == ["narrative_text"]
     assert LAYER_SHA256.get(layer["version"]) == layer["sha256"], (
         "agent/semantic.toml changed: bump version and pin the new sha256 here")
 
@@ -101,8 +103,17 @@ def test_complaints_v_and_narratives_v_carry_no_response_fields():
         assert not cols & {"company_response", "timely_response", "company_public_response"}
 
 
+def test_no_visible_table_carries_narrative_text():
+    # Decision, session 5: the planner never sees consumer text.
+    layer = sem.load()
+    for t in layer["tables"].values():
+        assert "narrative" not in {c["name"] for c in t["column"]}, t["name"]
+    hidden = {t["name"]: t for t in layer["table"] if t.get("hidden")}
+    assert [c["name"] for c in hidden["narrative_text"]["column"]] == ["complaint_id", "narrative"]
+
+
 @pytest.mark.parametrize("edit, message", [
-    (lambda t: t.replace('version = "layer-1"', 'version = ""'), "version is empty"),
+    (lambda t: t.replace('version = "layer-2"', 'version = ""'), "version is empty"),
     (lambda t: t.replace('to = "2026-06-30"', 'to = "2026-6-30"'), "not YYYY-MM-DD"),
     (lambda t: t.replace('to = "2026-06-30"', 'to = "2025-06-30"'), "from is after to"),
     (lambda t: t.replace('name = "responses_v"', 'name = "responses"'), "ending in _v"),
@@ -115,10 +126,15 @@ def test_complaints_v_and_narratives_v_carry_no_response_fields():
                          'from = "narratives JOIN narratives USING (complaint_id)"'), "may only join"),
     (lambda t: t.replace('description = "Month received, YYYY-MM."', 'description = ""', 1),
      "has no description"),
-    (lambda t: t.replace('table = "responses_v"', 'table = "nowhere_v"', 1), "is not in the layer"),
+    (lambda t: t.replace('table = "responses_v"', 'table = "nowhere_v"', 1), "not a visible table"),
     (lambda t: t.replace('kind = "rate"', 'kind = "ratio"', 1), "kind must be"),
     (lambda t: t.replace('denominator = "SUM(closed)"', 'denominator = ""', 1),
      "needs numerator and denominator"),
+    (lambda t: t.replace('name = "narrative_text"', 'name = "narrative_text_v"'), "not ending in _v"),
+    (lambda t: t.replace('hidden = true', 'hidden = "yes"'), "hidden must be true or false"),
+    (lambda t: t.replace('table = "narratives_v"', 'table = "narrative_text"'),
+     "not a visible table"),
+    (lambda t: t.replace('name = "narrative_text"', 'name = "build_info"'), "clashes"),
 ])
 def test_malformed_layer_is_refused(tmp_path, edit, message):
     with open(sem.LAYER_PATH, encoding="utf-8") as f:
@@ -143,7 +159,13 @@ def test_build_counts_match_the_source(env):
     assert n["responses_v"] == source_count(
         env, "date_received <= '2026-06-30' AND company_response <> 'In progress'")
     assert n["narratives_v"] == source_count(env, "has_narrative = 1")
-    assert info["layer_version"] == "layer-1"
+    conn = sqlite3.connect(sem.text_path(env["agent"]))
+    assert conn.execute("SELECT COUNT(*) FROM narrative_text").fetchone()[0] == n["narratives_v"]
+    assert conn.execute(
+        "SELECT COUNT(*) FROM narrative_text WHERE narrative LIKE 'Narrative %'").fetchone()[0] \
+        == n["narratives_v"]
+    conn.close()
+    assert info["layer_version"] == "layer-2"
     assert info["layer_sha256"] == sem.file_sha256(env["layer"])
     assert info["source_loader_commit"] == "abc1234"
     assert info["rows_responses_v"] == str(n["responses_v"])
@@ -158,14 +180,33 @@ def test_build_keeps_only_the_window(env):
     assert conn.execute("SELECT MAX(month) FROM complaints_v").fetchone()[0] == "2026-08"
     tables = {r[0] for r in conn.execute("SELECT name FROM sqlite_master WHERE type = 'table'")}
     conn.close()
+    # The text is not in the agent's database at all (decision, session 5).
     assert tables == {"complaints_v", "responses_v", "narratives_v", "build_info"}
+    conn = sqlite3.connect(env["agent"])
+    cols = {r[1] for r in conn.execute("PRAGMA table_info(narratives_v)")}
+    conn.close()
+    assert "narrative" not in cols and "char_length" in cols
+    text = sqlite3.connect(sem.text_path(env["agent"]))
+    tables = {r[0] for r in text.execute("SELECT name FROM sqlite_master WHERE type = 'table'")}
+    info = dict(text.execute("SELECT key, value FROM build_info"))
+    text.close()
+    assert tables == {"narrative_text", "build_info"}
+    assert info["layer_sha256"] == sem.file_sha256(env["layer"])
 
 
 def test_build_refuses_to_overwrite(env):
     with pytest.raises(sem.LayerError, match="--force"):
         sem.build(source_path=env["src"], agent_path=env["agent"], layer_path=env["layer"])
+    os.remove(env["agent"])          # the text file alone also blocks a build
+    with pytest.raises(sem.LayerError, match="--force"):
+        sem.build(source_path=env["src"], agent_path=env["agent"], layer_path=env["layer"])
     sem.build(source_path=env["src"], agent_path=env["agent"], layer_path=env["layer"], force=True)
     assert not os.path.exists(env["agent"] + ".building")
+    assert not os.path.exists(sem.text_path(env["agent"]) + ".building")
+
+
+def test_text_path():
+    assert sem.text_path("data/agent.sqlite") == "data/agent_text.sqlite"
 
 
 # ---------- the guard ----------
@@ -201,6 +242,10 @@ def test_a_cte_named_like_a_table_still_sees_only_the_window(guarded):
     ("SELECT name FROM sqlite_master", "prohibited"),
     ("SELECT name FROM sqlite_schema", "prohibited"),
     ("SELECT COUNT(*) FROM build_info", "not authorized"),
+    ("SELECT narrative FROM narrative_text", "no such table"),
+    ("SELECT n.complaint_id FROM narratives_v n JOIN narrative_text t USING (complaint_id)",
+     "no such table"),
+    ("SELECT narrative FROM narratives_v", "no such column"),
     ("WITH x AS (SELECT * FROM build_info) SELECT COUNT(*) FROM x", "prohibited"),
     ("SELECT * FROM pragma_table_info('complaints_v')", "not authorized"),
     ("PRAGMA query_only = OFF", "not authorized"),
@@ -217,7 +262,7 @@ def test_guard_refuses(guarded, sql, reason):
         conn.execute(sql)
     if sql.startswith("PRAGMA"):
         assert guard.last_denial == "only SELECT queries are allowed, not PRAGMA"
-    if reason != "no such table":
+    if not reason.startswith("no such"):
         assert guard.last_denial
 
 
@@ -243,6 +288,8 @@ def test_connect_refuses_a_database_from_another_layer(env):
         f.write(text.replace("One row per complaint", "One row for each complaint", 1))
     with pytest.raises(sem.LayerError, match="--force"):
         sem.connect(agent_path=env["agent"], layer_path=env["layer"])
+    with pytest.raises(sem.LayerError, match="--force"):
+        sem.connect_text(env["agent"], env["layer"])
 
 
 def test_connect_without_a_database(tmp_path):
@@ -315,12 +362,36 @@ def test_filters_are_parameters_not_text():
 def test_describe_shows_every_table_column_and_metric():
     layer = sem.load()
     text = sem.describe(layer)
-    for t in layer["table"]:
+    for t in layer["tables"].values():
         assert f"Table {t['name']}" in text
         for c in t["column"]:
             assert f"- {c['name']}: " in text
     for m in layer["metrics"]:
         assert f"- {m}: " in text
+    assert "narrative_text" not in text
+    assert "- text_has(complaint_id, 'phrase'): " in text
+
+
+def test_guard_refuses_attaching_the_text_file(guarded, env):
+    conn, guard = guarded
+    with pytest.raises(sqlite3.DatabaseError, match="not authorized"):
+        conn.execute("ATTACH DATABASE ? AS t", (sem.uri(sem.text_path(env["agent"])),))
+    assert guard.last_denial == "only SELECT queries are allowed, not ATTACH"
+
+
+def test_code_can_read_the_text_on_its_own_connection(env):
+    conn = sem.connect_text(env["agent"], env["layer"])
+    n = conn.execute("SELECT COUNT(*) FROM narrative_text").fetchone()[0]
+    with pytest.raises(sqlite3.OperationalError, match="readonly"):
+        conn.execute("DELETE FROM narrative_text")
+    conn.close()
+    assert n > 0
+
+
+def test_connect_needs_the_text_file(env):
+    os.remove(sem.text_path(env["agent"]))
+    with pytest.raises(sem.LayerError, match="agent_text.sqlite not found"):
+        sem.connect(agent_path=env["agent"], layer_path=env["layer"])
 
 
 # ---------- real data (skip when data/agent.sqlite is not built, as in CI) ----------
@@ -329,6 +400,7 @@ def test_describe_shows_every_table_column_and_metric():
 # queried data/complaints.sqlite directly without the layer.
 REAL = {
     "rows": {"complaints_v": 125_220, "responses_v": 93_519, "narratives_v": 41_770},
+    "narrative_text": 41_770,
     "timely_response_rate": {CHK: (44_462, 44_794), CARD: (47_974, 48_725)},
     "relief_rate": {CHK: (8_235, 44_729), CARD: (12_785, 48_562)},
     "monetary_relief_rate": {CHK: (5_871, 44_729), CARD: (7_762, 48_562)},
@@ -356,3 +428,6 @@ def test_real_layer_matches_the_direct_queries():
            for r in sem.run_metric(conn, layer, "narrative_coverage", ["month"])}
     assert got == REAL["coverage_by_month"]
     conn.close()
+    text = sem.connect_text()
+    assert text.execute("SELECT COUNT(*) FROM narrative_text").fetchone()[0] == REAL["narrative_text"]
+    text.close()
