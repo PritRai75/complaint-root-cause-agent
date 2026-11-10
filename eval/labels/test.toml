@@ -1,0 +1,1609 @@
+# Labels for the test set (200 narratives). Written by Prit.
+#
+# For each item set code to one code from eval/taxonomy.toml, chosen by its
+# primary_rule. uncertain = true leaves the item out of scoring. note is
+# optional: one line on why, or what made it hard.
+# Check with: python -m eval.labelset check test
+
+set = "test"
+taxonomy_version = "v1"   # the version these labels were made under
+
+[[item]]
+ref = "T001"
+complaint_id = 21664089
+product = "Credit card"
+code = "terms_not_honored"
+uncertain = false
+note = "vs third_party. A deferred-interest plan the sales rep upsold 'did not happen in the system', leaving $3,000 of interest. The request is aimed at 'this merchant', but the promotional term not applied on the Comenity account is the reported failure."
+
+[[item]]
+ref = "T002"
+complaint_id = 24734416
+product = "Checking or savings account"
+code = "fraud_claim"
+uncertain = false
+note = "Some fraud claims granted, others still denied; the consumer says the merchant has no storefront and the charges weren't theirs."
+
+[[item]]
+ref = "T003"
+complaint_id = 19967185
+product = "Credit card"
+code = "servicing_error"
+uncertain = false
+note = "$200 payment debited from the bank but never posted to the Self card; the consumer asked for documentation, not a claim. Cites Reg E, Reg Z and UDAAP, ignored."
+
+[[item]]
+ref = "T004"
+complaint_id = 22081623
+product = "Credit card"
+code = "dispute_mishandled"
+uncertain = false
+note = "Hotel booking with no confirmation and no service; Citi denied the dispute."
+
+[[item]]
+ref = "T005"
+complaint_id = 18903437
+product = "Checking or savings account"
+code = "third_party"
+uncertain = false
+note = "Ford put the refund on a closed card and says it never got the bounced money back. No failure by the bank is reported. Checking product, but the complaint is about the merchant."
+
+[[item]]
+ref = "T006"
+complaint_id = 23071729
+product = "Credit card"
+code = "fraud_claim"
+uncertain = false
+note = "Points redeemed for gift cards the consumer says they didn't request; after the investigation the bank won't reinstate the points. A points redemption rather than a card transaction."
+
+[[item]]
+ref = "T007"
+complaint_id = 18597664
+product = "Checking or savings account"
+code = "account_restricted"
+uncertain = false
+note = "Account closed and stocks sold right after identity verification; over $12,000 still held. Robinhood, a non-bank, filed under Checking."
+
+[[item]]
+ref = "T008"
+complaint_id = 19894178
+product = "Checking or savings account"
+code = "fraud_claim"
+uncertain = false
+note = "Provisional credit refused for missing the 10-day written confirmation, after reps twice told the consumer to wait. The reps' wrong information is the cause, but the claim handling is the failure. Netspend prepaid, a non-bank."
+
+[[item]]
+ref = "T009"
+complaint_id = 23669166
+product = "Credit card"
+code = "account_restricted"
+uncertain = false
+note = "Seven Synchrony accounts closed as 'high risk'; one was briefly reopened after a fraud letter, then closed again. All caps, sequence muddled."
+
+[[item]]
+ref = "T010"
+complaint_id = 21022192
+product = "Credit card"
+code = "fee_charged"
+uncertain = false
+note = "vs terms_not_honored. Deferred interest back-dated after minimum payments fell below the payoff pace. The consumer knew the 24-month condition, so this objects afterwards rather than claiming a misstated term. Close to R23, which went terms_not_honored on 'misled'."
+
+[[item]]
+ref = "T011"
+complaint_id = 21749958
+product = "Checking or savings account"
+code = "fraud_claim"
+uncertain = false
+note = "Follow-up: the case on an $800 fraud loss was closed with no explanation, and the case manager doesn't respond."
+
+[[item]]
+ref = "T012"
+complaint_id = 18423197
+product = "Credit card"
+code = "fee_charged"
+uncertain = false
+note = "vs servicing_error. Interest charged although the full previous balance was paid on time. No company mistake is stated, so it is a question about how interest was worked out. 120 characters."
+
+[[item]]
+ref = "T013"
+complaint_id = 19042160
+product = "Credit card"
+code = "dispute_mishandled"
+uncertain = false
+note = "Merchandise never shipped and the refund was faked; Citi ruled for the merchant and may reopen."
+
+[[item]]
+ref = "T014"
+complaint_id = 23954282
+product = "Checking or savings account"
+code = "fraud_claim"
+uncertain = false
+note = "Fraud claim denied despite a police report and an out-of-state merchant."
+
+[[item]]
+ref = "T015"
+complaint_id = 19699551
+product = "Checking or savings account"
+code = "account_restricted"
+uncertain = false
+note = "vs servicing_error. ATM and online access cut without notice after a past fraud flag. The account also went negative and deposits were swept, but most of the requests are about access and explanation."
+
+[[item]]
+ref = "T016"
+complaint_id = 18607997
+product = "Credit card"
+code = "credit_reporting"
+uncertain = false
+note = "vs terms_not_honored. The rep said the application could be cancelled if the limit was too low, but the account was opened anyway, with two hard pulls. The card is already cancelled; the concern is the credit report. Like R35."
+
+[[item]]
+ref = "T017"
+complaint_id = 21034940
+product = "Checking or savings account"
+code = "account_restricted"
+uncertain = false
+note = "About $42,000 in business wire funds withheld for nine months; final decision not to release. Business account."
+
+[[item]]
+ref = "T018"
+complaint_id = 23698712
+product = "Checking or savings account"
+code = "servicing_error"
+uncertain = false
+note = "vs unclear. Garbled: Chime seems to have lowered a pay-advance limit and kept $80 after the consumer repaid in full. The request is the $80 back."
+
+[[item]]
+ref = "T019"
+complaint_id = 22372249
+product = "Credit card"
+code = "fraud_claim"
+uncertain = false
+note = "Fraud claim closed after a missed follow-up email and the charge rebilled; reps promised a reopening, but nothing changed for months."
+
+[[item]]
+ref = "T020"
+complaint_id = 21272904
+product = "Credit card"
+code = "fraud_claim"
+uncertain = false
+note = "$2,900 charge denied as 'similar to previous activity'; the consumer asks for reconsideration and the evidence relied on."
+
+[[item]]
+ref = "T021"
+complaint_id = 21635515
+product = "Credit card"
+code = "third_party"
+uncertain = false
+note = "vs dispute_mishandled. A Rooms to Go sales rep misrepresented warranties and the return terms and added items. The consumer is 'disputing the full transaction', but no action by the card issuer is reported, and the partial-return offers came from the store."
+
+[[item]]
+ref = "T022"
+complaint_id = 19971988
+product = "Checking or savings account"
+code = "third_party"
+uncertain = false
+note = "vs fraud_claim. Bank-impersonation scam; the consumer sent $4,700. A claim was placed but its outcome isn't stated. The only bank action is an agent refusing to conference in the caller, which is service conduct at best. Coin-flip territory, kept false."
+
+[[item]]
+ref = "T023"
+complaint_id = 22331702
+product = "Checking or savings account"
+code = "fraud_claim"
+uncertain = false
+note = "Fraud claims on about $19,000 drained while the consumer was incarcerated were denied; the account was later frozen over an unexplained deposit. Most of the text and the request concern the claim. Cites EFTA extenuating circumstances, ignored. Opening quote marks suggest pasted text."
+
+[[item]]
+ref = "T024"
+complaint_id = 19129603
+product = "Credit card"
+code = "credit_reporting"
+uncertain = false
+note = "vs account_restricted. Application denied on a credit score the consumer says is wrong; they ask for reconsideration with accurate data. Routed by the R50 line, but the bank used bad data rather than reporting it. Gap: v1 has no clear home for a credit denial based on disputed data. Template-like headings."
+
+[[item]]
+ref = "T025"
+complaint_id = 18857903
+product = "Credit card"
+code = "terms_not_honored"
+uncertain = false
+note = "vs servicing_error. 2% reward not earned on one purchase; the consumer suspects the card replacement that day. The bank says the purchase isn't eligible and closed the case. The reward term is the request."
+
+[[item]]
+ref = "T026"
+complaint_id = 23669464
+product = "Checking or savings account"
+code = "fee_charged"
+uncertain = false
+note = "vs servicing_error. $420 moved from savings to cover an overdraft. The consumer questions the amount, fees and notice but states no mistake, so it is a question about how the charge was worked out."
+
+[[item]]
+ref = "T027"
+complaint_id = 20981059
+product = "Checking or savings account"
+code = "account_restricted"
+uncertain = false
+note = "After the account closed, the balance check went to an old address; a replacement was promised but never issued months later. Credit Karma, a non-bank."
+
+[[item]]
+ref = "T028"
+complaint_id = 19748733
+product = "Credit card"
+code = "dispute_mishandled"
+uncertain = false
+note = "Mover raised the charge after a signed quote; Chase denied and closed the dispute. 'Unauthorized' refers to the amount from a real merchant, as in R55."
+
+[[item]]
+ref = "T029"
+complaint_id = 21381900
+product = "Credit card"
+code = "servicing_error"
+uncertain = false
+note = "The online portal showed a $0 balance, then late fees, interest and collection calls followed. The bank's own site counts as the bank (P24)."
+
+[[item]]
+ref = "T030"
+complaint_id = 20091713
+product = "Checking or savings account"
+code = "fraud_claim"
+uncertain = false
+note = "Unauthorized subscription charges; Chase reversed only some. Business checking."
+
+[[item]]
+ref = "T031"
+complaint_id = 18437259
+product = "Credit card"
+code = "account_restricted"
+uncertain = false
+note = "vs dispute_mishandled. Account closed without notice 'due to complaints'; the consumer wants information on open disputes. The closure isn't tied to a claim decision, and most of the text is about the closure. Dave, a non-bank, filed under Credit card."
+
+[[item]]
+ref = "T032"
+complaint_id = 18681560
+product = "Credit card"
+code = "third_party"
+uncertain = false
+note = "vs unclear. Notices about four card applications the consumer never made; frozen credit blocked them. No failure by the issuers is reported, and the blame is on whoever applied. No request stated."
+
+[[item]]
+ref = "T033"
+complaint_id = 21630432
+product = "Credit card"
+code = "servicing_error"
+uncertain = false
+note = "vs credit_reporting. During a co-brand switch Citi issued an unsolicited second card with a $95 fee. The request is to cancel it without credit damage or loss of miles. It is the bank's issuing mistake on an existing relationship, closer to R32 than to an identity-theft account."
+
+[[item]]
+ref = "T034"
+complaint_id = 18979336
+product = "Credit card"
+code = "account_restricted"
+uncertain = false
+note = "vs credit_reporting. Barclays cut the credit limit; the consumer objects that their credit was pulled without consent and the score is wrong. The limit cut is the action reported."
+
+[[item]]
+ref = "T035"
+complaint_id = 23185720
+product = "Checking or savings account"
+code = "fraud_claim"
+uncertain = false
+note = "Fraud claim denied for 'two different dates'; the card was used in Connecticut while the consumer was in Texas. Small-business debit card."
+
+[[item]]
+ref = "T036"
+complaint_id = 19072520
+product = "Checking or savings account"
+code = "dispute_mishandled"
+uncertain = false
+note = "vs fraud_claim. Poor-quality goods and a refused return; DCU found the purchase valid. The consumer calls the merchant a scam, but it is a real merchant and a quality dispute."
+
+[[item]]
+ref = "T037"
+complaint_id = 19067039
+product = "Checking or savings account"
+code = "unclear"
+uncertain = false
+note = "vs third_party. A general rant about forex brokers and banks, plus a pasted summary of a class action; the text is cut off mid-sentence. No account of what this bank did to the consumer."
+
+[[item]]
+ref = "T038"
+complaint_id = 18679364
+product = "Checking or savings account"
+code = "fraud_claim"
+uncertain = false
+note = "Disputes on international withdrawals denied as authorized; many made while the card was locked."
+
+[[item]]
+ref = "T039"
+complaint_id = 22199292
+product = "Credit card"
+code = "fee_charged"
+uncertain = false
+note = "Trailing interest of $23 after paying in full; the bank can't explain the calculation and an agent ended the call."
+
+[[item]]
+ref = "T040"
+complaint_id = 19264887
+product = "Credit card"
+code = "fee_charged"
+uncertain = false
+note = "Deferred interest of $3,500 on a $320 remainder. The consumer accepts the terms and asks for a goodwill reversal."
+
+[[item]]
+ref = "T041"
+complaint_id = 23877951
+product = "Checking or savings account"
+code = "other"
+uncertain = false
+note = "An employee looked at the accounts without reason and disclosed a transaction to family; the bank said she was fired, but she wasn't. A clear failure with no v1 code. Gap: privacy or data disclosure."
+
+[[item]]
+ref = "T042"
+complaint_id = 22581740
+product = "Checking or savings account"
+code = "third_party"
+uncertain = false
+note = "vs unclear. Concert ticket paid on layaway never delivered. Only the merchant is described; no dispute or bank action is mentioned."
+
+[[item]]
+ref = "T043"
+complaint_id = 23920108
+product = "Credit card"
+code = "credit_reporting"
+uncertain = false
+note = "vs servicing_error. Ex-spouse defaulted on a joint business card she was ordered to take over; Chase refused to remove the consumer and sold the debt. The harm and the request centre on credit damage."
+
+[[item]]
+ref = "T044"
+complaint_id = 19923329
+product = "Checking or savings account"
+code = "account_restricted"
+uncertain = false
+note = "Chime closed the accounts over 'deposits'; funds promised within 14 business days never arrived."
+
+[[item]]
+ref = "T045"
+complaint_id = 22712123
+product = "Credit card"
+code = "account_restricted"
+uncertain = false
+note = "Repeated fraud verification on a new card, with charges held as pending. Most requests are to remove the restrictions. Reads as rewritten for the CFPB, as the consumer says."
+
+[[item]]
+ref = "T046"
+complaint_id = 24718955
+product = "Checking or savings account"
+code = "account_restricted"
+uncertain = false
+note = "Account closed; the cashier's check not received after two months. The parent writes about the son's account."
+
+[[item]]
+ref = "T047"
+complaint_id = 23038975
+product = "Checking or savings account"
+code = "unclear"
+uncertain = false
+note = "The whole narrative is XXXX redaction."
+
+[[item]]
+ref = "T048"
+complaint_id = 21387855
+product = "Checking or savings account"
+code = "credit_reporting"
+uncertain = false
+note = "Late payments reported that the consumer says never happened; asks for documentation or deletion. Cap One Auto, filed under Checking. Form-letter style."
+
+[[item]]
+ref = "T049"
+complaint_id = 21491095
+product = "Checking or savings account"
+code = "fraud_claim"
+uncertain = false
+note = "vs credit_reporting. A Chime account the consumer never opened, used after their phone was stolen; the claim was reopened and denied again. Credit harm is mentioned but no removal is asked for."
+
+[[item]]
+ref = "T050"
+complaint_id = 19934482
+product = "Credit card"
+code = "dispute_mishandled"
+uncertain = false
+note = "vs fraud_claim. Empty-box delivery from a merchant the consumer bought from; the bank kept the dispute under 'not received' and then said it was out of time. 'Fraud' means merchant fraud on a real purchase."
+
+[[item]]
+ref = "T051"
+complaint_id = 20542458
+product = "Credit card"
+code = "credit_reporting"
+uncertain = false
+note = "The consumer admits a 30-day late and asks for goodwill removal; Chase refused because it was already reported."
+
+[[item]]
+ref = "T052"
+complaint_id = 18400351
+product = "Checking or savings account"
+code = "servicing_error"
+uncertain = false
+note = "vs third_party. A merchant refund the bank said would post by a date never arrived; supervisors hang up. No claim is described."
+
+[[item]]
+ref = "T053"
+complaint_id = 19125653
+product = "Credit card"
+code = "servicing_error"
+uncertain = false
+note = "An early payment is not credited by the card side though the branch can see it; late fee and interest keep coming. The 'lost payment investigation' is finding a payment, not a claim."
+
+[[item]]
+ref = "T054"
+complaint_id = 18536388
+product = "Credit card"
+code = "terms_not_honored"
+uncertain = false
+note = "vs account_restricted. Chase closed the card with no reason a year ago; the core complaint now is forfeited reward points it won't move to the new card."
+
+[[item]]
+ref = "T055"
+complaint_id = 18568131
+product = "Checking or savings account"
+code = "fraud_claim"
+uncertain = false
+note = "Account takeover after a phone-number change; the claim was denied five times despite police and FTC reports."
+
+[[item]]
+ref = "T056"
+complaint_id = 21666057
+product = "Checking or savings account"
+code = "dispute_mishandled"
+uncertain = false
+note = "vs servicing_error. A gas-station refund on the card failed; the merchant raised it with SoFi and the consumer sent the refund receipt, but SoFi won't release the $300. Treated as a claim because a decision was made. Fuel for a company vehicle."
+
+[[item]]
+ref = "T057"
+complaint_id = 22379214
+product = "Checking or savings account"
+code = "fraud_claim"
+uncertain = false
+note = "Fraud claim denied; the transaction was made in another place. 101 characters."
+
+[[item]]
+ref = "T058"
+complaint_id = 18719921
+product = "Checking or savings account"
+code = "dispute_mishandled"
+uncertain = false
+note = "$16 food order never delivered; dispute denied on the app's proof of delivery, reopening only with camera footage."
+
+[[item]]
+ref = "T059"
+complaint_id = 18613399
+product = "Checking or savings account"
+code = "fraud_claim"
+uncertain = false
+note = "$1,100 unauthorized purchase through a payment app debited the bank account; the bank's investigation only asks the app. Written as an FTC report."
+
+[[item]]
+ref = "T060"
+complaint_id = 23129988
+product = "Credit card"
+code = "third_party"
+uncertain = false
+note = "vs fraud_claim. Card opened at Citi by an identity thief; Citi closed it at the consumer's request. No failure by Citi is reported; it is an account of identity theft."
+
+[[item]]
+ref = "T061"
+complaint_id = 20804357
+product = "Checking or savings account"
+code = "other"
+uncertain = false
+note = "vs unclear. A teller refused to accept a large check and handed it back. The failure is nameable (refused a deposit) but fits no v1 code. The text is erratic and the amount is redacted."
+
+[[item]]
+ref = "T062"
+complaint_id = 21769149
+product = "Credit card"
+code = "account_restricted"
+uncertain = false
+note = "Account under review past the stated timeframe; conflicting answers on whether the review restarted."
+
+[[item]]
+ref = "T063"
+complaint_id = 19352651
+product = "Credit card"
+code = "account_restricted"
+uncertain = false
+note = "Card closed within its first month over returned payments that were since paid off. Rewards were forfeited and reinstatement was refused; most of the text is about the closure."
+
+[[item]]
+ref = "T064"
+complaint_id = 22450556
+product = "Checking or savings account"
+code = "account_restricted"
+uncertain = false
+note = "Joint account with a grandfather closed for a 'business decision'; the consumer asks for re-evaluation."
+
+[[item]]
+ref = "T065"
+complaint_id = 22363815
+product = "Credit card"
+code = "other"
+uncertain = false
+note = "Card closed for inactivity years ago; the request is to stop BoA's card offers after asking by phone. A clear failure, an opt-out ignored, with no v1 code. Gap: marketing or opt-out."
+
+[[item]]
+ref = "T066"
+complaint_id = 20039113
+product = "Credit card"
+code = "fraud_claim"
+uncertain = false
+note = "Lost card and phone abroad, about $25,000 charged. Denied because the rep wrongly recorded that the consumer still had the card."
+
+[[item]]
+ref = "T067"
+complaint_id = 20759196
+product = "Credit card"
+code = "dispute_mishandled"
+uncertain = false
+note = "Dispute over a defective cosmetic procedure denied on timing alone, and the appeal denied too. Cites FCBA, ignored."
+
+[[item]]
+ref = "T068"
+complaint_id = 23118323
+product = "Checking or savings account"
+code = "fraud_claim"
+uncertain = false
+note = "vs account_restricted. No investigator assigned for weeks on an ATM fraud claim, and a rep implied the consumer did it. The account was restricted pending closure while the claim was open. The claim leads the consumer's list and takes most of the text."
+
+[[item]]
+ref = "T069"
+complaint_id = 20609980
+product = "Credit card"
+code = "dispute_mishandled"
+uncertain = false
+note = "Dispute denied as 'not returned' though the merchant kept the lenses; the consumer asks for a new review under the right category."
+
+[[item]]
+ref = "T070"
+complaint_id = 20142034
+product = "Checking or savings account"
+code = "servicing_error"
+uncertain = false
+note = "vs account_restricted. The bank was told of the mother's death but didn't freeze the joint account, so debits continued; now it won't close the account while it is negative. The writer is the joint holder."
+
+[[item]]
+ref = "T071"
+complaint_id = 21692654
+product = "Checking or savings account"
+code = "account_restricted"
+uncertain = false
+note = "Branch manager refused to open a business account despite full documentation; alleged discriminatory treatment. Gap: no code separates discrimination from service conduct."
+
+[[item]]
+ref = "T072"
+complaint_id = 19451337
+product = "Checking or savings account"
+code = "fee_charged"
+uncertain = false
+note = "vs other. $15 maintenance fee on a zero-balance account pushed it negative; the manager refused to reverse it. Most of the text alleges discrimination. Template text left in ('[ Name of Bank ]'), likely AI-drafted."
+
+[[item]]
+ref = "T073"
+complaint_id = 18862235
+product = "Checking or savings account"
+code = "account_restricted"
+uncertain = false
+note = "Funds held for months pending SSN verification after the consumer asked to close the account. The account type is redacted; HR asks for a former employee number, so it may be an employee or benefit account."
+
+[[item]]
+ref = "T074"
+complaint_id = 20541169
+product = "Credit card"
+code = "dispute_mishandled"
+uncertain = false
+note = "A damaged-item claim was closed in the consumer's favour, then reopened and $360 reversed months later without notice. PayPal, a non-bank, filed under Credit card."
+
+[[item]]
+ref = "T075"
+complaint_id = 22820293
+product = "Credit card"
+code = "fee_charged"
+uncertain = false
+note = "Foreign purchase converted at a worse rate than market; BoA can't explain the difference. Questions how the charge was worked out."
+
+[[item]]
+ref = "T076"
+complaint_id = 19451176
+product = "Credit card"
+code = "fee_charged"
+uncertain = false
+note = "vs servicing_error. Amex won't cancel a pay-over-time plan or apply the returned item's refund to it, so plan fees keep running. Policy, not a stated mistake. Odd detail: a rep gave a scam phone number."
+
+[[item]]
+ref = "T077"
+complaint_id = 24028029
+product = "Credit card"
+code = "credit_reporting"
+uncertain = false
+note = "Goodwill letter asking to remove an admitted late payment from all three bureaus. Written to the company, not the CFPB."
+
+[[item]]
+ref = "T078"
+complaint_id = 19558844
+product = "Checking or savings account"
+code = "fraud_claim"
+uncertain = false
+note = "Money taken by a family member; the bank says the consumer authorized it and won't refund. The account was shut and reopened because of the fraud."
+
+[[item]]
+ref = "T079"
+complaint_id = 19660667
+product = "Credit card"
+code = "servicing_error"
+uncertain = false
+note = "vs fee_charged. On closing, the $39 fee refund was posted as a credit balance; the refund takes another 10 business days though a rep said one week."
+
+[[item]]
+ref = "T080"
+complaint_id = 23050375
+product = "Credit card"
+code = "credit_reporting"
+uncertain = false
+note = "vs third_party. A thief applied in the consumer's name and the issuer made a hard inquiry. No request is stated; the only company action named is the inquiry. 195 characters."
+
+[[item]]
+ref = "T081"
+complaint_id = 22783371
+product = "Credit card"
+code = "terms_not_honored"
+uncertain = false
+note = "vs fee_charged. The card couldn't be linked online, so the consumer closed it; a rep promised the $75 annual fee would be refunded, then it was refused. The promised refund is the main request. Opening sentences duplicated."
+
+[[item]]
+ref = "T082"
+complaint_id = 22789768
+product = "Checking or savings account"
+code = "account_restricted"
+uncertain = false
+note = "About $6,500 in customer card payments held for risk review; the cardholder confirmed the payments were authorized but the funds are still not released. The writer is a merchant on a business processing account."
+
+[[item]]
+ref = "T083"
+complaint_id = 18990917
+product = "Checking or savings account"
+code = "fee_charged"
+uncertain = false
+note = "vs servicing_error. ATM fee charged on a decline for insufficient funds although the balance was enough, and the ATM was said to be free. The decline isn't clearly said to be the bank's mistake."
+
+[[item]]
+ref = "T084"
+complaint_id = 19573241
+product = "Credit card"
+code = "fraud_claim"
+uncertain = false
+note = "Secured card lost and used at an ATM; dispute denied because the PIN was used."
+
+[[item]]
+ref = "T085"
+complaint_id = 19952250
+product = "Checking or savings account"
+code = "account_restricted"
+uncertain = false
+note = "SoFi closed the account over 'something fraudulent' after a church check deposit; the balance is still held after more than a month."
+
+[[item]]
+ref = "T086"
+complaint_id = 22620436
+product = "Credit card"
+code = "servicing_error"
+uncertain = false
+note = "vs account_restricted. A $4,200 credit-balance refund on a closed card was requested three times and not issued; earlier calls weren't recorded. Who closed the account isn't said, so this is a refund operation, not a hold."
+
+[[item]]
+ref = "T087"
+complaint_id = 19627825
+product = "Checking or savings account"
+code = "dispute_mishandled"
+uncertain = false
+note = "A $280 bill-pay payment never reached the insurer; four disputes with the bank's fraud department are unresolved. Not unauthorized: a payment the consumer made that went missing."
+
+[[item]]
+ref = "T088"
+complaint_id = 23072561
+product = "Checking or savings account"
+code = "account_restricted"
+uncertain = false
+note = "vs fraud_claim. Venmo denied three unauthorized-charge disputes, then blocked the new card as a 'security risk' and left the consumer without funds. Most of the text is about the block, which isn't tied to the claim decision. Venmo, a non-bank."
+
+[[item]]
+ref = "T089"
+complaint_id = 22438116
+product = "Credit card"
+code = "fraud_claim"
+uncertain = false
+note = "vs unclear. 'Credit card was issued under false identity and used at XXXX store': an identity-theft account with no request stated. Coded as an account the consumer didn't open, in line with R13 (short but specific). 66 characters."
+
+[[item]]
+ref = "T090"
+complaint_id = 23199922
+product = "Checking or savings account"
+code = "account_restricted"
+uncertain = false
+note = "BoA froze the accounts, locked outgoing payments and closed them over an IP-location fraud flag. Legal-brief style, possibly AI-drafted."
+
+[[item]]
+ref = "T091"
+complaint_id = 24641443
+product = "Checking or savings account"
+code = "fraud_claim"
+uncertain = false
+note = "Truist reimbursed some unauthorized transactions from the same scheme and denied others, including on the son's account; the final appeal was denied with no written reason."
+
+[[item]]
+ref = "T092"
+complaint_id = 23220338
+product = "Credit card"
+code = "fee_charged"
+uncertain = false
+note = "vs terms_not_honored. $7,800 in deferred interest. The consumer complains the app doesn't show the deadline, but admits it was disclosed in the statement, agreement and emails. A post-agreement notice complaint, as in R22. Cites UDAAP and a CFPB circular."
+
+[[item]]
+ref = "T093"
+complaint_id = 20288635
+product = "Credit card"
+code = "terms_not_honored"
+uncertain = false
+note = "Deferred interest never explained at opening, no cardholder agreement provided, and paperless delivery set up without consent. A store rep also misstated the payment plan. Cites TILA."
+
+[[item]]
+ref = "T094"
+complaint_id = 19671497
+product = "Checking or savings account"
+code = "fraud_claim"
+uncertain = false
+note = "A caller posing as Ally got the PIN; the dispute was denied with conflicting explanations."
+
+[[item]]
+ref = "T095"
+complaint_id = 21054477
+product = "Credit card"
+code = "account_restricted"
+uncertain = false
+note = "Synchrony closed all 11 accounts as a 'risk of nonpayment'; the credit review requested has had no answer for a month."
+
+[[item]]
+ref = "T096"
+complaint_id = 18981988
+product = "Checking or savings account"
+code = "account_restricted"
+uncertain = false
+note = "Fraud restriction to inbound-only access after legitimate activity; it can only be lifted at a branch 80 miles away."
+
+[[item]]
+ref = "T097"
+complaint_id = 19119578
+product = "Checking or savings account"
+code = "servicing_error"
+uncertain = false
+note = "vs account_restricted. The banker's phone-number change locked the consumer out of online banking, and the bank now refuses to send codes to a VOIP number. Walked back to the banker's mistake, as the consumer says."
+
+[[item]]
+ref = "T098"
+complaint_id = 21750294
+product = "Checking or savings account"
+code = "fraud_claim"
+uncertain = false
+note = "ATM fraud after a car and identity theft; promised provisional credit wasn't given and the claims were then denied. Template placeholder left in ('[ Insert Date You Sent Email ]'). Cites Reg E, ignored."
+
+[[item]]
+ref = "T099"
+complaint_id = 24246675
+product = "Credit card"
+code = "dispute_mishandled"
+uncertain = false
+note = "Food paid for but never received from an unmarked vendor; Wells Fargo closed the dispute without a chargeback because there was no receipt."
+
+[[item]]
+ref = "T100"
+complaint_id = 21385131
+product = "Credit card"
+code = "fee_charged"
+uncertain = false
+note = "An annual fee went unnoticed and was paid a day late; compounding late fees and interest followed, with no reply from Citi. Written as an email to the bank."
+
+[[item]]
+ref = "T101"
+complaint_id = 19687669
+product = "Checking or savings account"
+code = "fraud_claim"
+uncertain = false
+note = "The bank let obviously suspicious fraud through and won't resolve it. 197 characters."
+
+[[item]]
+ref = "T102"
+complaint_id = 22196183
+product = "Checking or savings account"
+code = "third_party"
+uncertain = false
+note = "$1,500 sent through Remitly to a website developer who stopped work; the refund request is aimed at the individual. Remitly, a non-bank remittance service, filed under Checking."
+
+[[item]]
+ref = "T103"
+complaint_id = 20073347
+product = "Checking or savings account"
+code = "fraud_claim"
+uncertain = false
+note = "Resale-site phishing scam drained the debit account; Wells Fargo declined the claim using merchant-dispute reasons such as 'services were rendered'."
+
+[[item]]
+ref = "T104"
+complaint_id = 21117453
+product = "Credit card"
+code = "dispute_mishandled"
+uncertain = false
+note = "Airline charged $1,900 to board after a timely cancellation; Capital One gave temporary credit, then rebilled on the merchant's statement. Cites FCBA and Reg Z, ignored."
+
+[[item]]
+ref = "T105"
+complaint_id = 21172661
+product = "Credit card"
+code = "fraud_claim"
+uncertain = false
+note = "$910 identity-theft charge on a Chime Credit Builder card; no provisional credit, and the dispute is unchanged after two weeks. Chime, a non-bank, filed under Credit card."
+
+[[item]]
+ref = "T106"
+complaint_id = 21519497
+product = "Checking or savings account"
+code = "fraud_claim"
+uncertain = false
+note = "Impersonation scam took about $5,000 via a verification code; promised provisional credit is weeks late. Cites Reg E, ignored."
+
+[[item]]
+ref = "T107"
+complaint_id = 19610120
+product = "Checking or savings account"
+code = "fee_charged"
+uncertain = false
+note = "vs unclear. 'All the overdraft fees from them needs to be paid back.' Short but specific. 54 characters, the shortest in the set."
+
+[[item]]
+ref = "T108"
+complaint_id = 23462690
+product = "Credit card"
+code = "servicing_error"
+uncertain = false
+note = "vs fee_charged. After a portfolio transfer Citi didn't send a usable card for two months; the consumer disputes the $99 annual fee and the collections transfer that followed. Walked back to the missing card, as the consumer does."
+
+[[item]]
+ref = "T109"
+complaint_id = 20810154
+product = "Checking or savings account"
+code = "fraud_claim"
+uncertain = false
+note = "Out-of-state transaction denied as authorized on the merchant's word, with no reconsideration."
+
+[[item]]
+ref = "T110"
+complaint_id = 20956424
+product = "Checking or savings account"
+code = "fraud_claim"
+uncertain = false
+note = "vs unclear. Garbled: the bank allowed forged ID and unauthorized wires and withdrawals, hid an account merger, and won't restore funds. The writer may be a beneficiary, not the account holder."
+
+[[item]]
+ref = "T111"
+complaint_id = 23680217
+product = "Credit card"
+code = "servicing_error"
+uncertain = false
+note = "Enrolled in paperless without consent; paper statements requested repeatedly but never sent; late fees and interest followed. Walked back to the missing statements. Store card, paid in store."
+
+[[item]]
+ref = "T112"
+complaint_id = 18514829
+product = "Credit card"
+code = "third_party"
+uncertain = false
+note = "vs dispute_mishandled. A stroller ordered from Target never arrived. Only Target and the carrier are faulted; no dispute with the card issuer is mentioned."
+
+[[item]]
+ref = "T113"
+complaint_id = 22021710
+product = "Checking or savings account"
+code = "account_restricted"
+uncertain = false
+note = "Locked out of the account for three months after a $17,000 SSDI back-pay deposit; the bank wants an SSA document. CFPB portal text appended to the narrative."
+
+[[item]]
+ref = "T114"
+complaint_id = 21392495
+product = "Credit card"
+code = "servicing_error"
+uncertain = false
+note = "vs credit_reporting. Citi closed a secured card and never showed how the $1,000 deposit was applied; the $260 balance went to collections and the credit report. Walked back to the deposit not being applied, as the consumer argues."
+
+[[item]]
+ref = "T115"
+complaint_id = 22783733
+product = "Checking or savings account"
+code = "dispute_mishandled"
+uncertain = false
+note = "Store refund never posted; the Chime dispute was denied, then reopened, with no documents behind the denial."
+
+[[item]]
+ref = "T116"
+complaint_id = 23091510
+product = "Checking or savings account"
+code = "servicing_error"
+uncertain = false
+note = "vs account_restricted. A Social Security deposit after the husband's death was taken back, overdrawing the account, and Chase now holds funds pending an SSA form. Treated as a reversed transaction rather than an account freeze."
+
+[[item]]
+ref = "T117"
+complaint_id = 19913152
+product = "Credit card"
+code = "dispute_mishandled"
+uncertain = false
+note = "One used pair of shoes received and one missing; the Robinhood card dispute was decided against the consumer. All caps."
+
+[[item]]
+ref = "T118"
+complaint_id = 19935812
+product = "Checking or savings account"
+code = "account_restricted"
+uncertain = false
+note = "USAA won't close the account and release the $5,000 because of a fraud-department note."
+
+[[item]]
+ref = "T119"
+complaint_id = 21837807
+product = "Credit card"
+code = "unclear"
+uncertain = false
+note = "vs servicing_error. The consumer picked the wrong funding account in Citi's online payment screen, and that payment was returned. They fault the closely spaced buttons, but no harm and no request are stated."
+
+[[item]]
+ref = "T120"
+complaint_id = 18465007
+product = "Credit card"
+code = "fraud_claim"
+uncertain = false
+note = "$59 online charge from another state; Synchrony rejected the claim three times on illegible verification records."
+
+[[item]]
+ref = "T121"
+complaint_id = 19938115
+product = "Credit card"
+code = "servicing_error"
+uncertain = false
+note = "vs fee_charged. Autopay failed after a bank change, though manual payments from the new bank had worked; the $65 late fee credit was refused once the account was closed. The consumer says the autopay failure was the company's doing, and autopay counts as the company. Whose autopay it was is a little ambiguous."
+
+[[item]]
+ref = "T122"
+complaint_id = 19358906
+product = "Credit card"
+code = "fraud_claim"
+uncertain = false
+note = "Citi card and travel-rewards enrolment the consumer never applied for, plus phishing; fraud reports got no follow-up or corrective action."
+
+[[item]]
+ref = "T123"
+complaint_id = 18406440
+product = "Checking or savings account"
+code = "credit_reporting"
+uncertain = false
+note = "Complaint against ChexSystems, a reporting agency, over closed or obsolete bank records still reported. The named company is the reporter itself, not a bank. Legal-template style."
+
+[[item]]
+ref = "T124"
+complaint_id = 22343050
+product = "Checking or savings account"
+code = "terms_not_honored"
+uncertain = false
+note = "vs servicing_error. Points forfeited when an Amex agent linked accounts without saying points would be lost; restoring them was promised twice and not done. Business checking. Narrative is wrapped in quote marks."
+
+[[item]]
+ref = "T125"
+complaint_id = 19619189
+product = "Credit card"
+code = "fraud_claim"
+uncertain = false
+note = "vs account_restricted. A bank account the consumer doesn't own was added to three Capital One cards; the accounts are restricted and the fraud won't be investigated without a photo of an account that isn't theirs. The request is a fraud investigation."
+
+[[item]]
+ref = "T126"
+complaint_id = 24231771
+product = "Credit card"
+code = "other"
+uncertain = false
+note = "Reps disclosed account details and took a $4,400 payment after asking only for a name, and were dismissive when questioned. The only specific failure is weak identity verification, which has no v1 code. Gap: security or privacy."
+
+[[item]]
+ref = "T127"
+complaint_id = 19243497
+product = "Credit card"
+code = "fraud_claim"
+uncertain = false
+note = "$680 unauthorized charge; the Apple Card dispute was closed as 'approved' three times with no evidence provided."
+
+[[item]]
+ref = "T128"
+complaint_id = 23492768
+product = "Checking or savings account"
+code = "fraud_claim"
+uncertain = false
+note = "Virtual card numbers used fraudulently; dispute denied even though a repeat attempt on the new card was blocked."
+
+[[item]]
+ref = "T129"
+complaint_id = 19377902
+product = "Checking or savings account"
+code = "fraud_claim"
+uncertain = false
+note = "Stolen wallet, thief caught on video; PNC denied reimbursement citing usage pattern."
+
+[[item]]
+ref = "T130"
+complaint_id = 20362171
+product = "Checking or savings account"
+code = "dispute_mishandled"
+uncertain = false
+note = "vs fraud_claim. A merchant charged after the consumer had unsubscribed and closed that account; Chase gave 3 days of credit and closed the claim without asking for documents. A real merchant the consumer had used. Also a 10-day check hold."
+
+[[item]]
+ref = "T131"
+complaint_id = 20041144
+product = "Credit card"
+code = "servicing_error"
+uncertain = false
+note = "The consumer keyed $3,600 instead of $360; the company hasn't returned the $3,200 excess or sent an accounting. Refunding an overpayment is routine, and asking for it is not a claim."
+
+[[item]]
+ref = "T132"
+complaint_id = 21134884
+product = "Credit card"
+code = "terms_not_honored"
+uncertain = false
+note = "vs fee_charged. Retroactive 39.9% interest after missing the promo deadline by days; the consumer says its severity wasn't clearly disclosed. A protection plan was added without informed consent, and the APR rose during the promotion. Polished, possibly AI-drafted."
+
+[[item]]
+ref = "T133"
+complaint_id = 20124721
+product = "Credit card"
+code = "dispute_mishandled"
+uncertain = false
+note = "vs account_restricted. Citi closed all accounts for 'too many disputes / misrepresentation' after merchant disputes the consumer says were honest. The consumer ties the closure to how the disputes were judged, so walked back to the claim (R06 pattern). Pasted letter with a template placeholder ('[ Your Phone Number ]')."
+
+[[item]]
+ref = "T134"
+complaint_id = 19087883
+product = "Checking or savings account"
+code = "fraud_claim"
+uncertain = false
+note = "Phishing link led to an account takeover and transfer; Chase denied the claim."
+
+[[item]]
+ref = "T135"
+complaint_id = 22200340
+product = "Checking or savings account"
+code = "fraud_claim"
+uncertain = false
+note = "Rep coded an unauthorized-charge claim as a merchant return, so no provisional credit was given."
+
+[[item]]
+ref = "T136"
+complaint_id = 20533208
+product = "Credit card"
+code = "unclear"
+uncertain = false
+note = "'Identity Theft reports Closed account No account number': no failure or request can be named. 55 characters."
+
+[[item]]
+ref = "T137"
+complaint_id = 24130164
+product = "Credit card"
+code = "dispute_mishandled"
+uncertain = false
+note = "Capital One reversed provisional credits on several disputes, gave no basis for its decisions and is collecting the disputed amounts."
+
+[[item]]
+ref = "T138"
+complaint_id = 21123091
+product = "Checking or savings account"
+code = "dispute_mishandled"
+uncertain = false
+note = "Merchant took $21,000 against a $5,100 agreement and admitted a refund was due; Wells Fargo misclassified and denied the dispute. 'Unauthorized' means over the agreed amount. Cites FCBA for checking, ignored. Exhibit-style write-up, possibly AI-drafted."
+
+[[item]]
+ref = "T139"
+complaint_id = 21264754
+product = "Checking or savings account"
+code = "account_restricted"
+uncertain = false
+note = "A tenant reported the landlord's received payments as fraud; Navy Federal closed all accounts and holds $3,700. The writer is the payee, not the one filing the claim, so the closure isn't tied to their own claim. Landlord, mixed personal and business accounts."
+
+[[item]]
+ref = "T140"
+complaint_id = 23285304
+product = "Credit card"
+code = "servicing_error"
+uncertain = false
+note = "Synchrony's correction missed one payment, so the balance and fees keep growing. Called a 'dispute', but it is a payment not posted."
+
+[[item]]
+ref = "T141"
+complaint_id = 18927397
+product = "Credit card"
+code = "fraud_claim"
+uncertain = false
+note = "vs servicing_error. Amex held the consumer liable for $10,000 of fraud, which they paid on a plan; an extra autopay came out after payoff. Two requests; the bigger one is to reopen the fraud case and refund the $10,000."
+
+[[item]]
+ref = "T142"
+complaint_id = 22995823
+product = "Credit card"
+code = "servicing_error"
+uncertain = false
+note = "vs fee_charged. During a servicer transition the card stopped working but kept charging monthly fees; support only sends automated replies. Walked back to the broken card. Grow Credit, a fintech."
+
+[[item]]
+ref = "T143"
+complaint_id = 20528923
+product = "Checking or savings account"
+code = "fraud_claim"
+uncertain = false
+note = "vs unclear. Unauthorized transactions found late; two claims opened with TD. No outcome or failure stated; the narrative reads as cut off. Coded the claim, as with P22."
+
+[[item]]
+ref = "T144"
+complaint_id = 22680934
+product = "Credit card"
+code = "account_restricted"
+uncertain = false
+note = "vs credit_reporting. Application denied for suspected fraud, then documents repeatedly 'not visible' and conflicting letters; the consumer blames repeated pulls for a score drop. Text has literal backslash-n escapes and a trailing quote, like a bytes repr."
+
+[[item]]
+ref = "T145"
+complaint_id = 21905738
+product = "Checking or savings account"
+code = "fraud_claim"
+uncertain = false
+note = "Most unauthorized Chase debits credited, but $2,500 reversed, some as past 30 days though the statement never arrived; no explanation for reversals given."
+
+[[item]]
+ref = "T146"
+complaint_id = 21054364
+product = "Credit card"
+code = "servicing_error"
+uncertain = false
+note = "vs other. Tax offsets and wage garnishments seem to exceed the balance; AAFES gives no accounting of how payments were applied or whether there was an overpayment. No mistake stated outright. AAFES/Military Star, a government exchange, not a bank."
+
+[[item]]
+ref = "T147"
+complaint_id = 18656971
+product = "Credit card"
+code = "fee_charged"
+uncertain = false
+note = "vs terms_not_honored. APR raised twice; the notice letter never arrived, and the consumer admits not reading the statement. A notice after agreeing, not a misstated term (R22 line)."
+
+[[item]]
+ref = "T148"
+complaint_id = 22322962
+product = "Credit card"
+code = "credit_reporting"
+uncertain = false
+note = "vs fraud_claim. Klarna account opened by an identity thief; Klarna ignored the dispute and keeps reporting it. The first request is to delete the tradeline, then void the debt. Klarna, a BNPL non-bank. Legal-template style, possibly AI-drafted."
+
+[[item]]
+ref = "T149"
+complaint_id = 22218102
+product = "Credit card"
+code = "unclear"
+uncertain = false
+note = "vs dispute_mishandled. A dental refund of $3,500 for an implant never received, promised by phone between BoA and the dental office. The sequence is too garbled to say who failed."
+
+[[item]]
+ref = "T150"
+complaint_id = 23222346
+product = "Checking or savings account"
+code = "fraud_claim"
+uncertain = false
+note = "Repeated $31 charges denied as PIN-present at a location the consumer never visited. Business account."
+
+[[item]]
+ref = "T151"
+complaint_id = 18933288
+product = "Checking or savings account"
+code = "fraud_claim"
+uncertain = false
+note = "$410 burst of charges; the bank said nothing could be done while pending, then denied with no reason and sent the wrong intake form as support."
+
+[[item]]
+ref = "T152"
+complaint_id = 22412831
+product = "Credit card"
+code = "terms_not_honored"
+uncertain = false
+note = "Robinhood refused a 10% 'Mystery Box' cash-back boost, with shifting reasons."
+
+[[item]]
+ref = "T153"
+complaint_id = 24659531
+product = "Credit card"
+code = "dispute_mishandled"
+uncertain = false
+note = "$6 missing item; ACE Flare denied the dispute saying the merchant had credited the consumer, but no credit arrived. ACE Flare is a prepaid-style account, filed under Credit card."
+
+[[item]]
+ref = "T154"
+complaint_id = 18827430
+product = "Credit card"
+code = "unclear"
+uncertain = false
+note = "vs credit_reporting. A pasted generic template (FCRA tradeline deletion plus FDCPA validation demand) repeated twice, with no account of events. Stored as a bytes literal (b'...'). AI-generated, as its own header '(Aggressive / UDAAP Focused Version)' shows. 12,451 characters, the longest in the set."
+
+[[item]]
+ref = "T155"
+complaint_id = 18532123
+product = "Checking or savings account"
+code = "account_restricted"
+uncertain = false
+note = "Can't reopen the account after returning from a redacted absence, despite full verification. 161 characters."
+
+[[item]]
+ref = "T156"
+complaint_id = 24148120
+product = "Checking or savings account"
+code = "third_party"
+uncertain = false
+note = "vs fraud_claim. A thief opened a US Bank account in the consumer's business name; the bank froze it and fraud is engaged. No failure by US Bank is reported. Business."
+
+[[item]]
+ref = "T157"
+complaint_id = 20329630
+product = "Checking or savings account"
+code = "servicing_error"
+uncertain = false
+note = "vs account_restricted. BoA pulled $22,000 of deposits from a company the consumer worked for back out of the account. The consumer calls it theft; coded as reversed transactions as reported. The pattern suggests a fake-employer scheme, but that isn't what the consumer says."
+
+[[item]]
+ref = "T158"
+complaint_id = 20166724
+product = "Credit card"
+code = "fraud_claim"
+uncertain = false
+note = "Chase denied all fraud claims, blaming the authorized-user wife; fraud continued through 180 digital wallets after reports."
+
+[[item]]
+ref = "T159"
+complaint_id = 22034475
+product = "Checking or savings account"
+code = "dispute_mishandled"
+uncertain = false
+note = "vs third_party. $60 swallowed by another bank's ATM with no deposit or receipt; the consumer's own bank and the ATM owner each refuse to take the dispute."
+
+[[item]]
+ref = "T160"
+complaint_id = 24277809
+product = "Checking or savings account"
+code = "other"
+uncertain = false
+note = "The widower found old accounts at failed banks; the acquiring banks, including BoA, won't honour the balances. Writer is the estate, not the account holder. Gap: legacy or unclaimed accounts."
+
+[[item]]
+ref = "T161"
+complaint_id = 21705903
+product = "Checking or savings account"
+code = "servicing_error"
+uncertain = false
+note = "vs account_restricted. Wells Fargo closed the accounts, held forgiven-PPP funds for nearly two years, then sent $15,000 to the lender on an indemnity request the consumer never authorized. The request is reimbursement of that transfer, a reversal the consumer disputes. Business funds."
+
+[[item]]
+ref = "T162"
+complaint_id = 23956972
+product = "Credit card"
+code = "fraud_claim"
+uncertain = false
+note = "vs unclear. 'Discover Credit Card Balance $2,000 isn't my card. Its Fraud.' An account the consumer didn't open; reads as a request to stop being billed. 65 characters."
+
+[[item]]
+ref = "T163"
+complaint_id = 24237977
+product = "Checking or savings account"
+code = "terms_not_honored"
+uncertain = false
+note = "Citigold benefits advertised 'upon account opening' still not delivered after 47 days, and the account was locked for 10 days waiting for a new debit card."
+
+[[item]]
+ref = "T164"
+complaint_id = 23998190
+product = "Credit card"
+code = "servicing_error"
+uncertain = false
+note = "A $10,000 mailed payment, delivered to PayPal Credit (Synchrony), can't be found; interest keeps accruing. The consumer 'filed a dispute', but it is finding a payment, which is not a claim."
+
+[[item]]
+ref = "T165"
+complaint_id = 19236700
+product = "Checking or savings account"
+code = "fraud_claim"
+uncertain = false
+note = "An unknown external account linked to Chime and about $7,000 taken; Chime didn't investigate and froze or closed the account, keeping the balance. Cites Reg E, ignored."
+
+[[item]]
+ref = "T166"
+complaint_id = 19944801
+product = "Credit card"
+code = "other"
+uncertain = false
+note = "vs fee_charged. The issuer said it would close the account if the new card wasn't activated, then kept it open and kept charging a $4 statement fee after payoff. The consumer wants the closure recorded as by the issuer. Not closing as announced fits no v1 code; the fees follow from it."
+
+[[item]]
+ref = "T167"
+complaint_id = 23301922
+product = "Credit card"
+code = "fraud_claim"
+uncertain = false
+note = "vs credit_reporting. Logix holds the consumer liable for an identity-theft account and transactions and keeps reporting them; disputes unresolved. The requests lead with reinvestigation and the evidence relied on, then correct the reporting."
+
+[[item]]
+ref = "T168"
+complaint_id = 23445508
+product = "Checking or savings account"
+code = "account_restricted"
+uncertain = false
+note = "Santander froze the son's account over a $3,000 insurance check it flagged as fraud, and won't release the check after four months. The parent writes for the son."
+
+[[item]]
+ref = "T169"
+complaint_id = 21498525
+product = "Checking or savings account"
+code = "account_restricted"
+uncertain = false
+note = "PNC locked the account over a cash deposit by an ex-girlfriend and won't release funds unless she verifies in person; the closure letter was later called an error."
+
+[[item]]
+ref = "T170"
+complaint_id = 23093083
+product = "Checking or savings account"
+code = "third_party"
+uncertain = false
+note = "vs dispute_mishandled. A former card processor kept debiting the business account for years after cancellation. The requests are aimed at the processor; no failure by the bank is reported. Business account."
+
+[[item]]
+ref = "T171"
+complaint_id = 21608963
+product = "Credit card"
+code = "fraud_claim"
+uncertain = false
+note = "Dispute on charges after an account compromise denied; Chase closed the card and reported $930 past due."
+
+[[item]]
+ref = "T172"
+complaint_id = 21049422
+product = "Checking or savings account"
+code = "fraud_claim"
+uncertain = false
+note = "Tech-support scam with remote access; about $10,000 moved out of Chase through a linked payment app. The app's reps said there's no protection because the transfers came from the consumer's computer. Hard to tell which company is addressed; notes are disjointed."
+
+[[item]]
+ref = "T173"
+complaint_id = 21629975
+product = "Credit card"
+code = "fraud_claim"
+uncertain = false
+note = "BoA card opened in the consumer's name; disputes closed as valid before documents could be requested, and BoA has sued. Earlier, unauthorized debits from checking paid toward it. The requests are for evidence and to stop being held liable."
+
+[[item]]
+ref = "T174"
+complaint_id = 18546327
+product = "Checking or savings account"
+code = "fraud_claim"
+uncertain = false
+note = "vs unclear. A check bounced, then Citi said it cleared and told them to file a forgery claim; the claim filed got no result. The writer is the 'payee's principal', so possibly not the consumer. Checks are outside Reg E."
+
+[[item]]
+ref = "T175"
+complaint_id = 24027263
+product = "Checking or savings account"
+code = "terms_not_honored"
+uncertain = false
+note = "$350 direct-deposit bonus refused for a debit-card activation step not shown on the offer page."
+
+[[item]]
+ref = "T176"
+complaint_id = 23525985
+product = "Credit card"
+code = "dispute_mishandled"
+uncertain = false
+note = "vs fraud_claim. Paid a transmission shop that installed a salvage unit and billed under another business name; Wells Fargo denied the 'fraud claims' with no reason. The consumer authorized the payments; it is a quality or misrepresentation dispute."
+
+[[item]]
+ref = "T177"
+complaint_id = 22536886
+product = "Checking or savings account"
+code = "servicing_error"
+uncertain = false
+note = "vs fraud_claim. Identity theft through digital-wallet tokens; the bank refuses to turn off the 'Balance Protection' overdraft feature. The request is an opt-out and freeze, an account change, not a claim decision. 348 characters."
+
+[[item]]
+ref = "T178"
+complaint_id = 19363751
+product = "Credit card"
+code = "credit_reporting"
+uncertain = false
+note = "vs servicing_error. A new card account was opened in a Bilt transition despite a confirmed opt-out by phone and email. The request is to delete the account from the credit bureaus, so routed by request."
+
+[[item]]
+ref = "T179"
+complaint_id = 21614130
+product = "Credit card"
+code = "dispute_mishandled"
+uncertain = false
+note = "vs servicing_error. Disputes decided in the consumer's favour were lost when Synchrony took over the card, and the credit score is now hurt. A claim decision is at issue."
+
+[[item]]
+ref = "T180"
+complaint_id = 21103850
+product = "Checking or savings account"
+code = "fee_charged"
+uncertain = false
+note = "Objects to Wells Fargo's business minimum-balance fee policy; the local banker already reversed the latest fees. Business accounts. An email to the board, copied in."
+
+[[item]]
+ref = "T181"
+complaint_id = 21088856
+product = "Credit card"
+code = "dispute_mishandled"
+uncertain = false
+note = "Follow-up: Citi reopened the $6,100 seats dispute after a CFPB complaint, then missed its own deadlines and stopped replying. Same purchase and dispute as T013, likely the same consumer; possible near-duplicate in the test set. Cites FCBA."
+
+[[item]]
+ref = "T182"
+complaint_id = 22208751
+product = "Checking or savings account"
+code = "servicing_error"
+uncertain = false
+note = "vs third_party. A $200 incoming transfer left the other bank but never posted; Wells Fargo cancelled it, says it never received the funds, and won't issue the indemnity letter the other bank needs. The banker misread which transfer had posted. Account since closed."
+
+[[item]]
+ref = "T183"
+complaint_id = 24214352
+product = "Checking or savings account"
+code = "dispute_mishandled"
+uncertain = false
+note = "A reconciliation demand for $150 of disputed debit purchases that Navy Federal treated as delivered. Written in the third person ('The letter requests only...'), like a pasted summary, possibly AI-written."
+
+[[item]]
+ref = "T184"
+complaint_id = 20211506
+product = "Checking or savings account"
+code = "servicing_error"
+uncertain = false
+note = "After reopening the account for fraud, Navy Federal moved only the available balance and carried pending debits over, so the account went negative. Payroll then failed despite a rep's 45-day assurance, causing late payments elsewhere."
+
+[[item]]
+ref = "T185"
+complaint_id = 21272197
+product = "Checking or savings account"
+code = "terms_not_honored"
+uncertain = false
+note = "vs servicing_error. Bonus denied after the consumer was accepted, given a promo code and met the terms, because bank records show the wrong closing date for an old account. The consumer calls being approved then denied the 'central complaint'. Stored as a bytes literal (b'...')."
+
+[[item]]
+ref = "T186"
+complaint_id = 18839123
+product = "Credit card"
+code = "dispute_mishandled"
+uncertain = false
+note = "Barclays refused to stop payment and closed the dispute over a failed transmission repair on the time window, after mail-only document steps and uploads that were lost."
+
+[[item]]
+ref = "T187"
+complaint_id = 22078991
+product = "Credit card"
+code = "fraud_claim"
+uncertain = false
+note = "$34,000 unauthorized; Wells Fargo rejected the dispute in days with no investigation and no provisional credit; collecting past-due. Cites Reg Z and 15 USC 1643, ignored. Legal-brief headings."
+
+[[item]]
+ref = "T188"
+complaint_id = 22456993
+product = "Credit card"
+code = "unclear"
+uncertain = false
+note = "Family lost home and job in a fire and told Capital One; the narrative stops before saying what Capital One did. 234 characters, truncated."
+
+[[item]]
+ref = "T189"
+complaint_id = 22600396
+product = "Checking or savings account"
+code = "fraud_claim"
+uncertain = false
+note = "About 15 unauthorized transfers; Chase wouldn't stop them while pending and sent the consumer to file a fraud claim; no alerts were sent. Outcome not stated; coded the claim handling, as P22."
+
+[[item]]
+ref = "T190"
+complaint_id = 22975923
+product = "Credit card"
+code = "servicing_error"
+uncertain = false
+note = "vs other. The phone number on a Lowe's card account shows the ex-wife's name; told he'd been removed from the account, but it wasn't done after a year. The consumer frames it as a privacy breach; the failure is an account change not made."
+
+[[item]]
+ref = "T191"
+complaint_id = 23890107
+product = "Credit card"
+code = "terms_not_honored"
+uncertain = false
+note = "Capital One Travel refused a price-match guarantee using an undisclosed 'banned list' of sites; a one-time courtesy credit was given. The request is to honour or disclose the terms."
+
+[[item]]
+ref = "T192"
+complaint_id = 18860796
+product = "Credit card"
+code = "dispute_mishandled"
+uncertain = false
+note = "Hotel cancelled over earthquake safety concerns; Citi decided for the merchant with no explanation."
+
+[[item]]
+ref = "T193"
+complaint_id = 20527086
+product = "Checking or savings account"
+code = "account_restricted"
+uncertain = false
+note = "vs servicing_error. Axos restricted the account when the consumer tried to close it, then returned $35,000 to the originating bank for 'incomplete verification'. The funds can't be traced. The return follows from the restriction."
+
+[[item]]
+ref = "T194"
+complaint_id = 20381029
+product = "Checking or savings account"
+code = "servicing_error"
+uncertain = false
+note = "vs other. A transfer to another firm from a custodial account in the father's name; US Bank hasn't produced the hold-harmless letter needed for the refund, more than a year on."
+
+[[item]]
+ref = "T195"
+complaint_id = 22206265
+product = "Checking or savings account"
+code = "account_restricted"
+uncertain = false
+note = "A prepaid program moved to Netspend and closed all accounts; the $400 refund check went to an old address, and the phone system won't let the consumer update it. Like T027. Netspend, a non-bank."
+
+[[item]]
+ref = "T196"
+complaint_id = 21571672
+product = "Checking or savings account"
+code = "servicing_error"
+uncertain = false
+note = "vs account_restricted. Against instructions, the bank emailed the brother-in-law about a closure; he reported fraud, and the joint savings has been frozen for 30 days. The consumer traces the freeze to the bank's notification mistake (step 2). A POA spouse is writing."
+
+[[item]]
+ref = "T197"
+complaint_id = 20220845
+product = "Credit card"
+code = "fraud_claim"
+uncertain = false
+note = "Banco Popular refused to refund $1,000 of charges made where the consumer wasn't. Ends with pasted chatbot text ('If you want, I can also help you: Make it sound more formal...')."
+
+[[item]]
+ref = "T198"
+complaint_id = 21952532
+product = "Credit card"
+code = "servicing_error"
+uncertain = false
+note = "vs fraud_claim. Paid $150 but the company pulled $400; the consumer calls it unauthorized, but it is the card issuer's own payment debit. The company is looking into it. 168 characters."
+
+[[item]]
+ref = "T199"
+complaint_id = 23434086
+product = "Checking or savings account"
+code = "fraud_claim"
+uncertain = false
+note = "Ten unauthorized store transactions totalling $1,600; Chime denied both disputes."
+
+[[item]]
+ref = "T200"
+complaint_id = 19073600
+product = "Credit card"
+code = "fraud_claim"
+uncertain = false
+note = "Stolen card; BoA is charging the consumer $960 of a thief's purchases. 151 characters."
