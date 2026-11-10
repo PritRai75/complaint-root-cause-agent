@@ -1,0 +1,492 @@
+# Labels for the reading set (60 narratives). Prit's codes.
+#
+# Transcribed by Claude on 10 Nov 2026 from Prit's reading notes
+# (claude/session-3/prit-taxonomy-notes.md, section 1). The codes were chosen
+# while the definitions were being written, so review every item under the
+# frozen taxonomy, change any code that v1 decides differently, then set
+# taxonomy_version to that version. Check with:
+#   python -m eval.labelset check reading
+# These are dev items: they may be used to tune the tagger, never to score it.
+
+set = "reading"
+taxonomy_version = "draft-1"   # the version these labels were made under
+
+[[item]]
+ref = "R01"
+complaint_id = 24156190
+product = "Checking or savings account"
+code = "dispute_mishandled"
+uncertain = false
+note = ""
+
+[[item]]
+ref = "R02"
+complaint_id = 22363973
+product = "Credit card"
+code = "dispute_mishandled"
+uncertain = false
+note = ""
+
+[[item]]
+ref = "R03"
+complaint_id = 22403050
+product = "Checking or savings account"
+code = "dispute_mishandled"
+uncertain = false
+note = ""
+
+[[item]]
+ref = "R04"
+complaint_id = 19277522
+product = "Checking or savings account"
+code = "account_restricted"
+uncertain = false
+note = ""
+
+[[item]]
+ref = "R05"
+complaint_id = 23277602
+product = "Credit card"
+code = "dispute_mishandled"
+uncertain = false
+note = ""
+
+[[item]]
+ref = "R06"
+complaint_id = 20611250
+product = "Checking or savings account"
+code = "fraud_claim"
+uncertain = false
+note = ""
+
+[[item]]
+ref = "R07"
+complaint_id = 20774615
+product = "Checking or savings account"
+code = "fraud_claim"
+uncertain = false
+note = ""
+
+[[item]]
+ref = "R08"
+complaint_id = 20776961
+product = "Checking or savings account"
+code = "dispute_mishandled"
+uncertain = false
+note = ""
+
+[[item]]
+ref = "R09"
+complaint_id = 18705821
+product = "Credit card"
+code = "credit_reporting"
+uncertain = false
+note = ""
+
+[[item]]
+ref = "R10"
+complaint_id = 18974168
+product = "Checking or savings account"
+code = "account_restricted"
+uncertain = false
+note = ""
+
+[[item]]
+ref = "R11"
+complaint_id = 18644748
+product = "Credit card"
+code = "credit_reporting"
+uncertain = false
+note = ""
+
+[[item]]
+ref = "R12"
+complaint_id = 18563060
+product = "Checking or savings account"
+code = "account_restricted"
+uncertain = false
+note = ""
+
+[[item]]
+ref = "R13"
+complaint_id = 24003378
+product = "Credit card"
+code = "credit_reporting"
+uncertain = false
+note = ""
+
+[[item]]
+ref = "R14"
+complaint_id = 19884050
+product = "Checking or savings account"
+code = "terms_not_honored"
+uncertain = false
+note = ""
+
+[[item]]
+ref = "R15"
+complaint_id = 18832031
+product = "Credit card"
+code = "fraud_claim"
+uncertain = false
+note = ""
+
+[[item]]
+ref = "R16"
+complaint_id = 24162397
+product = "Credit card"
+code = "terms_not_honored"
+uncertain = false
+note = ""
+
+[[item]]
+ref = "R17"
+complaint_id = 22752337
+product = "Credit card"
+code = "fraud_claim"
+uncertain = false
+note = ""
+
+[[item]]
+ref = "R18"
+complaint_id = 20604468
+product = "Credit card"
+code = "fraud_claim"
+uncertain = false
+note = ""
+
+[[item]]
+ref = "R19"
+complaint_id = 20994235
+product = "Credit card"
+code = "third_party"
+uncertain = false
+note = ""
+
+[[item]]
+ref = "R20"
+complaint_id = 22848097
+product = "Checking or savings account"
+code = "account_restricted"
+uncertain = false
+note = ""
+
+[[item]]
+ref = "R21"
+complaint_id = 19828493
+product = "Checking or savings account"
+code = "account_restricted"
+uncertain = false
+note = ""
+
+[[item]]
+ref = "R22"
+complaint_id = 23546069
+product = "Checking or savings account"
+code = "fee_charged"
+uncertain = false
+note = ""
+
+[[item]]
+ref = "R23"
+complaint_id = 19178760
+product = "Credit card"
+code = "terms_not_honored"
+uncertain = false
+note = ""
+
+[[item]]
+ref = "R24"
+complaint_id = 21168008
+product = "Credit card"
+code = "dispute_mishandled"
+uncertain = false
+note = ""
+
+[[item]]
+ref = "R25"
+complaint_id = 21305999
+product = "Checking or savings account"
+code = "dispute_mishandled"
+uncertain = false
+note = ""
+
+[[item]]
+ref = "R26"
+complaint_id = 19938661
+product = "Credit card"
+code = "fee_charged"
+uncertain = false
+note = ""
+
+[[item]]
+ref = "R27"
+complaint_id = 23952751
+product = "Credit card"
+code = "fraud_claim"
+uncertain = false
+note = ""
+
+[[item]]
+ref = "R28"
+complaint_id = 23427188
+product = "Checking or savings account"
+code = "terms_not_honored"
+uncertain = false
+note = ""
+
+[[item]]
+ref = "R29"
+complaint_id = 20220773
+product = "Credit card"
+code = "third_party"
+uncertain = false
+note = ""
+
+[[item]]
+ref = "R30"
+complaint_id = 21613349
+product = "Credit card"
+code = "servicing_error"
+uncertain = false
+note = ""
+
+[[item]]
+ref = "R31"
+complaint_id = 20971471
+product = "Checking or savings account"
+code = "fraud_claim"
+uncertain = false
+note = ""
+
+[[item]]
+ref = "R32"
+complaint_id = 19570777
+product = "Credit card"
+code = "servicing_error"
+uncertain = false
+note = ""
+
+[[item]]
+ref = "R33"
+complaint_id = 22432933
+product = "Credit card"
+code = "servicing_error"
+uncertain = false
+note = ""
+
+[[item]]
+ref = "R34"
+complaint_id = 23254159
+product = "Checking or savings account"
+code = "account_restricted"
+uncertain = false
+note = ""
+
+[[item]]
+ref = "R35"
+complaint_id = 22679200
+product = "Credit card"
+code = "credit_reporting"
+uncertain = false
+note = ""
+
+[[item]]
+ref = "R36"
+complaint_id = 21880183
+product = "Checking or savings account"
+code = "dispute_mishandled"
+uncertain = false
+note = ""
+
+[[item]]
+ref = "R37"
+complaint_id = 21679531
+product = "Checking or savings account"
+code = "dispute_mishandled"
+uncertain = false
+note = ""
+
+[[item]]
+ref = "R38"
+complaint_id = 23125128
+product = "Credit card"
+code = "servicing_error"
+uncertain = false
+note = ""
+
+[[item]]
+ref = "R39"
+complaint_id = 19798156
+product = "Checking or savings account"
+code = "fraud_claim"
+uncertain = false
+note = ""
+
+[[item]]
+ref = "R40"
+complaint_id = 18709201
+product = "Checking or savings account"
+code = "dispute_mishandled"
+uncertain = false
+note = ""
+
+[[item]]
+ref = "R41"
+complaint_id = 23777918
+product = "Checking or savings account"
+code = "fee_charged"
+uncertain = false
+note = ""
+
+[[item]]
+ref = "R42"
+complaint_id = 18571187
+product = "Credit card"
+code = "dispute_mishandled"
+uncertain = false
+note = ""
+
+[[item]]
+ref = "R43"
+complaint_id = 20220151
+product = "Credit card"
+code = "third_party"
+uncertain = false
+note = ""
+
+[[item]]
+ref = "R44"
+complaint_id = 24279234
+product = "Checking or savings account"
+code = "account_restricted"
+uncertain = false
+note = ""
+
+[[item]]
+ref = "R45"
+complaint_id = 21261443
+product = "Checking or savings account"
+code = "dispute_mishandled"
+uncertain = false
+note = ""
+
+[[item]]
+ref = "R46"
+complaint_id = 22706202
+product = "Checking or savings account"
+code = "account_restricted"
+uncertain = false
+note = ""
+
+[[item]]
+ref = "R47"
+complaint_id = 19572459
+product = "Credit card"
+code = "dispute_mishandled"
+uncertain = false
+note = ""
+
+[[item]]
+ref = "R48"
+complaint_id = 23335231
+product = "Credit card"
+code = "dispute_mishandled"
+uncertain = false
+note = ""
+
+[[item]]
+ref = "R49"
+complaint_id = 18868878
+product = "Checking or savings account"
+code = "fraud_claim"
+uncertain = false
+note = ""
+
+[[item]]
+ref = "R50"
+complaint_id = 20830321
+product = "Credit card"
+code = "credit_reporting"
+uncertain = false
+note = ""
+
+[[item]]
+ref = "R51"
+complaint_id = 18667964
+product = "Credit card"
+code = "fraud_claim"
+uncertain = false
+note = ""
+
+[[item]]
+ref = "R52"
+complaint_id = 20780458
+product = "Credit card"
+code = "servicing_error"
+uncertain = false
+note = ""
+
+[[item]]
+ref = "R53"
+complaint_id = 23457730
+product = "Checking or savings account"
+code = "account_restricted"
+uncertain = false
+note = ""
+
+[[item]]
+ref = "R54"
+complaint_id = 18813582
+product = "Checking or savings account"
+code = "servicing_error"
+uncertain = false
+note = ""
+
+[[item]]
+ref = "R55"
+complaint_id = 21232787
+product = "Credit card"
+code = "dispute_mishandled"
+uncertain = false
+note = ""
+
+[[item]]
+ref = "R56"
+complaint_id = 19135163
+product = "Credit card"
+code = "terms_not_honored"
+uncertain = false
+note = ""
+
+[[item]]
+ref = "R57"
+complaint_id = 21890098
+product = "Credit card"
+code = "terms_not_honored"
+uncertain = false
+note = ""
+
+[[item]]
+ref = "R58"
+complaint_id = 20185439
+product = "Checking or savings account"
+code = "fraud_claim"
+uncertain = false
+note = ""
+
+[[item]]
+ref = "R59"
+complaint_id = 22445490
+product = "Checking or savings account"
+code = "account_restricted"
+uncertain = false
+note = ""
+
+[[item]]
+ref = "R60"
+complaint_id = 21537469
+product = "Checking or savings account"
+code = "servicing_error"
+uncertain = false
+note = ""
