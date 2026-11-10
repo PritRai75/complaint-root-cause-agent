@@ -76,9 +76,9 @@ note = "Lost card; claim and rebuttals denied despite police evidence."
 ref = "P09"
 complaint_id = 21637717
 product = "Credit card"
-code = "credit_reporting"
+code = "fraud_claim"
 uncertain = false
-note = "vs fraud_claim. A card the consumer never applied for, now billed $4,500. Fits the unwanted-account half of credit_reporting, but no credit report is mentioned, and 'not my charges' reads like a fraud claim."
+note = "Card the consumer never applied for, now billed $4,500. The request is to stop the charges, not a report fix, so it goes by main request (draft-2)."
 
 [[item]]
 ref = "P10"
@@ -102,7 +102,7 @@ complaint_id = 23264595
 product = "Checking or savings account"
 code = "fraud_claim"
 uncertain = false
-note = "Unauthorized items refused as past the reporting window; no reply to written claims. Heavily redacted but readable."
+note = "Unauthorized items refused as past the reporting window; no reply to written claims. A late-report refusal, cf. 1005.6(b)(3). Heavily redacted but readable."
 
 [[item]]
 ref = "P13"
@@ -180,9 +180,9 @@ note = "Wrong bank account kept on file and can't be edited, so the payment reve
 ref = "P22"
 complaint_id = 21449162
 product = "Checking or savings account"
-code = "unclear"
+code = "fraud_claim"
 uncertain = false
-note = "vs fraud_claim. An unauthorized charge is reported, but the only company action described is 'can't dispute until it posts'. The outcome isn't stated."
+note = "The only company action is a delay: wouldn't take the claim until the charge posted. The outcome isn't stated (draft-2: was unclear)."
 
 [[item]]
 ref = "P23"
