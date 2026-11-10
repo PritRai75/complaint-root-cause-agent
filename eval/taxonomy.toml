@@ -23,7 +23,7 @@
 # ("x of y narratives fault someone other than the company") and is left out
 # of root-cause shares and out of the 6-8 cause count.
 
-version = "draft-1"
+version = "v1"
 written = "2026-11-10"
 
 # How to choose ONE code when a narrative reports more than one failure.
