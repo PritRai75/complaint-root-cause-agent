@@ -12,238 +12,238 @@ taxonomy_version = "draft-1"   # the version these labels were made under
 ref = "P01"
 complaint_id = 20371356
 product = "Checking or savings account"
-code = ""
+code = "fraud_claim"
 uncertain = false
-note = ""
+note = "Disputes denied despite a police report; funds held. The replacement card that was never delivered is secondary."
 
 [[item]]
 ref = "P02"
 complaint_id = 23542903
 product = "Credit card"
-code = ""
+code = "dispute_mishandled"
 uncertain = false
-note = ""
+note = "Refund not credited; the dispute was decided 'No Credit Applied', so a claim is at issue."
 
 [[item]]
 ref = "P03"
 complaint_id = 21184577
 product = "Checking or savings account"
-code = ""
+code = "dispute_mishandled"
 uncertain = false
-note = ""
+note = "Merchandise not received; repeated dispute denials, later disputes unanswered."
 
 [[item]]
 ref = "P04"
 complaint_id = 22391819
 product = "Checking or savings account"
-code = ""
+code = "dispute_mishandled"
 uncertain = false
-note = ""
+note = "ATM deposit missing, dispute filed, consumer objects to the wait. Step 2 stops at the claim. The rude teller is service conduct."
 
 [[item]]
 ref = "P05"
 complaint_id = 21551792
 product = "Checking or savings account"
-code = ""
+code = "account_restricted"
 uncertain = false
-note = ""
+note = "vs fraud_claim. Closure came after a fraud dispute, but the consumer doesn't say it was caused by the claim decision, and most of the text is about the closure."
 
 [[item]]
 ref = "P06"
 complaint_id = 23896189
 product = "Credit card"
-code = ""
+code = "fee_charged"
 uncertain = false
-note = ""
+note = "vs servicing_error. The request is to reverse the late fee, and the consumer also asks how the early payment was applied. Coded fee_charged because no posting mistake is named."
 
 [[item]]
 ref = "P07"
 complaint_id = 18646830
 product = "Credit card"
-code = ""
+code = "credit_reporting"
 uncertain = false
-note = ""
+note = "Paid account still shows a balance on the report. Short but specific."
 
 [[item]]
 ref = "P08"
 complaint_id = 23216386
 product = "Credit card"
-code = ""
+code = "fraud_claim"
 uncertain = false
-note = ""
+note = "Lost card; claim and rebuttals denied despite police evidence."
 
 [[item]]
 ref = "P09"
 complaint_id = 21637717
 product = "Credit card"
-code = ""
+code = "credit_reporting"
 uncertain = false
-note = ""
+note = "vs fraud_claim. A card the consumer never applied for, now billed $4,500. Fits the unwanted-account half of credit_reporting, but no credit report is mentioned, and 'not my charges' reads like a fraud claim."
 
 [[item]]
 ref = "P10"
 complaint_id = 19576750
 product = "Credit card"
-code = ""
+code = "fee_charged"
 uncertain = false
-note = ""
+note = "Late fees from a mail delay, kept after payoff; some waived."
 
 [[item]]
 ref = "P11"
 complaint_id = 22291135
 product = "Credit card"
-code = ""
+code = "servicing_error"
 uncertain = false
-note = ""
+note = "vs fee_charged. Scheduled payment failed on the bank's online system, so the late fees walk back to that. Most of the text is about the agent hanging up, but that is service conduct and doesn't decide. If the glitch is read as not the bank's, this is fee_charged."
 
 [[item]]
 ref = "P12"
 complaint_id = 23264595
 product = "Checking or savings account"
-code = ""
+code = "fraud_claim"
 uncertain = false
-note = ""
+note = "Unauthorized items refused as past the reporting window; no reply to written claims. Heavily redacted but readable."
 
 [[item]]
 ref = "P13"
 complaint_id = 22075224
 product = "Credit card"
-code = ""
+code = "fee_charged"
 uncertain = false
-note = ""
+note = "vs terms_not_honored. 'Interest charge protected' is unexplained, and the consumer calls the label misleading. That is statement wording, not a term misstated before they agreed."
 
 [[item]]
 ref = "P14"
 complaint_id = 23665020
 product = "Checking or savings account"
-code = ""
+code = "account_restricted"
 uncertain = false
-note = ""
+note = "Withdrawal held behind new identity checks. Robinhood is a non-bank."
 
 [[item]]
 ref = "P15"
 complaint_id = 18668471
 product = "Checking or savings account"
-code = ""
+code = "fraud_claim"
 uncertain = false
-note = ""
+note = "ATM withdrawals while travelling; claim denied in 4 days as 'no error'."
 
 [[item]]
 ref = "P16"
 complaint_id = 18975088
 product = "Credit card"
-code = ""
+code = "servicing_error"
 uncertain = false
-note = ""
+note = "$5,000 cash payment at a branch never credited. Asking the branch to investigate is not a claim. The same-day closure of all accounts is secondary."
 
 [[item]]
 ref = "P17"
 complaint_id = 22748477
 product = "Checking or savings account"
-code = ""
+code = "account_restricted"
 uncertain = false
-note = ""
+note = "Closed with immediate effect; funds inaccessible. The replacement card sent to an old address is secondary."
 
 [[item]]
 ref = "P18"
 complaint_id = 21233319
 product = "Credit card"
-code = ""
+code = "dispute_mishandled"
 uncertain = false
-note = ""
+note = "Refused to open disputes on game purchases. A real merchant and purchases the consumer made, so not fraud_claim despite the 'merchant fraud' framing. Like R48."
 
 [[item]]
 ref = "P19"
 complaint_id = 20187915
 product = "Checking or savings account"
-code = ""
+code = "fraud_claim"
 uncertain = false
-note = ""
+note = "Claim denied as authorized; provisional credit taken back without notice."
 
 [[item]]
 ref = "P20"
 complaint_id = 18530222
 product = "Credit card"
-code = ""
+code = "fee_charged"
 uncertain = false
-note = ""
+note = "Late fees and interest piled onto a $69 balance; hardship waivers refused; closed and sold. The consumer didn't know the full cost, but says that after agreeing, not before."
 
 [[item]]
 ref = "P21"
 complaint_id = 21567482
 product = "Credit card"
-code = ""
+code = "servicing_error"
 uncertain = false
-note = ""
+note = "Wrong bank account kept on file and can't be edited, so the payment reversed. The reversal fee and line cut follow from that."
 
 [[item]]
 ref = "P22"
 complaint_id = 21449162
 product = "Checking or savings account"
-code = ""
+code = "unclear"
 uncertain = false
-note = ""
+note = "vs fraud_claim. An unauthorized charge is reported, but the only company action described is 'can't dispute until it posts'. The outcome isn't stated."
 
 [[item]]
 ref = "P23"
 complaint_id = 23877365
 product = "Checking or savings account"
-code = ""
+code = "dispute_mishandled"
 uncertain = false
-note = ""
+note = "Merchant dispute (hotel booked for the wrong dates) denied as 'authorized'; combined intake."
 
 [[item]]
 ref = "P24"
 complaint_id = 20725439
 product = "Credit card"
-code = ""
+code = "servicing_error"
 uncertain = false
-note = ""
+note = "vs fee_charged. Interest is traced to the app showing a different statement balance from the bank's system. If that isn't read as a servicing mistake, it's fee_charged. The amounts look odd: a $4,200 payment against a $3,200 balance."
 
 [[item]]
 ref = "P25"
 complaint_id = 20289042
 product = "Credit card"
-code = ""
+code = "other"
 uncertain = false
-note = ""
+note = "vs dispute_mishandled. The complainant is the merchant: Chase as card issuer approved a guest's chargeback and debited the complainant's business account. A merchant-side complaint, outside the consumer population, not a missing cause."
 
 [[item]]
 ref = "P26"
 complaint_id = 18897666
 product = "Checking or savings account"
-code = ""
+code = "account_restricted"
 uncertain = false
-note = ""
+note = "vs fraud_claim. A fake incoming payment was reported and the bank did nothing, then the account was shut. Most of the text is about the shutdown, and the consumer doesn't link the two."
 
 [[item]]
 ref = "P27"
 complaint_id = 19068258
 product = "Checking or savings account"
-code = ""
+code = "dispute_mishandled"
 uncertain = false
-note = ""
+note = "vs servicing_error. A rep said the payment wouldn't be resent, then it was, overdrawing the account. The dispute department took a claim and denied it, so step 2 stops at the claim."
 
 [[item]]
 ref = "P28"
 complaint_id = 19985922
 product = "Checking or savings account"
-code = ""
+code = "account_restricted"
 uncertain = false
-note = ""
+note = "Frozen pending ownership changes; still under review after in-person verification."
 
 [[item]]
 ref = "P29"
 complaint_id = 19571777
 product = "Checking or savings account"
-code = ""
+code = "account_restricted"
 uncertain = false
-note = ""
+note = "Closed without notice; balance not released after two weeks."
 
 [[item]]
 ref = "P30"
 complaint_id = 20755697
 product = "Credit card"
-code = ""
+code = "dispute_mishandled"
 uncertain = false
-note = ""
+note = "Billing dispute over an unsafe rental denied as 'service used'; misclassified as a cancellation."
