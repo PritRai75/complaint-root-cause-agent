@@ -38,10 +38,17 @@ primary_rule = """
    "closed it because I disputed and they think it was me"), code the earlier
    one. Late fees, interest, negative balances, collections, credit-report
    damage, line cuts and closures that follow from a failure take that
-   failure's code. Walk back only as far as the consumer does.
-3. Service conduct (rudeness, hold times, transfers, broken callbacks, a rep
-   giving wrong information) never decides the code when a specific failure
-   is reported. If it is the only failure reported, the code is other.
+   failure's code. Walk back only as far as the consumer does, and stop at a
+   claim (defined under dispute_mishandled). If the consumer filed one, code
+   how the company handled it (fraud_claim or dispute_mishandled), not the
+   mistake the claim was about. R36: the ATM put the deposit in a stranger's
+   account, the consumer opened a case, the case stalled ->
+   dispute_mishandled, not servicing_error.
+3. Service conduct never decides the code when a specific failure is
+   reported. Service conduct means rudeness, hold times, transfers, broken
+   callbacks, a rep giving wrong information, and a rep promising anything
+   other than the specific benefit described under terms_not_honored. If
+   service conduct is the only failure reported, the code is other.
 4. third_party only when no failure by the named company is reported anywhere
    in the narrative. unclear only when the narrative does not let you name a
    failure or say who is blamed.
@@ -71,7 +78,8 @@ code = "fraud_claim"
 name = "Fraud or scam claim mishandled"
 definition = """
 The company denied, reversed, delayed, or failed to investigate the consumer's
-claim that a transaction was made by someone else, or that the consumer was
+claim (as defined under dispute_mishandled) that a transaction was made by
+someone else, or that the consumer was
 tricked into it by someone posing as a seller, the bank, or another trusted
 party.
 """
@@ -112,11 +120,20 @@ examples = ["R07", "R18", "R31"]
 code = "dispute_mishandled"
 name = "Transaction dispute mishandled"
 definition = """
-The consumer raised a dispute, claim, or case about a transaction they took
-part in: goods or services not received or not as agreed, a wrong or double
-amount, a refund not credited, or an ATM or deposit error. The company denied,
-reversed, delayed, misclassified, or never answered it, or tried to collect
-the disputed amount while it was open.
+The consumer filed a claim about a transaction they took part in: goods or
+services not received or not as agreed, a wrong or double amount, a refund
+not credited, or an ATM or deposit error. The company denied, reversed,
+delayed, misclassified, or never answered it, or tried to collect the
+disputed amount while it was open.
+
+A claim is a request that the company investigate a transaction and decide
+it. It counts when the consumer says they filed a dispute, claim, chargeback,
+or fraud report, or opened a case. It also counts when they describe a
+decision on one: approved, denied, reopened, or a provisional credit given or
+taken back. It is not a claim when the consumer asks the company to fix its
+own mistake, post or find a payment, credit a deposit, or waive or refund a
+fee, even if they call that "disputing". The same definition applies to
+fraud_claim and to primary_rule step 2.
 """
 signals = """
 "filed a dispute", "claim", "opened a case", "chargeback", "investigation",
@@ -128,12 +145,13 @@ the documents a denial relied on.
 not_this = """
 - The consumer says they did not make the transaction, or were scammed by a
   fake payee -> fraud_claim.
-- The company's own mistake with no claim decision at issue (payment not
-  posted, autopay dropped, refunds reversed, deposit not credited), where the
-  consumer just told the company and it did not fix it -> servicing_error
-  (R33, R54). If the consumer opened a dispute, claim, or case and complains
-  about its outcome or delay -> here, even when the original mistake was the
-  company's (R36, R45).
+- The company's own mistake with no claim at issue (payment not posted,
+  autopay dropped, refunds reversed, deposit not credited) ->
+  servicing_error. This holds even when the consumer asked the company to fix
+  it, in writing or calling it a dispute (R33, R54). If the consumer filed a
+  claim and complains about its outcome or delay -> here, even when the
+  original mistake was the company's (R36, R45). primary_rule step 2 stops
+  the walk-back at the claim.
 - Funds held because the account was closed or frozen, not because of a claim
   decision -> account_restricted.
 - The consumer blames only the merchant and reports nothing about the
@@ -150,6 +168,10 @@ not_this = """
 # transfers (1005.3(c)(3), R37) are outside Reg E. On credit cards, quality
 # disputes about accepted goods (R42) relate to 1026.12(c) more than 1026.13,
 # which excludes them under comment 13(a)(3)-1.ii.
+# The claim / servicing_error line is a labelling convention, not a legal one.
+# On credit cards, a payment not credited is itself a billing error under
+# 1026.13(a)(4), so R33 could be a legal billing error and still be coded
+# servicing_error, because the consumer filed no claim.
 rule = { "Credit card" = "1026.13", "Checking or savings account" = "1005.11" }
 examples = ["R01", "R24", "R45"]
 
@@ -157,10 +179,11 @@ examples = ["R01", "R24", "R45"]
 code = "servicing_error"
 name = "Account servicing error"
 definition = """
-The company made a mistake in a routine account operation and did not fix it
-when the consumer raised it. Routine operations are posting a payment or
-deposit, running autopay, crediting or reversing a transaction, issuing a
-card, or making an account change the consumer asked for.
+The company made a mistake in a routine account operation. Routine
+operations are posting a payment or deposit, running autopay, crediting or
+reversing a transaction, issuing a card, or making an account change the
+consumer asked for. Whether the consumer raised the mistake with the company
+before complaining is background, not a condition.
 """
 signals = """
 "payment was not posted", "autopay was turned off", "system migration",
@@ -170,8 +193,10 @@ admitted it was their error". The consumer traces a late fee, delinquency,
 negative balance, or line cut back to the mistake.
 """
 not_this = """
-- The consumer filed a dispute, claim, or case and complains about its
-  decision or delay -> dispute_mishandled.
+- The consumer filed a claim (as defined under dispute_mishandled) and
+  complains about its decision or delay -> dispute_mishandled (R36). Asking
+  the company to fix the mistake is not a claim, even in writing or when the
+  consumer calls it a dispute, so that stays here (R33, R54).
 - The consumer objects to a fee itself, with no company mistake behind it ->
   fee_charged.
 - Credit damage the consumer traces to the mistake goes here, not
@@ -228,11 +253,12 @@ examples = ["R04", "R46", "R53"]
 code = "terms_not_honored"
 name = "Offer or terms not honored"
 definition = """
-The company did not deliver a term it advertised or promised, such as a
-bonus, promotional rate, statement credit, installment plan, or a
-representative's promise. This code also covers terms that, as the consumer
-reports it, were never disclosed or were misstated before they agreed and
-later cost them.
+The company did not deliver a term it advertised or offered, such as a bonus,
+promotional rate, statement credit, or installment plan. It also did not
+deliver a specific benefit a representative promised (a credit, waiver, rate,
+or bonus) when getting that benefit is the consumer's main request. This code
+also covers terms that, as the consumer reports it, were never disclosed or
+were misstated before they agreed and later cost them.
 """
 signals = """
 "promotion", "bonus", "0%", "deferred interest", "advertised", "offer",
@@ -247,6 +273,17 @@ not_this = """
   - they object to the amount, the method, or the refusal to waive
     -> fee_charged (R26, R41)
   - they were not notified when the fee posted -> fee_charged (R22)
+- A rep's promise counts here only when it is a specific benefit (a credit,
+  waiver, rate, or bonus) and getting it is the consumer's main request. R28
+  qualifies: the $300 bonus a manager confirmed.
+- Other rep statements are service conduct and never decide the code
+  (primary_rule step 3):
+  - wrong information or a general promise ("we'll fix it", "you have to
+    contact the bureaus") -> code the underlying failure (R30 ->
+    servicing_error)
+  - a promised benefit that isn't the main request -> code by the main
+    request. R24: a goodwill credit was promised, but the request is to
+    re-evaluate the dispute -> dispute_mishandled.
 - A rep's promise that a dispute refund is coming -> dispute_mishandled (R02).
 - The account was closed despite an offer -> account_restricted (R44).
 - An advertised deposit timing, where the deposit itself never posted ->
