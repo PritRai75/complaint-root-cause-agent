@@ -19,8 +19,8 @@ dev split later, never test, because reading it shaped the taxonomy.
 Once the IDs file exists the script does not draw again. It only rebuilds the
 reading sheet (scratch/taxonomy_sample.html, not committed) from the saved IDs.
 
-The sheet leaves out the company name. Labels will be made without it too, so
-reading and labelling happen under the same conditions.
+The sheet leaves out the company field (narratives often name the bank anyway).
+The labelling sheets in eval/labelset.py leave it out too.
 """
 import html
 import json
@@ -203,7 +203,8 @@ def render_sheet(sample, details, copies):
         f"{sample['per_product']} per product, one per distinct text, months in proportion "
         "to their counts of distinct narratives. "
         f"Drawn {e(sample['drawn_at'])} from the database built {e(str(db['built_at']))} "
-        f"(loader {e(str(db['loader_commit']))}). Company names are left out. "
+        f"(loader {e(str(db['loader_commit']))}). The company field is left out, "
+        "though narratives often name the bank. "
         "Every complaint here goes to the dev split.</p>",
         "<p class='lede'>Complaints may cite the 2024 $8 late-fee rule (vacated April 2025) "
         "or the 2024 overdraft rule (overturned May 2025). Neither is law.</p>",
