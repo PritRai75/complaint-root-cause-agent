@@ -78,7 +78,7 @@ complaint_id = 21637717
 product = "Credit card"
 code = "fraud_claim"
 uncertain = false
-note = "Card the consumer never applied for, now billed $4,500. The request is to stop the charges, not a report fix, so it goes by main request (draft-2)."
+note = "Card the consumer never applied for, now billed $4,500. The request is to stop the charges, not a report fix, so it goes by main request (v1)."
 
 [[item]]
 ref = "P10"
@@ -182,7 +182,7 @@ complaint_id = 21449162
 product = "Checking or savings account"
 code = "fraud_claim"
 uncertain = false
-note = "The only company action is a delay: wouldn't take the claim until the charge posted. The outcome isn't stated (draft-2: was unclear)."
+note = "The only company action is a delay: wouldn't take the claim until the charge posted. The outcome isn't stated (v1: was unclear)."
 
 [[item]]
 ref = "P23"
