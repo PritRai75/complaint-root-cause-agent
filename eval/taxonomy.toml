@@ -1,0 +1,394 @@
+# Root-cause taxonomy for the complaint agent. Written by Prit.
+#
+# A root cause says what the institution did or failed to do, as the consumer
+# reports it. It is not the topic of the complaint. The topic is the CFPB
+# issue column, which the consumer picks from a menu. Labels record what the
+# complaint reports, not whether the bank really failed.
+#
+# Codes are short snake_case ids. Once labels exist, a code is never renamed
+# or reused for a different meaning. A change in meaning gets a new version.
+#
+# The labeller sees the narrative and the product only. Issue, sub-issue,
+# company response and month are hidden, so every `signals` entry below
+# names something visible in the narrative text.
+#
+# `rule` maps the exact product name to the related Reg Z or Reg E provision.
+# Credit card -> Reg Z, Checking or savings account -> Reg E. A product with
+# no related provision is left out of the table; `rule = {}` means none for
+# either product. The map names the related provision for reporting. It is
+# not a finding that the provision applies to any one complaint, and it never
+# holds a rule the consumer cites unless that rule is in force.
+#
+# third_party is not a root cause. It is reported on its own line
+# ("x of y narratives fault someone other than the company") and is left out
+# of root-cause shares and out of the 6-8 cause count.
+
+version = "draft-1"
+written = "2026-11-10"
+
+# How to choose ONE code when a narrative reports more than one failure.
+primary_rule = """
+1. Pick a failure. Find the consumer's main request: what they ask the company
+   or the CFPB to do. Code the company failure that request would undo. If
+   there are several requests, use the one the narrative spends the most words
+   on. If no request is stated, use the company failure the narrative spends
+   the most words on.
+2. Walk it back. If the consumer says that failure was caused by an earlier
+   failure of the same company ("because they never posted my payment",
+   "closed it because I disputed and they think it was me"), code the earlier
+   one. Late fees, interest, negative balances, collections, credit-report
+   damage, line cuts and closures that follow from a failure take that
+   failure's code. Walk back only as far as the consumer does.
+3. Service conduct (rudeness, hold times, transfers, broken callbacks, a rep
+   giving wrong information) never decides the code when a specific failure
+   is reported. If it is the only failure reported, the code is other.
+4. third_party only when no failure by the named company is reported anywhere
+   in the narrative. unclear only when the narrative does not let you name a
+   failure or say who is blamed.
+5. Ignore any law the consumer cites, right or wrong. Code what they say
+   happened.
+6. If two codes still fit, the one earlier in precedence wins.
+"""
+
+# If two codes still both fit after primary_rule, the one earlier in this
+# list wins. Specific transaction failures come first; credit_reporting comes
+# late because a bad report is usually downstream of another failure.
+precedence = [
+  "fraud_claim",
+  "dispute_mishandled",
+  "servicing_error",
+  "account_restricted",
+  "terms_not_honored",
+  "fee_charged",
+  "credit_reporting",
+  "third_party",
+  "other",
+  "unclear",
+]
+
+[[cause]]
+code = "fraud_claim"
+name = "Fraud or scam claim mishandled"
+definition = """
+The company denied, reversed, delayed, or failed to investigate the consumer's
+claim that a transaction was made by someone else, or that the consumer was
+tricked into it by someone posing as a seller, the bank, or another trusted
+party.
+"""
+signals = """
+The consumer says they did not make the transaction: "unauthorized", "fraud",
+"stolen", "hacked", "never received the card", "card was in my possession",
+"not in that state". The company "found it was me", called the charge
+legitimate or authorized, or holds the consumer liable. A police or FTC report
+was filed. For scams, the payee is described as fake: goods that never
+existed, a party "representing itself as" a business, or contact cut off after
+payment.
+"""
+not_this = """
+- The consumer paid a real merchant and disputes the amount, delivery, or
+  quality -> dispute_mishandled. R55 calls the amounts "unauthorized", but the
+  consumer made the purchase and disputes how much was charged.
+- Slow versus denied is not the test. A slow fraud claim stays here; a slow
+  merchant dispute stays in dispute_mishandled. The test is whether the
+  consumer says they did not make the transaction (or were tricked into it).
+- An account opened in the consumer's name that they say they never applied
+  for -> credit_reporting (R09, R50).
+- The account was closed or the card removed after the claim:
+  - the consumer says the closure came from the fraud decision -> here (R06)
+  - the consumer does not tie the two, and the closure is the main grievance
+    -> account_restricted (R20)
+- A scam where the consumer reports nothing the company did wrong ->
+  third_party (R43).
+- Charges sent to collections or reported late because of the fraud stay here,
+  not credit_reporting (R17).
+"""
+# Whether a transfer the consumer initiated after being deceived is
+# "unauthorized" (1005.2(m)) is contested. The label records the consumer's
+# report, not the answer.
+rule = { "Credit card" = "1026.12(b)", "Checking or savings account" = "1005.11" }
+examples = ["R07", "R18", "R31"]
+
+[[cause]]
+code = "dispute_mishandled"
+name = "Transaction dispute mishandled"
+definition = """
+The consumer raised a dispute, claim, or case about a transaction they took
+part in: goods or services not received or not as agreed, a wrong or double
+amount, a refund not credited, or an ATM or deposit error. The company denied,
+reversed, delayed, misclassified, or never answered it, or tried to collect
+the disputed amount while it was open.
+"""
+signals = """
+"filed a dispute", "claim", "opened a case", "chargeback", "investigation",
+"denied my claim", "reversed the credit", "never received the item",
+"returned it", "merchant refused", "refund", "charged more than agreed",
+"ATM didn't dispense". Requests to reopen or reinvestigate a dispute, or for
+the documents a denial relied on.
+"""
+not_this = """
+- The consumer says they did not make the transaction, or were scammed by a
+  fake payee -> fraud_claim.
+- The company's own mistake with no claim decision at issue (payment not
+  posted, autopay dropped, refunds reversed, deposit not credited), where the
+  consumer just told the company and it did not fix it -> servicing_error
+  (R33, R54). If the consumer opened a dispute, claim, or case and complains
+  about its outcome or delay -> here, even when the original mistake was the
+  company's (R36, R45).
+- Funds held because the account was closed or frozen, not because of a claim
+  decision -> account_restricted.
+- The consumer blames only the merchant and reports nothing about the
+  company's handling -> third_party (R19). If they say the company refused the
+  dispute, refund, or cancellation -> here (R48, R40, R25).
+- Late fees, interest, collection calls, or a negative balance caused by the
+  disputed amount stay here, not fee_charged (R05, R01).
+- A rep's false promise that a dispute refund is coming stays here, not
+  terms_not_honored (R02).
+"""
+# Reg E's list of errors in 1005.11(a)(1) is closed and does not include goods
+# not delivered or not as described. Debit-card merchant disputes like R01 and
+# R08 run on card-network chargeback rules. Checks (1005.3(c)(1)) and wire
+# transfers (1005.3(c)(3), R37) are outside Reg E. On credit cards, quality
+# disputes about accepted goods (R42) relate to 1026.12(c) more than 1026.13,
+# which excludes them under comment 13(a)(3)-1.ii.
+rule = { "Credit card" = "1026.13", "Checking or savings account" = "1005.11" }
+examples = ["R01", "R24", "R45"]
+
+[[cause]]
+code = "servicing_error"
+name = "Account servicing error"
+definition = """
+The company made a mistake in a routine account operation and did not fix it
+when the consumer raised it. Routine operations are posting a payment or
+deposit, running autopay, crediting or reversing a transaction, issuing a
+card, or making an account change the consumer asked for.
+"""
+signals = """
+"payment was not posted", "autopay was turned off", "system migration",
+"no record of my request", "replacement card never sent", "reversed the
+refunds", "deposit hasn't been credited", "sent cards I didn't ask for", "they
+admitted it was their error". The consumer traces a late fee, delinquency,
+negative balance, or line cut back to the mistake.
+"""
+not_this = """
+- The consumer filed a dispute, claim, or case and complains about its
+  decision or delay -> dispute_mishandled.
+- The consumer objects to a fee itself, with no company mistake behind it ->
+  fee_charged.
+- Credit damage the consumer traces to the mistake goes here, not
+  credit_reporting (R30, R52).
+- The delay is in releasing funds from a closed or frozen account ->
+  account_restricted (R21).
+- A promised bonus or extra not delivered -> terms_not_honored (R28). A
+  deposit that never posted stays here even if the consumer also cites an
+  advertisement, because the request is to credit the deposit (R60).
+- Extra or wrong cards on an existing account the consumer asked to change
+  -> here, not credit_reporting (R32).
+"""
+# No Checking key: deposit posting and availability is Reg CC, not E or Z. An
+# EFT posting error the consumer raises as an error notice is a 1005.11 matter,
+# and the not_this rule above already sends it to dispute_mishandled.
+rule = { "Credit card" = "1026.10(a)" }
+examples = ["R30", "R33", "R38"]
+
+[[cause]]
+code = "account_restricted"
+name = "Account closed, frozen or restricted"
+definition = """
+The company closed, froze, locked, or limited the consumer's account or card,
+or refused to open or reopen one. This includes holding the consumer's funds
+after doing so.
+"""
+signals = """
+"closed my account", "froze", "locked", "limitation", "no longer want to do
+business with you", "can't access my funds", "sending a check", "check never
+arrived", "denied reopening", "removed my debit card", "won't let me add my
+card", repeated identity-verification demands.
+"""
+not_this = """
+- Funds held or an account closed because of a dispute or fraud-claim
+  decision, where the consumer ties the two -> that claim's code (R06 ->
+  fraud_claim).
+- A credit line cut that the consumer traces to a company mistake ->
+  servicing_error (R33).
+- A credit card application denied:
+  - because of an account on the report the consumer says isn't theirs ->
+    credit_reporting (R50)
+  - and the consumer says the denial letter was fake -> third_party (R43)
+- The consumer calls the closure a bait-and-switch, but the request is to get
+  their funds -> here, not terms_not_honored (R44).
+"""
+# Empty: account closures and holds are governed by the account agreement.
+# The one Reg Z hook, 1026.13(d)(3), covers closing a card account because the
+# consumer used billing-error rights, which primary_rule sends to
+# dispute_mishandled.
+rule = {}
+examples = ["R04", "R46", "R53"]
+
+[[cause]]
+code = "terms_not_honored"
+name = "Offer or terms not honored"
+definition = """
+The company did not deliver a term it advertised or promised, such as a
+bonus, promotional rate, statement credit, installment plan, or a
+representative's promise. This code also covers terms that, as the consumer
+reports it, were never disclosed or were misstated before they agreed and
+later cost them.
+"""
+signals = """
+"promotion", "bonus", "0%", "deferred interest", "advertised", "offer",
+"promo code", "manager said I was approved for", "not presented clearly",
+"misled", "not eligible", "fine print".
+"""
+not_this = """
+- Fee versus term. The test is what the consumer says about the time before
+  they agreed:
+  - they were not told about the fee or term, or were told something
+    different -> here (R16, R23)
+  - they object to the amount, the method, or the refusal to waive
+    -> fee_charged (R26, R41)
+  - they were not notified when the fee posted -> fee_charged (R22)
+- A rep's promise that a dispute refund is coming -> dispute_mishandled (R02).
+- The account was closed despite an offer -> account_restricted (R44).
+- An advertised deposit timing, where the deposit itself never posted ->
+  servicing_error (R60).
+"""
+# No Checking key: deposit-account bonuses and advertising fall under Reg DD
+# (12 CFR 1030), which is neither E nor Z.
+rule = { "Credit card" = "1026.16" }
+examples = ["R14", "R16", "R57"]
+
+[[cause]]
+code = "fee_charged"
+name = "Fee or interest charged or not waived"
+definition = """
+The company charged a fee or interest that the consumer says was unfair or
+wrongly triggered, or it refused to refund or waive one. Examples are
+overdraft, NSF, late, annual, or processing fees and the way interest is
+computed. The consumer does not say the term was hidden or misstated.
+"""
+signals = """
+"overdraft fee", "NSF fee", "late fee", "annual fee", "processing fee",
+"interest charged", "won't refund", "courtesy refund", "it's our policy",
+"fees are not refundable".
+"""
+not_this = """
+- The consumer says the fee or term was not disclosed, or was misrepresented,
+  before they agreed -> terms_not_honored (R16).
+- A fee caused by a company mistake the consumer names (unposted payment,
+  reopened account) -> servicing_error (R33, R52).
+- Fees or interest on a disputed or fraudulent amount -> dispute_mishandled or
+  fraud_claim (R05).
+- A narrative that cites the vacated 2024 $8 late-fee rule or the overturned
+  2024 overdraft rule still gets a code by primary_rule. Those rules never
+  appear in `rule`.
+"""
+# 1026.52(b) is the penalty-fee provision. Its safe-harbor amounts are the
+# pre-2024 ones: the $8 amendment was vacated in April 2025 and is not law.
+# 1005.17 is the 2010 overdraft opt-in rule for ATM and one-time debit card
+# transactions, which is in force. It is not the 2024 overdraft-lending rule,
+# which was overturned in May 2025. Interest-computation complaints (R26)
+# relate more to 1026.54.
+rule = { "Credit card" = "1026.52(b)", "Checking or savings account" = "1005.17" }
+examples = ["R22", "R26", "R41"]
+
+[[cause]]
+code = "credit_reporting"
+name = "Credit report or unwanted account"
+definition = """
+The company reported credit-report information the consumer says is wrong, or
+would not correct or remove it. This includes an account or hard inquiry that
+the consumer says they never applied for or never knowingly agreed to.
+"""
+signals = """
+"remove from my credit report", "inaccurate", "never opened this account",
+"fraudulent account", "hard inquiry", "charge-off", "reported as late",
+"past due", "verified", "FTC report", "FCRA".
+"""
+not_this = """
+- The consumer traces the bad report to a company mistake they describe
+  (autopay dropped, payment not posted, closed account reopened) ->
+  servicing_error (R30, R52).
+- A bad report that comes from a disputed or fraudulent charge on an existing
+  account -> dispute_mishandled or fraud_claim (R17).
+- The complaint is aimed at the credit bureaus, not the named company ->
+  third_party (R29).
+- Unwanted extra cards on an account the consumer already has ->
+  servicing_error (R32).
+"""
+# Empty: credit reporting is FCRA / Regulation V, outside E and Z.
+rule = {}
+examples = ["R09", "R11", "R35"]
+
+[[cause]]
+code = "third_party"
+name = "Someone else blamed"
+definition = """
+The consumer reports no failure by the named company at all. The narrative
+blames someone else, such as a merchant or provider, a scammer, or a credit
+bureau. This code records who the consumer blames, not who is really at fault.
+"""
+signals = """
+The complaint is addressed to or about another party. The company appears
+only as the card or account that was used. Examples are "scam letter", "the
+provider shut down", "breach of contract" by a merchant, and the bureaus named
+as the respondents.
+"""
+not_this = """
+- Any reported failure by the named company, even alongside blame of someone
+  else, takes the code for that failure. Examples are a refused dispute,
+  refund, cancellation, or a refusal to help.
+- R40 depends on what the consumer asks of Cherry:
+  - if they only described the med spa's misrepresentation -> here
+  - they also say Cherry refused to waive the fee, refused to cancel, and
+    denied the dispute -> dispute_mishandled
+- R19 versus R48: in both, the provider closed.
+  - R19 never says Synchrony did anything -> here
+  - R48 says Fortiva refused to process the dispute -> dispute_mishandled
+- A scam victim who also says the bank refused to help -> fraud_claim.
+- Text too thin to tell who is blamed -> unclear.
+"""
+rule = {}
+examples = ["R19", "R29", "R43"]
+
+[[cause]]
+code = "other"
+name = "Other"
+definition = """
+A clear failure by the named company that fits no code above. This includes
+narratives whose only reported failure is service conduct, such as rudeness,
+hold times, or broken callbacks.
+"""
+signals = """
+A specific action or omission by the company that none of the definitions
+above covers.
+"""
+not_this = """
+- Rudeness or runaround alongside a specific failure -> that failure's code
+  (R03, R21, R33).
+- A narrative too vague to name a failure -> unclear.
+- Blame on someone other than the company -> third_party.
+"""
+rule = {}
+examples = []          # none in the reading sample
+
+[[cause]]
+code = "unclear"
+name = "Unclear"
+definition = """
+The narrative is too short, garbled, or redacted to say what the company did
+wrong, or whether the consumer blames it at all.
+"""
+signals = """
+One-line demands with no account of events. Redaction that removes the key
+fact. Text that names a topic but no action by anyone.
+"""
+not_this = """
+- Short but specific -> the specific code. R13 ("remove fraudulent account
+  from my credit report") -> credit_reporting.
+- Garbled but readable -> the specific code. R06 says the account was closed
+  because the company decided the consumer made the disputed transactions ->
+  fraud_claim.
+- Clear blame on someone else -> third_party.
+"""
+rule = {}
+examples = []          # none in the reading sample; R13 and R49 came closest
