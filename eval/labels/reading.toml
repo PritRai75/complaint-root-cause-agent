@@ -9,7 +9,7 @@
 # These are dev items: they may be used to tune the tagger, never to score it.
 
 set = "reading"
-taxonomy_version = "draft-1"   # the version these labels were made under
+taxonomy_version = "v1"   # the version these labels were made under
 
 [[item]]
 ref = "R01"
