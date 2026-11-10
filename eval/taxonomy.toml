@@ -79,9 +79,10 @@ name = "Fraud or scam claim mishandled"
 definition = """
 The company denied, reversed, delayed, or failed to investigate the consumer's
 claim (as defined under dispute_mishandled) that a transaction was made by
-someone else, or that the consumer was
-tricked into it by someone posing as a seller, the bank, or another trusted
-party.
+someone else, or that the consumer was tricked into it by someone posing as a
+seller, the bank, or another trusted party. It also covers an account the
+consumer says someone else opened in their name, when the main request is to
+stop billing them, close the account, or cancel its charges.
 """
 signals = """
 The consumer says they did not make the transaction: "unauthorized", "fraud",
@@ -100,7 +101,12 @@ not_this = """
   merchant dispute stays in dispute_mishandled. The test is whether the
   consumer says they did not make the transaction (or were tricked into it).
 - An account opened in the consumer's name that they say they never applied
-  for -> credit_reporting (R09, R50).
+  for goes by the main request:
+  - remove it from the credit report -> credit_reporting (R09, R13, R35, R50)
+  - stop billing them, close it, or cancel the charges -> here (P09)
+- The only company action named is a delay, even if the outcome isn't known
+  yet -> here, as "delayed" (P22: wouldn't take the claim until the charge
+  posted).
 - The account was closed or the card removed after the claim:
   - the consumer says the closure came from the fraud decision -> here (R06)
   - the consumer does not tie the two, and the closure is the main grievance
@@ -197,8 +203,12 @@ not_this = """
   complains about its decision or delay -> dispute_mishandled (R36). Asking
   the company to fix the mistake is not a claim, even in writing or when the
   consumer calls it a dispute, so that stays here (R33, R54).
-- The consumer objects to a fee itself, with no company mistake behind it ->
-  fee_charged.
+- Fee versus servicing mistake. A fee or interest charge comes here only when
+  the consumer states that the company made a mistake that triggered it (R33,
+  P11, P24). The company's own website, app, and autopay count as the company.
+  Objecting to the fee itself, or questioning how a payment was applied or
+  how the charge was calculated without stating a mistake, -> fee_charged
+  (P06).
 - Credit damage the consumer traces to the mistake goes here, not
   credit_reporting (R30, R52).
 - The delay is in releasing funds from a closed or frozen account ->
@@ -311,8 +321,13 @@ signals = """
 not_this = """
 - The consumer says the fee or term was not disclosed, or was misrepresented,
   before they agreed -> terms_not_honored (R16).
-- A fee caused by a company mistake the consumer names (unposted payment,
-  reopened account) -> servicing_error (R33, R52).
+- Fee versus servicing mistake. Code servicing_error only when the consumer
+  states that the company made a mistake that triggered the fee or interest.
+  Examples are a payment it didn't post, autopay that didn't run, a wrong
+  account kept on file, or a balance its own site showed wrongly (R33, R52,
+  P11, P24). The company's own website, app, and autopay count as the
+  company. Questioning how a payment was applied or how a fee or interest was
+  calculated, without stating a mistake, stays here (P06, P13).
 - Fees or interest on a disputed or fraudulent amount -> dispute_mishandled or
   fraud_claim (R05).
 - A narrative that cites the vacated 2024 $8 late-fee rule or the overturned
@@ -333,8 +348,10 @@ code = "credit_reporting"
 name = "Credit report or unwanted account"
 definition = """
 The company reported credit-report information the consumer says is wrong, or
-would not correct or remove it. This includes an account or hard inquiry that
-the consumer says they never applied for or never knowingly agreed to.
+would not correct or remove it. This includes an account or hard inquiry the
+consumer says they never applied for or never knowingly agreed to, when the
+main request is to remove it from the credit report. If the request is to
+stop billing, close the account, or cancel its charges, it is fraud_claim.
 """
 signals = """
 "remove from my credit report", "inaccurate", "never opened this account",
@@ -351,6 +368,8 @@ not_this = """
   third_party (R29).
 - Unwanted extra cards on an account the consumer already has ->
   servicing_error (R32).
+- An account the consumer never applied for, where the request is to stop
+  billing them or close it -> fraud_claim (P09).
 """
 # Empty: credit reporting is FCRA / Regulation V, outside E and Z.
 rule = {}
@@ -393,7 +412,9 @@ name = "Other"
 definition = """
 A clear failure by the named company that fits no code above. This includes
 narratives whose only reported failure is service conduct, such as rudeness,
-hold times, or broken callbacks.
+hold times, or broken callbacks. It also covers complaints from someone who
+is not the consumer of the product, such as a merchant objecting to a
+chargeback the card issuer approved (P25).
 """
 signals = """
 A specific action or omission by the company that none of the definitions
@@ -426,6 +447,9 @@ not_this = """
   because the company decided the consumer made the disputed transactions ->
   fraud_claim.
 - Clear blame on someone else -> third_party.
+- A company action is named but the outcome isn't known yet -> code the
+  action (P22: wouldn't take the claim until the charge posted ->
+  fraud_claim).
 """
 rule = {}
 examples = []          # none in the reading sample; R13 and R49 came closest
