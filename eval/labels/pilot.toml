@@ -6,7 +6,7 @@
 # Check with: python -m eval.labelset check pilot
 
 set = "pilot"
-taxonomy_version = "draft-1"   # the version these labels were made under
+taxonomy_version = "v1"   # the version these labels were made under
 
 [[item]]
 ref = "P01"
