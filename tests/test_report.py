@@ -277,6 +277,19 @@ def test_check_text_uses_every_result_in_the_run(run):
     assert legal == ["finding 2: 'violated' states a legal conclusion"]
 
 
+def test_number_words_in_the_question_count_as_digits(run):
+    """Decision 37 (S8): dev task D05 was refused for 'Top 3' when the question said 'three'."""
+    run.sql(BY_PRODUCT)
+    run.store.question = "What were the THREE most common root causes, and the top twelve issues?"
+    assert rp.check_text(run.store, [("title", "Top 3 root causes and top 12 issues")]) == []
+    run.store.question = "What were the most common root causes?"
+    assert rp.check_text(run.store, [("title", "Top 3 root causes")]) == [
+        "title: 3 not found in this run's results"]
+    run.store.question = "Is someone like me covered? Did it go up thirteenfold?"
+    assert rp.check_text(run.store, [("title", "Top 1 root cause")]) == [
+        "title: 1 not found in this run's results"]       # 'someone' is not 'one'
+
+
 # ---------- quotes ----------
 
 def test_excerpt_cuts_at_a_sentence_end():

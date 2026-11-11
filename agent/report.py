@@ -412,6 +412,11 @@ def clean_and_chart(store, handle, title, kind="bar", x=None, y=None, series=Non
 NUMBER = re.compile(r"(?<![\w.])(\d{1,3}(?:,\d{3})+|\d+)(\.\d+)?(\s*(?:%|percent\b))?")
 DATES = re.compile(r"\b\d{4}-\d{2}(?:-\d{2})?\b")
 YEARS = range(2011, 2027)        # the CFPB database starts in 2011; the data ends in 2026
+# Number words in the request count as their digits (decision 37, session 8): a
+# question asking for "the three most common" lets the report say "top 3".
+NUMBER_WORDS = {w: i for i, w in enumerate(
+    "one two three four five six seven eight nine ten eleven twelve".split(), 1)}
+NUMBER_WORD = re.compile(r"\b(" + "|".join(NUMBER_WORDS) + r")\b", re.I)
 
 
 def numbers_in(text):
@@ -482,6 +487,8 @@ def allowed_values(store):
                 add(v)
     for _, value, _, _ in numbers_in(store.question or ""):
         values.add(value)
+    for m in NUMBER_WORD.finditer(store.question or ""):
+        values.add(float(NUMBER_WORDS[m.group(1).lower()]))
     return values
 
 

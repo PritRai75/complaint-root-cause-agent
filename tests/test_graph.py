@@ -5,7 +5,7 @@ from typing import Any, List
 
 import pytest
 from langchain_core.language_models.chat_models import BaseChatModel
-from langchain_core.messages import AIMessage, ToolMessage
+from langchain_core.messages import AIMessage, HumanMessage, ToolMessage
 from langchain_core.outputs import ChatGeneration, ChatResult
 
 from agent import graph as gr
@@ -19,6 +19,12 @@ from tests.test_report import PLANTED, ROWS, FakeBedrock, FakeSes, AwsError, mak
 PROMPT_SHA256 = {
     "plan-1": "00c179e76ce0013722343da75da2ba68c71737473253fda5ad6a68520d697608",
     "plan-2": "716519be9b23597361146be22cb0143e13d4e1a393dbda735a0612fc7726353d",
+    "plan-3": "b5ebfa5cf08e659e3c336eacbd7e28b895d4e8f3179605c7eb8c63cc02d51ccb",
+}
+# What the model reads about its tools, pinned the same way (from plan-3; plan-2's
+# descriptions hashed to bc13a64d... when this pin was added).
+TOOLS_SHA256 = {
+    "plan-3": "005e498ea0f0b7e6b191d91e46aeabeb17936c10a3a988f559a6f42692ff92a0",
 }
 
 BY_PRODUCT = ("SELECT product, COUNT(*) AS complaints FROM complaints_v GROUP BY product "
@@ -114,7 +120,8 @@ def test_a_run_builds_and_sends_once(paths):
     assert result["status"] == "sent" and result["stop_reason"] is None
     assert len(sender.sent) == 1 and sender.sent[0]["to"] == "fixed@example.com"
     assert sender.sent[0]["attachments"][0]["sha256"] == result["report"]["sha256"]
-    assert result["counts"] == {"turns": 5, "tool_calls": 5, "tag_runs": 1, "failed_calls": 0}
+    assert result["counts"] == {"turns": 5, "tool_calls": 5, "tag_runs": 1, "failed_calls": 0,
+                                "nudges": 0}
     tools = [s["tool"] for s in result["tool_trace"]]
     assert tools[0] == "run_sql" and tools[3:] == ["clean_and_chart", "build_report"]
     assert sorted(tools[1:3]) == ["clean_and_chart", "tag_root_causes"]   # one turn, any order
@@ -144,6 +151,10 @@ def test_system_prompt_holds_the_tables_and_is_pinned(paths):
     assert "Table complaints_v" in system and "text_has" in system
     real = gr.system_prompt(sem.load())
     assert hashlib.sha256(real.encode()).hexdigest() == PROMPT_SHA256[gr.PLAN_VERSION]
+
+
+def test_tool_descriptions_are_pinned():
+    assert gr.tools_sha256() == TOOLS_SHA256[gr.PLAN_VERSION]
 
 
 def test_sql_errors_go_back_to_the_model_which_corrects_them(paths):
@@ -183,6 +194,49 @@ def test_no_report_means_no_email(paths):
                                       turn(text="Here is the answer in words.")])
     result, sender = ask(paths, planner)
     assert result["status"] == "no_report" and sender.sent == []
+
+
+# ---------- the reminder when the model stops with no report (decision 36) ----------
+
+def test_a_plain_text_answer_gets_one_reminder_and_then_a_report(paths):
+    """Dev task D01 (S8): the right number in plain text and no report."""
+    script = [turn(call("run_sql", sql=BY_PRODUCT)),
+              turn(text="Each product has **5** complaints."),
+              turn(call("build_report", title="Complaints by product",
+                        findings=["Each product has 5 complaints in the snapshot."], charts=[])),
+              turn(text="The report is ready.")]
+    planner = ScriptedPlanner(script=script)
+    result, sender = ask(paths, planner, question="How many complaints per product?")
+    assert result["status"] == "sent" and len(sender.sent) == 1
+    assert result["counts"]["nudges"] == 1 and result["counts"]["turns"] == 4
+    reminder = planner.seen[2][-1]
+    assert isinstance(reminder, HumanMessage) and reminder.content == gr.NUDGE
+    assert result["report"]["charts"] == []                 # one number, no chart
+
+
+def test_a_second_stop_after_the_reminder_ends_the_run(paths):
+    planner = ScriptedPlanner(script=[turn(text="5."), turn(text="Still 5.")],
+                              after=turn(text="should never be asked"))
+    result, sender = ask(paths, planner)
+    assert result["status"] == "no_report" and sender.sent == []
+    assert result["counts"]["nudges"] == 1 and len(planner.seen) == 2
+
+
+def test_no_reminder_after_a_report_or_a_question(paths):
+    result, _ = ask(paths, ScriptedPlanner(script=happy_script()))
+    assert result["counts"]["nudges"] == 0
+    asked = ScriptedPlanner(script=[turn(call("ask_clarifying_question", question="Which year?"))])
+    result, _ = ask(paths, asked)
+    assert result["counts"]["nudges"] == 0 and len(asked.seen) == 1
+
+
+def test_a_failed_report_then_a_stop_gets_the_reminder(paths):
+    script = [turn(call("run_sql", sql=BY_PRODUCT)),
+              turn(call("build_report", title="T", findings=["Rose 3.2 points."], charts=[])),
+              turn(text="I could not build it.")]
+    planner = ScriptedPlanner(script=script)
+    result, _ = ask(paths, planner)
+    assert result["counts"]["nudges"] == 1 and result["status"] == "no_report"
 
 
 def test_turn_limit_stops_the_run_even_with_a_report_built(paths):
@@ -268,23 +322,26 @@ def test_the_real_planner_sends_the_expected_converse_request(paths, monkeypatch
     client.meta.events.register("provide-client-params.bedrock-runtime.Converse",
                                 lambda params, **kw: sent.append(params))
     stub = Stubber(client)
-    stub.add_response("converse", {
-        "output": {"message": {"role": "assistant", "content": [{"text": "Nothing to do."}]}},
-        "stopReason": "end_turn", "usage": {"inputTokens": 7, "outputTokens": 3,
-                                             "totalTokens": 10}, "metrics": {"latencyMs": 1}})
+    for text in ("Nothing to do.", "Still nothing."):        # the reminder makes a second call
+        stub.add_response("converse", {
+            "output": {"message": {"role": "assistant", "content": [{"text": text}]}},
+            "stopReason": "end_turn", "usage": {"inputTokens": 7, "outputTokens": 3,
+                                                 "totalTokens": 10}, "metrics": {"latencyMs": 1}})
     stub.activate()
     monkeypatch.setattr(gr.tg, "bedrock_client", lambda: client)
     result, run = gr.answer("How many complaints?", sd.DryRunSender(), **paths)
     run.close()
-    (req,) = sent
+    req, second = sent
+    assert [m["role"] for m in second["messages"]] == ["user", "assistant", "user"]
+    assert second["messages"][-1]["content"][0]["text"] == gr.NUDGE
     assert req["modelId"] == "global.anthropic.claude-sonnet-4-6"
     assert req["inferenceConfig"] == {"maxTokens": gr.MAX_TOKENS, "temperature": 0.0}
     assert req["system"][0]["text"] == gr.system_prompt(sem.load(paths["layer_path"]))
     specs = [t["toolSpec"] for t in req["toolConfig"]["tools"]]
     assert [s["name"] for s in specs] == list(gr.TOOL_NAMES)
     assert all(len(s["description"]) > 40 for s in specs)
-    assert result["status"] == "no_report" and result["tokens"] == {"input": 7, "output": 3}
-    assert result["final_text"] == "Nothing to do."
+    assert result["status"] == "no_report" and result["tokens"] == {"input": 14, "output": 6}
+    assert result["final_text"] == "Still nothing." and result["counts"]["nudges"] == 1
 
 
 def test_numbers_typed_into_sql_do_not_pass_the_check(paths):

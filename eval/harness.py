@@ -35,7 +35,7 @@ finding, and a figure is found wherever it is written, even in a sentence about
 something else. `check` warns about small numbers.
 
 Run log: eval/runs/agent-<split>-<time>.jsonl, a header (commit, model, plan
-version and prompt SHA-256, layer version, tagger prompt, tasks version and
+version, prompt and tool-description SHA-256s, layer version, tagger prompt, tasks version and
 SHA-256, grader version), one line per task (references, the run's outputs,
 checks, tokens, cost, time; no narrative text) and a summary. Reports are saved
 to scratch/eval/<run id>/ for reading. `regrade` re-scores a stored run with
@@ -72,7 +72,7 @@ from ingest.build_db import git_commit
 TASKS_PATH = "eval/tasks.toml"
 RUNS_DIR = "eval/runs"
 REPORTS_DIR = "scratch/eval"
-GRADER_VERSION = "g1"
+GRADER_VERSION = "g2"     # g2: a comma inside a number (2,063) no longer splits a clause
 FIXED_TO = "fixed-recipient@example.invalid"
 ID = re.compile(r"^[A-Z]\d{2}$")
 SPLITS = ("dev", "test")
@@ -88,7 +88,7 @@ UP = re.compile(r"\b(rose|rise[sn]?|rising|increas(?:e|ed|es|ing)|gr[eo]w|grows|
                 r"higher|up(?!\s+to\b)|jump(?:ed|s)?|climb(?:ed|s)?|doubled|tripled)\b", re.I)
 DOWN = re.compile(r"\b(fell|falls?|falling|fallen|decreas(?:e|ed|es|ing)|declin(?:e|ed|es|ing)|"
                   r"drop(?:ped|s)?|dropping|lower|down|fewer|shr[au]nk|shrinks?|halved)\b", re.I)
-CLAUSE = re.compile(r"[,;:()]|\s(?:while|whereas|but|although|though)\s", re.I)
+CLAUSE = re.compile(r",(?=\s)|[;:()]|\s(?:while|whereas|but|although|though)\s", re.I)
 MONTHS = {f"{m:02d}": calendar.month_name[m] for m in range(1, 13)}
 
 
@@ -302,8 +302,9 @@ def clauses(text):
 
 def direction_ok(expected, value, findings):
     """(ok, detail). Looks at each place the direction_of figure is written:
-    the clause holding it (split at , ; : ( ) while whereas but although
-    though) must use an expected-direction word and no opposite word; if the
+    the clause holding it (split at ; : ( ), at a comma followed by a space,
+    and at while whereas but although though; a comma inside a number such as
+    2,063 doesn't split) must use an expected-direction word and no opposite word; if the
     clause has neither, the whole finding is read the same way. Passes if any
     place passes."""
     want, other = (UP, DOWN) if expected == "up" else (DOWN, UP)
@@ -418,6 +419,7 @@ def outputs(result, run, sender):
         "counts": result.get("counts"), "tokens": result.get("tokens"),
         "tool_trace": result.get("tool_trace"), "seconds": result.get("seconds"),
         "plan_version": result.get("plan_version"), "prompt_sha256": result.get("prompt_sha256"),
+        "tools_sha256": result.get("tools_sha256"),
     }
 
 
@@ -515,6 +517,7 @@ def run(split, final=False, only=None, tasks_path=TASKS_PATH, runs_dir=RUNS_DIR,
               "only": sorted(only) if only else None, "tasks": [t["id"] for t in tasks],
               "code_commit": commit, "model": gr.MODEL_ID, "region": gr.REGION,
               "plan_version": gr.PLAN_VERSION, "prompt_sha256": gr.prompt_sha256(layer),
+              "tools_sha256": gr.tools_sha256(),
               "layer_version": layer["version"], "tagger_prompt": tg.PROMPT_VERSION,
               "tasks_version": tf["version"], "tasks_sha256": tf["sha256"],
               "grader_version": GRADER_VERSION, "fixed_to": FIXED_TO,

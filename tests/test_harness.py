@@ -104,6 +104,10 @@ def test_text_matches_as_whole_words():
     ("down", 12.5, ["Card complaints fell 12.5% to 900."], True),
     ("up", 12.5, ["A sample of up to 200 narratives; complaints changed 12.5%."], False),
     ("up", 12.5, ["Card complaints rose 10%."], False),             # the figure isn't there
+    # g2: thousands separators don't split clauses (dev run agent-dev-20261111T145559Z, D03)
+    ("down", -2063, ["Credit card complaint volume fell from 9,516 in January 2026 to 7,453 in "
+                     "June 2026, a decline of 2,063 complaints over the period."], True),
+    ("up", 2063, ["Complaints rose by 1,200, while card complaints fell by 2,063."], False),
 ])
 def test_direction(expected, value, findings, ok):
     assert hs.direction_ok(expected, value, findings)[0] is ok
@@ -252,7 +256,7 @@ def run_dev(tmp_path, paths, tasks_path=None, **kw):
 def test_a_dev_run_grades_and_logs(tmp_path, paths):
     path, rows, printed = run_dev(tmp_path, paths)
     header, d01, d02, summary = rows
-    assert header["type"] == "header" and header["plan_version"] == "plan-2"
+    assert header["type"] == "header" and header["plan_version"] == hs.gr.PLAN_VERSION
     assert header["grader_version"] == hs.GRADER_VERSION and header["tasks"] == ["D01", "D02"]
     assert len(header["prompt_sha256"]) == 64 and header["tasks_version"] == "tasks-t"
     # D01: the happy script reports 'Each product has 5 complaints' and fraud at 42.9%
@@ -291,6 +295,28 @@ def test_only_runs_the_named_tasks(tmp_path, paths):
     assert [r["id"] for r in rows if r["type"] == "task"] == ["D02"]
     with pytest.raises(hs.TaskError, match="not dev tasks: D09"):
         run_dev(tmp_path, paths, only=["D09"])
+
+
+def test_a_reminded_run_passes_and_the_reminder_is_logged(tmp_path, paths):
+    """D01 in the first dev run: the right number in plain text, no report (plan-2)."""
+    tp = write(tmp_path, task("D01", figures=CARD_COUNT))
+
+    def text_first(task):
+        return ScriptedPlanner(script=[
+            turn(call("run_sql", sql=CARD_COUNT)),
+            turn(text="There are 5 card complaints."),
+            turn(call("build_report", title="Card complaints",
+                      findings=["There were 5 credit card complaints."], charts=[])),
+            turn(text="The report is ready.")])
+    agent_kw = {k: paths[k] for k in ("agent_path", "layer_path", "tag_client", "tag_cache",
+                                      "tag_sleep")}
+    path = hs.run("dev", tasks_path=tp, runs_dir=str(tmp_path / "runs"),
+                  reports_dir=str(tmp_path / "reports"), planner_for=text_first,
+                  agent_kw=agent_kw, echo=lambda s: None)
+    rows = [json.loads(line) for line in open(path, encoding="utf-8")]
+    assert rows[1]["pass"] and rows[1]["outputs"]["counts"]["nudges"] == 1
+    assert rows[0]["tools_sha256"] == hs.gr.tools_sha256()
+    assert rows[1]["outputs"]["tools_sha256"] == rows[0]["tools_sha256"]
 
 
 def test_regrade_reproduces_the_run(tmp_path, paths):
