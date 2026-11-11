@@ -1,0 +1,52 @@
+# Eval tasks for the agent, written by Prit. Graded by eval/harness.py.
+#
+#   python -m eval.harness check     checks this file and prints every reference
+#
+# Bump version when a task changes after it has been run.
+#
+# Splits (decision 31): the 12 report + 3 clarify tasks are split = "test",
+# run once with --final after the planner prompt is frozen. Tasks for tuning
+# are split = "dev" and are not counted. Never reuse a test question, or a
+# reworded one, as a dev task.
+#
+# Fields of one [[task]]:
+#   id            a capital letter and two digits, unique (suggested: D01.. dev,
+#                 N01..N12 test report, A01..A03 test clarify)
+#   split         "dev" or "test"
+#   kind          "report"  the agent should build and send a report
+#                 "clarify" the agent should ask a clarifying question and send nothing
+#   question      exactly what is sent to the agent (at most 1,000 characters)
+#   figures       report tasks: reference SQL on the agent's tables (complaints_v,
+#                 responses_v, narratives_v; text_has() works). At most 12 rows.
+#                 Every cell is a key figure that must be written in the findings
+#                 (decision 32), except columns whose name starts with "_" (shown,
+#                 not graded). Numbers match with the number check's rounding;
+#                 text matches as whole words, case ignored ("YYYY-MM" also
+#                 matches the month's name). Leave out a text column unless the
+#                 findings must name it in those words.
+#                 A list of SQL strings gives accepted alternatives: the task
+#                 passes if one of them is found in full (use it for a second
+#                 reading you accept, or for ties at a top-N cut).
+#   direction     optional, "up" or "down", with
+#   direction_of  the figures column holding the signed change (positive = up);
+#                 the finding that gives it must say it moved that way (decision 33)
+#   population    root-cause tasks: SQL returning complaint_id for the narratives
+#                 the agent should tag. The agent's tag set must draw exactly the
+#                 same narratives (decision 34). Goes with
+#   causes        1 to 3: the shares of the top N root causes must be in the findings
+#   note          optional: why the reference is written this way
+#
+# A report task needs figures, population or both. A clarify task has only
+# id, split, kind, question and note.
+#
+# Format of one task (multi-line strings use triple quotes):
+#
+# [[task]]
+# id = "D01"
+# split = "dev"
+# kind = "report"
+# question = """..."""
+# figures = """SELECT ..."""
+# note = """..."""
+
+version = "tasks-1"

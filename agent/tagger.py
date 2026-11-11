@@ -336,13 +336,12 @@ def summarise(tax, results):
     return counts, shares, base, status
 
 
-def tag_root_causes(conn, guard, tagger, sql, store, sample=SAMPLE, seed=SAMPLE_SEED):
-    """The planner's tool. sql is a SELECT on the layer returning complaint_id.
+def draw(conn, guard, text_ids, sql, sample=SAMPLE, seed=SAMPLE_SEED):
+    """The narratives tag_root_causes would tag for sql, without tagging them.
 
-    Runs it on the guarded connection (windows hold), keeps complaints with a
-    published narrative, draws at most `sample` of them with a fixed seed, tags
-    them and returns counts and shares. No text and no complaint IDs reach the
-    planner; the tagged IDs are kept in `store` under the returned handle."""
+    Returns {"ok": True, "selected": [...], "with_text": [...], "drawn": [...]}
+    (sorted complaint IDs) or an error dict. The eval harness uses it for a
+    task's reference population, so both sides draw the same way."""
     from agent import tools
     sel = tools.run_sql(conn, guard, sql, max_rows=10**6)
     if not sel["ok"]:
@@ -357,19 +356,39 @@ def tag_root_causes(conn, guard, tagger, sql, store, sample=SAMPLE, seed=SAMPLE_
                 "error": "The selection query hit the time limit. Narrow it."}
     col = sel["columns"].index("complaint_id")
     selected = sorted({row[col] for row in sel["rows"] if isinstance(row[col], int)})
-    with_text = [cid for cid in selected if cid in tagger.text_ids]
+    with_text = [cid for cid in selected if cid in text_ids]
     drawn = (sorted(random.Random(seed).sample(with_text, sample))
              if len(with_text) > sample else with_text)
+    return {"ok": True, "selected": selected, "with_text": with_text, "drawn": drawn}
+
+
+def tag_root_causes(conn, guard, tagger, sql, store, sample=SAMPLE, seed=SAMPLE_SEED):
+    """The planner's tool. sql is a SELECT on the layer returning complaint_id.
+
+    Runs it on the guarded connection (windows hold), keeps complaints with a
+    published narrative, draws at most `sample` of them with a fixed seed, tags
+    them and returns counts and shares. No text and no complaint IDs reach the
+    planner; the drawn IDs and the tagged codes are kept in `store` under the
+    returned handle (the eval compares the draw with the task's reference)."""
+    d = draw(conn, guard, tagger.text_ids, sql, sample=sample, seed=seed)
+    if not d["ok"]:
+        return d
+    selected, with_text, drawn = d["selected"], d["with_text"], d["drawn"]
     products = dict(conn.execute(
         "SELECT complaint_id, product FROM narratives_v WHERE complaint_id IN "
         f"({', '.join('?' * len(drawn))})", drawn).fetchall()) if drawn else {}
     results = tagger.tag([(cid, products.get(cid, "")) for cid in drawn])
     counts, shares, base, status = summarise(tagger.tax, results)
     sampled = len(with_text) > sample
+    calls = [r for r in results if not r["cached"] and r["status"] != "no_text"]
     handle = store.add(results, {
         "sql": sql, "selected": len(selected), "with_narrative": len(with_text),
         "drawn": len(drawn), "sampled": sampled, "seed": seed, "status": status,
-        "counts": counts, "shares": shares, "root_cause_base": base})
+        "counts": counts, "shares": shares, "root_cause_base": base,
+        "drawn_ids": list(drawn),
+        "model_calls": {"calls": len(calls),
+                        "input_tokens": sum(r["input_tokens"] for r in calls),
+                        "output_tokens": sum(r["output_tokens"] for r in calls)}})
 
     names = {c["code"]: c["name"].strip() for c in tagger.tax["cause"]}
     lines = [f"Selected {len(selected):,} complaints; {len(with_text):,} have a published "
