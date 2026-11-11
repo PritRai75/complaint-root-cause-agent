@@ -50,3 +50,61 @@
 # note = """..."""
 
 version = "tasks-1"
+
+# ---------- dev tasks (written by Claude at Prit's request, session 8; not counted) ----------
+
+[[task]]
+id = "D01"
+split = "dev"
+kind = "report"
+question = """How many credit card complaints did the CFPB receive in March 2026?"""
+figures = """SELECT COUNT(*) AS complaints FROM complaints_v
+WHERE product = 'Credit card' AND month = '2026-03'"""
+note = """Volume: one product, one month, one number."""
+
+[[task]]
+id = "D02"
+split = "dev"
+kind = "report"
+question = """What was the timely response rate for checking or savings account complaints received from January to June 2026?"""
+figures = """SELECT 100.0 * SUM(timely) / COUNT(*) AS timely_rate FROM responses_v
+WHERE product = 'Checking or savings account'"""
+note = """Rate: the defined timely_response_rate (final responses only, Jan to Jun), not rounded."""
+
+[[task]]
+id = "D03"
+split = "dev"
+kind = "report"
+question = """Did the number of credit card complaints rise or fall from January 2026 to June 2026, and by how many complaints?"""
+figures = """SELECT jan, jun, jun - jan AS change FROM (
+  SELECT SUM(month = '2026-01') AS jan, SUM(month = '2026-06') AS jun
+  FROM complaints_v WHERE product = 'Credit card')"""
+direction = "down"
+direction_of = "change"
+note = """Change in count between two months. Direction written before seeing the data: check refuses it if the data says otherwise, and then it is flipped to match."""
+
+[[task]]
+id = "D04"
+split = "dev"
+kind = "report"
+question = """How many checking or savings account complaints received from January to July 2026 have a published narrative that mentions Zelle?"""
+figures = """SELECT COUNT(*) AS mentions FROM narratives_v
+WHERE product = 'Checking or savings account' AND text_has(complaint_id, 'zelle') = 1"""
+note = """Word filter on narratives (window Jan to Jul)."""
+
+[[task]]
+id = "D05"
+split = "dev"
+kind = "report"
+question = """What were the three most common root causes in credit card complaints received from January to June 2026, and what share of the tagged narratives did each one account for?"""
+population = """SELECT complaint_id FROM narratives_v
+WHERE product = 'Credit card' AND month BETWEEN '2026-01' AND '2026-06'"""
+causes = 3
+note = """Root cause: same population as the S6 real run (card, Jan to Jun), so the tags are probably cached."""
+
+[[task]]
+id = "D06"
+split = "dev"
+kind = "clarify"
+question = """How did the number of checking account complaints in 2026 compare with 2025?"""
+note = """Data not here: the snapshot covers 2026 only, so the agent should ask instead of building a report."""
