@@ -310,11 +310,15 @@ class TagStore:
 
     def __init__(self):
         self.sets = {}
+        self.info = {}
 
-    def add(self, results):
+    def add(self, results, info=None):
+        """info: the tool's figures (selection, coverage, counts, shares), kept for
+        the report's coverage line and its number check."""
         handle = f"tags_{len(self.sets) + 1}"
         self.sets[handle] = [(r["complaint_id"], r["code"]) for r in results
                              if r["status"] == "tagged"]
+        self.info[handle] = dict(info or {})
         return handle
 
 
@@ -361,12 +365,16 @@ def tag_root_causes(conn, guard, tagger, sql, store, sample=SAMPLE, seed=SAMPLE_
         f"({', '.join('?' * len(drawn))})", drawn).fetchall()) if drawn else {}
     results = tagger.tag([(cid, products.get(cid, "")) for cid in drawn])
     counts, shares, base, status = summarise(tagger.tax, results)
-    handle = store.add(results)
+    sampled = len(with_text) > sample
+    handle = store.add(results, {
+        "sql": sql, "selected": len(selected), "with_narrative": len(with_text),
+        "drawn": len(drawn), "sampled": sampled, "seed": seed, "status": status,
+        "counts": counts, "shares": shares, "root_cause_base": base})
 
     names = {c["code"]: c["name"].strip() for c in tagger.tax["cause"]}
     lines = [f"Selected {len(selected):,} complaints; {len(with_text):,} have a published "
              f"narrative. Tagged {status['tagged']:,} of {len(drawn):,} drawn"
-             + (f" (random sample, seed {seed})" if len(with_text) > sample else " (all)")
+             + (f" (random sample, seed {seed})" if sampled else " (all)")
              + f"; invalid {status['invalid']}, failed {status['failed']}.",
              "code | name | narratives | share of root causes"]
     for code, n in counts.items():

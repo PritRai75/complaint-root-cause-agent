@@ -1,4 +1,6 @@
 """The agent's tools. This file has the first two: describe_tables and run_sql.
+tag_root_causes is in agent/tagger.py, clean_and_chart and build_report in
+agent/report.py, send_report in agent/send.py.
 
 Each tool returns a dict for code (the graph, the eval harness, the run log)
 and a text form for the model (as_text). Nothing a tool returns to the model
@@ -51,14 +53,19 @@ def _error(kind, message, started):
             "seconds": round(time.monotonic() - started, 3)}
 
 
-def run_sql(conn, guard, sql, max_rows=MAX_ROWS, max_cell=MAX_CELL, max_seconds=MAX_SECONDS):
+def run_sql(conn, guard, sql, max_rows=MAX_ROWS, max_cell=MAX_CELL, max_seconds=MAX_SECONDS,
+            store=None):
     """Run one SELECT. Returns a dict:
 
     ok, columns, rows (at most max_rows, cells capped), row_count (all rows the
     query returned, or None when counting was stopped by the time limit),
     truncated (more rows than shown), cells_cut, seconds. On failure: ok False,
     error_kind (empty, too_long, one_statement, refused, timeout, text_has,
-    sql) and error, a message saying what to change."""
+    sql) and error, a message saying what to change.
+
+    store: the run's agent.report.RunStore. A successful result is saved there
+    and gets a handle (rows_1, rows_2, ...), so charts and the report use the
+    numbers the query returned, never numbers retyped by the model."""
     started = time.monotonic()
     if not isinstance(sql, str) or not sql.strip():
         return _error("empty", "The query is empty. Send one SELECT statement.", started)
@@ -123,7 +130,7 @@ def run_sql(conn, guard, sql, max_rows=MAX_ROWS, max_cell=MAX_CELL, max_seconds=
             cut += was_cut
             out.append(value)
         shown.append(out)
-    return {
+    result = {
         "ok": True,
         "columns": columns,
         "rows": shown,
@@ -132,6 +139,9 @@ def run_sql(conn, guard, sql, max_rows=MAX_ROWS, max_cell=MAX_CELL, max_seconds=
         "cells_cut": cut,
         "seconds": round(time.monotonic() - started, 3),
     }
+    if store is not None:
+        result["handle"] = store.add_table(sql, result)
+    return result
 
 
 def _fmt(value):
@@ -159,6 +169,8 @@ def as_text(result):
         foot = f"({n} row{'s' if n != 1 else ''})"
     if result["cells_cut"]:
         foot += f" {result['cells_cut']} long values were cut."
+    if result.get("handle"):
+        foot += f" Saved as {result['handle']} for clean_and_chart and the report."
     return "\n".join(lines + [foot])
 
 
