@@ -18,6 +18,7 @@ from tests.test_report import PLANTED, ROWS, FakeBedrock, FakeSes, AwsError, mak
 # fails here until PLAN_VERSION is bumped.
 PROMPT_SHA256 = {
     "plan-1": "00c179e76ce0013722343da75da2ba68c71737473253fda5ad6a68520d697608",
+    "plan-2": "716519be9b23597361146be22cb0143e13d4e1a393dbda735a0612fc7726353d",
 }
 
 BY_PRODUCT = ("SELECT product, COUNT(*) AS complaints FROM complaints_v GROUP BY product "
@@ -121,6 +122,7 @@ def test_a_run_builds_and_sends_once(paths):
     assert result["final_text"] == "The report is ready."
     assert result["tokens"] == {"input": 500, "output": 50}
     assert result["queries"] == {"rows_1": BY_PRODUCT}
+    assert result["tag_queries"] == {"tags_1": "SELECT complaint_id FROM complaints_v"}
     assert planner.bound == list(gr.TOOL_NAMES)                     # no send tool
 
 
@@ -152,6 +154,7 @@ def test_sql_errors_go_back_to_the_model_which_corrects_them(paths):
     errors = [m for m in planner.seen[1] if isinstance(m, ToolMessage)]
     assert errors[0].content.startswith("ERROR: SQLite error: no such column: nope")
     assert result["status"] == "sent" and result["counts"]["failed_calls"] == 1
+    assert result["tool_trace"][0]["error"].startswith("SQLite error: no such column: nope")
 
 
 def test_parallel_calls_share_one_connection_safely(paths):
@@ -166,7 +169,7 @@ def test_parallel_calls_share_one_connection_safely(paths):
 
 def test_a_clarifying_question_ends_the_run(paths):
     planner = ScriptedPlanner(script=[
-        turn(call("ask_clarifying_question", question="Which year do you mean?\nOnly 2026 "
+        turn(call("ask_clarifying_question", question="Which **year** do you mean?\nOnly `2026` "
                                                        "is available.")),
         turn(text="should never be asked")])
     result, sender = ask(paths, planner)
@@ -282,3 +285,26 @@ def test_the_real_planner_sends_the_expected_converse_request(paths, monkeypatch
     assert all(len(s["description"]) > 40 for s in specs)
     assert result["status"] == "no_report" and result["tokens"] == {"input": 7, "output": 3}
     assert result["final_text"] == "Nothing to do."
+
+
+def test_numbers_typed_into_sql_do_not_pass_the_check(paths):
+    """The S6 real run: refused for 30.2%, the planner typed 15.6 + 14.6 into SQL."""
+    script = happy_script()
+    script[3:4] = [
+        turn(call("build_report", title="Root causes", findings=["Together 44.0% of tagged "
+             "narratives."], charts=["chart_1"], tags="tags_1")),
+        turn(call("run_sql", 9, sql="SELECT COUNT(*) AS n, ROUND(42.9 + 1.1, 1) AS together "
+                                    "FROM complaints_v")),
+        turn(call("build_report", 2, title="Root causes", findings=["Together 44.0% of "
+             "tagged narratives."], charts=["chart_1"], tags="tags_1")),
+        turn(call("build_report", 3, title="Root causes of complaints", findings=FINDINGS,
+                  charts=["chart_1", "chart_2"], tags="tags_1")),
+    ]
+    planner = ScriptedPlanner(script=script)
+    result, sender = ask(paths, planner)
+    reports = [s for s in result["tool_trace"] if s["tool"] == "build_report"]
+    assert [s["ok"] for s in reports] == [False, False, True]
+    assert all("44.0% not found" in s["error"] for s in reports[:2])
+    told = [m.content for m in planner.seen[5] if isinstance(m, ToolMessage)][-1]
+    assert "Column(s) together don't depend on the data" in told
+    assert result["status"] == "sent" and len(sender.sent) == 1

@@ -10,7 +10,10 @@ in the run's store: a query (rows_N, saved by run_sql), a tag set (tags_N, saved
 by tag_root_causes) or a chart made from them (chart_N). The model refers to
 them by handle and never retypes them. The model writes the title and the
 findings; code checks every number in them against the store (rounding
-allowed, see supported()) and refuses legal conclusions. It does not check
+allowed, see supported()) and refuses legal conclusions. Numbers from query
+columns that don't depend on the data (tools.DataProbe: e.g. numbers typed
+into the SQL) don't count, and a chart from rows_N adds no numbers of its own
+(they are its table's). It does not check
 whether a finding says a figure rose when it fell: that is left to the eval
 and listed as a limitation.
 
@@ -102,7 +105,8 @@ class RunStore(tg.TagStore):
         self.tables[handle] = {"sql": sql, "columns": list(result["columns"]),
                                "rows": [list(r) for r in result["rows"]],
                                "row_count": result["row_count"],
-                               "truncated": result["truncated"]}
+                               "truncated": result["truncated"],
+                               "independent": list(result.get("independent", ()))}
         return handle
 
 
@@ -459,19 +463,23 @@ def allowed_values(store):
                 pass
 
     for t in store.tables.values():
+        skip = set(t.get("independent", ()))
+        keep = [i for i, c in enumerate(t["columns"]) if c not in skip]
         for row in t["rows"]:
-            for v in row:
-                add(v)
-        add(t["row_count"])
+            for i in keep:
+                add(row[i])
+        if "#rows" not in skip:
+            add(t["row_count"])
     for info in store.info.values():
         for key in ("selected", "with_narrative", "drawn", "root_cause_base"):
             add(info.get(key))
         for d in ("counts", "shares", "status"):
             for v in (info.get(d) or {}).values():
                 add(v)
-    for c in store.charts.values():
-        for v in c["values"]:
-            add(v)
+    for c in store.charts.values():          # a rows_N chart repeats its table's numbers
+        if c["source"] in store.sets:
+            for v in c["values"]:
+                add(v)
     for _, value, _, _ in numbers_in(store.question or ""):
         values.add(value)
     return values
@@ -755,19 +763,20 @@ def sample(tags=0, out=SAMPLE_OUT):
     text_conn = sem.connect_text()
     store = RunStore(question="Sample: complaint volumes, top credit card issues and "
                               "timely response by product.")
+    probe = tools.DataProbe(conn, layer)
 
     def show(result):
         print(result["text"] if "text" in result else tools.as_text(result), "\n")
         return result
 
     vol = show(tools.run_sql(conn, guard, "SELECT month, product, COUNT(*) AS complaints "
-                             "FROM complaints_v GROUP BY month, product", store=store))
+                             "FROM complaints_v GROUP BY month, product", store=store, probe=probe))
     top = show(tools.run_sql(conn, guard, "SELECT issue, COUNT(*) AS complaints FROM "
                              "complaints_v WHERE product = 'Credit card' GROUP BY issue "
-                             "ORDER BY complaints DESC LIMIT 10", store=store))
+                             "ORDER BY complaints DESC LIMIT 10", store=store, probe=probe))
     timely = show(tools.run_sql(conn, guard, "SELECT product, ROUND(100.0 * AVG(timely), 2) "
                                 "AS timely_pct FROM responses_v GROUP BY product",
-                                store=store))
+                                store=store, probe=probe))
     charts = [show(clean_and_chart(store, vol["handle"], "Complaints by month", kind="line",
                                    x="month", y="complaints", series="product"))["handle"],
               show(clean_and_chart(store, top["handle"], "Top credit card issues",
@@ -802,6 +811,7 @@ def sample(tags=0, out=SAMPLE_OUT):
               f"{store.report['sha256'][:12]}) in {time.monotonic() - started:.1f} s")
     if tagger:
         tagger.close()
+    probe.close()
     text_conn.close()
     conn.close()
     return 0 if r["ok"] else 1

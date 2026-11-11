@@ -18,6 +18,7 @@ Usage (for trying a query by hand on the real database):
   python -m agent.tools sql "SELECT product, COUNT(*) FROM complaints_v GROUP BY product"
   python -m agent.tools textcheck     counts and timings only, never text
 """
+import random
 import sqlite3
 import sys
 import time
@@ -30,6 +31,10 @@ MAX_CELL = 300
 MAX_SECONDS = 5.0
 PROGRESS_STEPS = 10_000      # SQLite VM steps between time checks
 MAX_SQL = 5_000              # characters in one query
+PROBE_SIZES = (400, 700)     # complaints in the two data-check samples, at most
+PROBE_SEED = 20261111
+PROBE_SECONDS = 1.0          # per query per sample
+PROBE_ROWS = 5_000
 
 
 def describe_tables(layer):
@@ -48,13 +53,92 @@ def _cell(value, max_cell):
     return value, False
 
 
+class DataProbe:
+    """Two small samples of the agent's database, to tell which result columns
+    depend on the data (Prit, S6: closes the number check's typed-in-numbers hole).
+
+    A query's numeric column whose set of values is the same on the real data
+    and on both samples doesn't depend on the data (e.g. ROUND(15.6 + 14.6, 1),
+    or a constant beside a GROUP BY), so the report's number check ignores it.
+    Samples: about a third and two thirds of the complaints (at most
+    PROBE_SIZES), the same complaint IDs in every table so joins still work.
+    text_has is replaced by a stand-in that depends on the complaint ID. If a
+    query can't run on the samples, nothing is marked (the check stays as before)."""
+
+    def __init__(self, conn, layer, sizes=None, seed=None):
+        sizes = sizes or PROBE_SIZES
+        rng = random.Random(PROBE_SEED if seed is None else seed)
+        ids = [r[0] for r in conn.execute(
+            "SELECT complaint_id FROM complaints_v ORDER BY complaint_id")]
+        self.samples = []
+        for part, cap in zip((3, 1.5), sizes):
+            chosen = sorted(rng.sample(ids, max(1, min(cap, int(len(ids) / part)))))
+            mem = sqlite3.connect(":memory:", check_same_thread=False)
+            for name, table in layer["tables"].items():
+                cols = [c["name"] for c in table["column"]]
+                mem.execute(f"CREATE TABLE {name} ({', '.join(cols)})")
+                for i in range(0, len(chosen), 900):
+                    chunk = chosen[i:i + 900]
+                    rows = conn.execute(
+                        f"SELECT {', '.join(cols)} FROM {name} WHERE complaint_id IN "
+                        f"({', '.join('?' * len(chunk))})", chunk).fetchall()
+                    mem.executemany(f"INSERT INTO {name} VALUES "
+                                    f"({', '.join('?' * len(cols))})", rows)
+            mem.create_function("text_has", 2, _stand_in_text_has, deterministic=True)
+            mem.execute("PRAGMA query_only = ON")
+            self.samples.append(mem)
+
+    def independent(self, sql, columns, rows, row_count):
+        """Names of the columns that don't depend on the data, plus '#rows' if
+        the number of rows doesn't either."""
+        real = _numbers_by_column(rows, len(columns))
+        found = []
+        for mem in self.samples:
+            deadline = time.monotonic() + PROBE_SECONDS
+            try:
+                mem.set_progress_handler(lambda: int(time.monotonic() > deadline),
+                                         PROGRESS_STEPS)
+                cur = mem.execute(sql)
+                if not cur.description or len(cur.description) != len(columns):
+                    return set()
+                got = cur.fetchmany(PROBE_ROWS)
+                mem.set_progress_handler(None, 0)
+            except sqlite3.Error:
+                return set()
+            found.append((_numbers_by_column(got, len(columns)), len(got)))
+        out = {name for i, name in enumerate(columns)
+               if real[i] and all(f[0][i] == real[i] for f in found)}
+        if row_count is not None and all(n == row_count for _, n in found):
+            out.add("#rows")
+        return out
+
+    def close(self):
+        for mem in self.samples:
+            mem.close()
+
+
+def _stand_in_text_has(complaint_id, phrase):
+    if not isinstance(complaint_id, int) or not isinstance(phrase, str):
+        return None
+    return (complaint_id + sum(map(ord, phrase))) % 2
+
+
+def _numbers_by_column(rows, n):
+    sets = [set() for _ in range(n)]
+    for row in rows:
+        for i, v in enumerate(row[:n]):
+            if isinstance(v, (int, float)) and not isinstance(v, bool):
+                sets[i].add(round(float(v), 9))
+    return sets
+
+
 def _error(kind, message, started):
     return {"ok": False, "error_kind": kind, "error": message,
             "seconds": round(time.monotonic() - started, 3)}
 
 
 def run_sql(conn, guard, sql, max_rows=MAX_ROWS, max_cell=MAX_CELL, max_seconds=MAX_SECONDS,
-            store=None):
+            store=None, probe=None):
     """Run one SELECT. Returns a dict:
 
     ok, columns, rows (at most max_rows, cells capped), row_count (all rows the
@@ -65,7 +149,9 @@ def run_sql(conn, guard, sql, max_rows=MAX_ROWS, max_cell=MAX_CELL, max_seconds=
 
     store: the run's agent.report.RunStore. A successful result is saved there
     and gets a handle (rows_1, rows_2, ...), so charts and the report use the
-    numbers the query returned, never numbers retyped by the model."""
+    numbers the query returned, never numbers retyped by the model.
+    probe: the run's DataProbe. Columns that don't depend on the data are
+    recorded with the result (independent) and named in its text."""
     started = time.monotonic()
     if not isinstance(sql, str) or not sql.strip():
         return _error("empty", "The query is empty. Send one SELECT statement.", started)
@@ -139,6 +225,8 @@ def run_sql(conn, guard, sql, max_rows=MAX_ROWS, max_cell=MAX_CELL, max_seconds=
         "cells_cut": cut,
         "seconds": round(time.monotonic() - started, 3),
     }
+    if probe is not None:
+        result["independent"] = sorted(probe.independent(sql, columns, rows, result["row_count"]))
     if store is not None:
         result["handle"] = store.add_table(sql, result)
     return result
@@ -171,6 +259,10 @@ def as_text(result):
         foot += f" {result['cells_cut']} long values were cut."
     if result.get("handle"):
         foot += f" Saved as {result['handle']} for clean_and_chart and the report."
+    fixed = [c for c in result.get("independent", ()) if c != "#rows"]
+    if fixed:
+        foot += (f" Column(s) {', '.join(fixed)} don't depend on the data (same values on "
+                 "samples of the database), so their numbers can't be used in findings.")
     return "\n".join(lines + [foot])
 
 

@@ -541,3 +541,45 @@ def test_a_long_table_keeps_only_its_header_with_the_chart(run):
     (table,) = doc.tables
     keeps = [row.cells[0].paragraphs[0].paragraph_format.keep_with_next for row in table.rows]
     assert keeps == [True] + [False] * 10
+
+
+# ---------- the data check (session 6: numbers typed into SQL) ----------
+
+def test_the_probe_marks_columns_that_dont_depend_on_the_data(run):
+    probe = tools.DataProbe(run.conn, run.layer)
+    q = lambda sql: tools.run_sql(run.conn, run.guard, sql, store=run.store, probe=probe)
+    typed = q("SELECT COUNT(*) AS n, ROUND(15.6 + 14.6, 1) AS s FROM complaints_v")
+    assert set(typed["independent"]) == {"s", "#rows"}
+    assert "Column(s) s don't depend on the data" in tools.as_text(typed)
+    grouped = q("SELECT product, 30.2 AS x, COUNT(*) AS n FROM complaints_v GROUP BY product")
+    assert "x" in grouped["independent"] and "n" not in grouped["independent"]
+    data = q(BY_PRODUCT)
+    assert "complaints" not in data["independent"]
+    words = q("SELECT product, SUM(text_has(complaint_id, 'card')) AS m FROM narratives_v "
+              "GROUP BY product")
+    assert words["ok"] and "m" not in words["independent"]
+    c = rp.clean_and_chart(run.store, typed["handle"], "Typed", x="n", y="s")
+    assert c["ok"]
+    assert rp.check_text(run.store, [("f", "Together 30.2%.")]) == \
+        ["f: 30.2% not found in this run's results"]
+    assert rp.check_text(run.store, [("f", "There are 10 complaints.")]) == []
+    probe.close()
+
+
+def test_the_probe_marks_nothing_when_it_cant_run_the_query(run):
+    probe = tools.DataProbe(run.conn, run.layer)
+    probe.samples[0].close()
+    r = tools.run_sql(run.conn, run.guard, "SELECT 30.2 AS s", store=run.store, probe=probe)
+    assert r["ok"] and r["independent"] == []
+    probe.close()
+
+
+def test_probe_samples_are_a_third_and_two_thirds(run):
+    probe = tools.DataProbe(run.conn, run.layer)
+    sizes = [m.execute("SELECT COUNT(*) FROM complaints_v").fetchone()[0] for m in probe.samples]
+    assert sizes == [3, 6]
+    a = [m.execute("SELECT complaint_id FROM narratives_v").fetchall() for m in probe.samples]
+    b = [m.execute("SELECT n.complaint_id FROM narratives_v n JOIN complaints_v c "
+                   "USING (complaint_id)").fetchall() for m in probe.samples]
+    assert a == b                                 # same IDs in every table, so joins work
+    probe.close()
