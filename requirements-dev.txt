@@ -1,1 +1,3 @@
 pytest==9.2.0
+# Laptop only: "aws login" credentials need the CRT. Kept out of requirements.txt (the deployed agent uses a role).
+botocore[crt]==1.43.127
