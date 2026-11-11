@@ -12,209 +12,209 @@ taxonomy_version = "v1"
 [[item]]
 ref = "B01"
 product = "Credit card"
-code = ""
+code = "dispute_mishandled"
 uncertain = false
-note = ""
+note = "Filed a dispute over seats the merchant never shipped; Citi ruled for the merchant, and the request is to undo that denial."
 
 [[item]]
 ref = "B02"
 product = "Checking or savings account"
-code = ""
+code = "fraud_claim"
 uncertain = false
-note = ""
+note = "Consumer says they did not make the charges; fraud dispute denied with no reason and the wrong intake form sent; app limits and hold times are service conduct."
 
 [[item]]
 ref = "B03"
 product = "Checking or savings account"
-code = ""
+code = "third_party"
 uncertain = false
-note = ""
+note = "Only the merchant's non-delivery is described; no bank action, dispute or request appears, so no company failure is reported. Odd: filed under a checking account, but the bank never appears."
 
 [[item]]
 ref = "B04"
 product = "Credit card"
-code = ""
+code = "account_restricted"
 uncertain = false
-note = ""
+note = "Synchrony closed all 11 accounts citing ability to pay; the closure is the grievance and the request; the manager's remark, offshore agents and the unanswered credit review are service conduct."
 
 [[item]]
 ref = "B05"
 product = "Credit card"
-code = ""
+code = "account_restricted"
 uncertain = false
-note = ""
+note = "vs credit_reporting: consumer objects to an unconsented pull and an inaccurate score, but asks for no correction or removal and the score is not Barclays reporting; the company action is the limit cut, which also wins on precedence."
 
 [[item]]
 ref = "B06"
 product = "Checking or savings account"
-code = ""
+code = "fraud_claim"
 uncertain = false
-note = ""
+note = "Never-opened Chime account with transactions; consumer reopened the claim with ID theft and police reports and it was denied again; step 2 stops at the claim; credit is mentioned but there is no removal request."
 
 [[item]]
 ref = "B07"
 product = "Checking or savings account"
-code = ""
-uncertain = false
-note = ""
+code = "fraud_claim"
+uncertain = true
+note = "vs other: a forgery claim was filed and nothing came of it, which reads as fraud_claim (delayed), but the writer seems to be on the payee's side and may not hold the Citi account, which v1 sends to other; text is too thin and contradictory (bounced vs cleared) to say who the consumer is. Refers to attachments not shown."
 
 [[item]]
 ref = "B08"
 product = "Credit card"
-code = ""
+code = "servicing_error"
 uncertain = false
-note = ""
+note = "Payment debited from the bank but never posted to the card; asking for an ACH trace is asking the company to find its own payment, not a claim; cited Reg E, Reg Z and UDAAP ignored. Reads partly templated or AI-assisted."
 
 [[item]]
 ref = "B09"
 product = "Checking or savings account"
-code = ""
+code = "servicing_error"
 uncertain = false
-note = ""
+note = "vs terms_not_honored: bonus denied after an acceptance email and promo code, but the consumer says the denial rests on Citizens recording the wrong closing date for an account closed in person and refusing to correct it; step 2 walks back to that recording error, which also precedes terms_not_honored. The consumer's stated central complaint is acceptance-then-denial, so this exposes a gap between walk-back and the consumer's own framing. Odd: text is wrapped in a Python bytes literal with escaped newlines."
 
 [[item]]
 ref = "B10"
 product = "Credit card"
-code = ""
-uncertain = false
-note = ""
+code = "third_party"
+uncertain = true
+note = "vs credit_reporting: a pasted goodwill letter asking removal of a late payment the consumer concedes was accurate and their own; no company failure or refusal is reported, which meets the brief's third_party test, but no one else is blamed either, and credit_reporting needs the data called wrong or a refusal; v1 has no code for a request with no failure."
 
 [[item]]
 ref = "B11"
 product = "Credit card"
-code = ""
+code = "servicing_error"
 uncertain = false
-note = ""
+note = "vs account_restricted: money sits on a closed account, but the consumer closed it and account_restricted covers company closures; the grievance is the agreed $39 fee refund posted as a credit balance and delayed, a crediting operation; the rep's one-week timeline is service conduct. Gap: no rule for refund delays after a consumer-initiated closure."
 
 [[item]]
 ref = "B12"
 product = "Credit card"
-code = ""
-uncertain = false
-note = ""
+code = "fraud_claim"
+uncertain = true
+note = "vs account_restricted: consumer reports an unauthorized bank account added and asks for a fraud investigation the company refuses without impossible proof, which reads as fraud_claim, but v1 defines a claim around a transaction and none is named; if it is not a claim, the restriction with a verification demand is account_restricted. Gap: unauthorized account changes with no transaction."
 
 [[item]]
 ref = "B13"
 product = "Checking or savings account"
-code = ""
+code = "fraud_claim"
 uncertain = false
-note = ""
+note = "Ten charges the consumer calls unauthorized; Chime denied the dispute twice."
 
 [[item]]
 ref = "B14"
 product = "Credit card"
-code = ""
+code = "servicing_error"
 uncertain = false
-note = ""
+note = "vs dispute_mishandled: the 'Research/EFT review' asks the company to reverse the consumer's own overpayment and refund the excess, an account change the consumer asked for, not a request to investigate and decide a transaction; the failure is not processing it. The original error was the consumer's, which v1 does not address. Reads templated."
 
 [[item]]
 ref = "B15"
 product = "Credit card"
-code = ""
+code = "fraud_claim"
 uncertain = false
-note = ""
+note = "Consumer says they did not redeem the points for gift cards; BoA closed the investigation without reinstating them because the cards came to their address."
 
 [[item]]
 ref = "B16"
 product = "Checking or savings account"
-code = ""
+code = "unclear"
 uncertain = false
-note = ""
+note = "vs third_party: a general accusation against forex brokers and liquidity banks plus a pasted lawsuit summary cut off mid-sentence; no account of what any company did to this consumer, so neither a failure nor a clear target can be named."
 
 [[item]]
 ref = "B17"
 product = "Credit card"
-code = ""
+code = "account_restricted"
 uncertain = false
-note = ""
+note = "Citi closed the card after returned payments and denied reinstatement; forfeited rewards follow from the closure; the returned payments were the consumer's, so there is no earlier company failure to walk back to."
 
 [[item]]
 ref = "B18"
 product = "Credit card"
-code = ""
+code = "third_party"
 uncertain = false
-note = ""
+note = "vs fraud_claim: a card was opened in the consumer's name, but Citi closed it on request and no mishandling, billing or removal request is reported; the identity thief is blamed. A second unnamed issuer also appears."
 
 [[item]]
 ref = "B19"
 product = "Credit card"
-code = ""
+code = "servicing_error"
 uncertain = false
-note = ""
+note = "Consumer traces the late fee and interest to a payment the branch confirms was made but the card side never posted; the rep's 'lost payment' investigation is the company finding its own payment, not a claim."
 
 [[item]]
 ref = "B20"
 product = "Checking or savings account"
-code = ""
+code = "account_restricted"
 uncertain = false
-note = ""
+note = "Bank will not reopen the account despite verification; short but specific; redaction hides where the consumer had been."
 
 [[item]]
 ref = "B21"
 product = "Credit card"
-code = ""
+code = "credit_reporting"
 uncertain = false
-note = ""
+note = "vs third_party: the thief is blamed for the application, but the one company action named is a hard inquiry on an application the consumer never made; no request is stated, and the inquiry points to credit_reporting. Very short."
 
 [[item]]
 ref = "B22"
 product = "Checking or savings account"
-code = ""
+code = "fraud_claim"
 uncertain = false
-note = ""
+note = "Consumer says the international withdrawals were not theirs, some made while the card was locked; disputes denied as authorized."
 
 [[item]]
 ref = "B23"
 product = "Checking or savings account"
-code = ""
+code = "servicing_error"
 uncertain = false
-note = ""
+note = "When reopening after fraud, NFCU moved only the available balance, causing a negative balance, then failed to post the payroll deposit to the new account; late payments and credit harm follow; no complaint about the fraud claim itself; the rep's 45-day assurance is service conduct."
 
 [[item]]
 ref = "B24"
 product = "Checking or savings account"
-code = ""
+code = "dispute_mishandled"
 uncertain = false
-note = ""
+note = "vs servicing_error: a bill payment that never reached the payee could be a find-the-payment request, but the consumer filed four disputes with the fraud department and asks for an investigation and written findings, so step 2 stops at the claim (like R36). Contrast B08, where no claim was filed."
 
 [[item]]
 ref = "B25"
 product = "Checking or savings account"
-code = ""
+code = "dispute_mishandled"
 uncertain = false
-note = ""
+note = "vs fraud_claim: the charge came from a real merchant the consumer had subscribed to and cancelled, not from someone else, so it is a dispute; Chase took back the provisional credit and closed the case without asking for documents; the check hold and overdraft are secondary. Garbled but readable."
 
 [[item]]
 ref = "B26"
 product = "Checking or savings account"
-code = ""
+code = "fraud_claim"
 uncertain = false
-note = ""
+note = "Consumer says they did not make the out-of-state transaction; Santander denied the claim on the merchant's word and has not reconsidered."
 
 [[item]]
 ref = "B27"
 product = "Credit card"
-code = ""
+code = "fee_charged"
 uncertain = false
-note = ""
+note = "vs terms_not_honored: consumer says the app does not surface the deferred-interest deadline but concedes it was disclosed in the agreement, statements, calls and emails, and never says it was hidden before agreeing, so the pre-agreement test gives fee_charged; the denied 'dispute' is a refund request, not a claim; cited circular and statute ignored. Gap: no rule for disclosure design after agreement. Reads polished, possibly AI-assisted."
 
 [[item]]
 ref = "B28"
 product = "Checking or savings account"
-code = ""
+code = "unclear"
 uncertain = false
-note = ""
+note = "vs fraud_claim: unauthorized transactions and two claims opened with TD, but the text stops there with no denial, delay or other company action; opening the claims is not a failure. Looks truncated."
 
 [[item]]
 ref = "B29"
 product = "Checking or savings account"
-code = ""
+code = "account_restricted"
 uncertain = false
-note = ""
+note = "Santander froze the son's account over a deposited insurance check it flagged as fraud and will not release the check; the request is to unfreeze and release. The writer is a parent acting for the account holder, not an adverse party, so not other. Gap: bank-initiated holds on suspected-fraud deposits have no v1 rule; decided by the main request."
 
 [[item]]
 ref = "B30"
 product = "Credit card"
-code = ""
+code = "terms_not_honored"
 uncertain = false
-note = ""
+note = "vs servicing_error: consumer also blames an unrequested paperless enrollment for missing notices, but most words go to deferred interest never disclosed and no agreement given before opening; unlike B27, the consumer says the term was not disclosed; the store rep's payment promise is service conduct. Also names the retailer, a non-bank."
