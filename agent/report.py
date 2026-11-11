@@ -34,6 +34,7 @@ import io
 import math
 import random
 import re
+import textwrap
 from datetime import datetime, timezone
 
 import matplotlib
@@ -55,6 +56,7 @@ WIDTH_IN = 6.5
 MAX_BARS = 12
 MAX_SERIES = 3
 MAX_CHARTS = 6
+LABEL_WRAP = 30          # characters per line of a bar label
 
 # report limits
 MAX_TITLE = 120
@@ -71,6 +73,10 @@ CAVEAT = ("These findings describe what consumers reported to the CFPB. Complain
           "narratives are not verified, and complaints are not a representative sample "
           "of all customers. Nothing in this report is a finding that a company broke a "
           "rule or a law.")
+QUOTE_NOTE = ("One complaint for each of the most common root causes, picked by code at "
+              "random among those tagged with it, never by company. Excerpts are as "
+              "published: company names and any claims about the law are the consumer's "
+              "own words, and XXXX marks the CFPB's redactions.")
 LEGAL = re.compile(r"\b(illegal\w*|unlawful\w*|violat\w*|broke the law|breach\w* of the law)\b",
                    re.IGNORECASE)
 
@@ -247,13 +253,23 @@ def month_range(first, last):
     return out
 
 
-def _value_axis(axis, unit):
+def _value_axis(axis, unit, nbins="auto"):
     from matplotlib.ticker import FuncFormatter, MaxNLocator
     if unit == "count":
-        axis.set_major_locator(MaxNLocator(integer=True))
+        axis.set_major_locator(MaxNLocator(nbins=nbins, integer=True))
         axis.set_major_formatter(FuncFormatter(lambda v, _: f"{v:,.0f}"))
     else:
+        axis.set_major_locator(MaxNLocator(nbins=nbins))
         axis.set_major_formatter(FuncFormatter(lambda v, _: f"{v:g}%"))
+
+
+def wrap(label, width=LABEL_WRAP):
+    """A long category name over at most two lines, for the chart only (the
+    table and the alt text keep it whole)."""
+    lines = textwrap.wrap(label, width) or [label]
+    if len(lines) > 2:
+        lines = [lines[0], textwrap.shorten(" ".join(lines[1:]), width, placeholder=" …")]
+    return "\n".join(lines)
 
 
 def _style(ax):
@@ -299,7 +315,9 @@ def draw(frame, x, y, series, kind, unit, y_label):
         n = len(groups)
         band = 0.8
         thick = min(band / n, 0.5)
-        fig, ax = plt.subplots(figsize=(WIDTH_IN, 0.6 + 0.32 * len(cats) * max(1, n * 0.7)))
+        labels = [wrap(c) for c in cats]
+        per = 0.28 + (0.08 if any("\n" in s for s in labels) else 0)
+        fig, ax = plt.subplots(figsize=(WIDTH_IN, 0.6 + per * len(cats) * max(1, n * 0.7)))
         top, low = max(frame[y].max(), 0), min(frame[y].min(), 0)
         for i, g in enumerate(groups):
             part = frame if g is None else frame[frame[series] == g]
@@ -307,12 +325,12 @@ def draw(frame, x, y, series, kind, unit, y_label):
             bars = ax.barh(pos, part[y], height=thick * 0.85, color=SERIES_COLORS[i], label=g)
             ax.bar_label(bars, labels=[label(v) for v in part[y]], padding=3, fontsize=7.5,
                          color=INK)
-        ax.set_yticks(range(len(cats)), cats)
+        ax.set_yticks(range(len(cats)), labels)
         ax.invert_yaxis()
         ax.grid(axis="x", color=GRID, linewidth=0.6)
         ax.set_xlabel(y_label, fontsize=8, color=INK_2)
         ax.set_xlim(low * 1.15, top * 1.15 if top else 1)
-        _value_axis(ax.xaxis, unit)
+        _value_axis(ax.xaxis, unit, nbins=5)
     _style(ax)
     if series:
         ax.legend(frameon=False, fontsize=8, labelcolor=INK_2, loc="best")
@@ -530,8 +548,20 @@ def _para(doc, text, size=None, color=None, italic=False, bold=False, style=None
     return p
 
 
-def _table(doc, columns, rows):
+KEEP_WHOLE_ROWS = 8      # tables up to this many rows never break across pages
+
+
+def _table(doc, columns, rows, keep_together=False):
+    """keep_together: a table of up to KEEP_WHOLE_ROWS rows stays on one page
+    with the chart above it and its source line below; a longer one keeps its
+    header and first row with the chart, may break after that, and repeats
+    its header row on the next page."""
+    from docx.oxml import OxmlElement
+    from docx.oxml.ns import qn
     t = doc.add_table(rows=1, cols=len(columns))
+    header = OxmlElement("w:tblHeader")
+    header.set(qn("w:val"), "true")
+    t.rows[0]._tr.get_or_add_trPr().append(header)
     t.style = "Table Grid"
     for cell, name in zip(t.rows[0].cells, columns):
         cell.text = ""
@@ -542,9 +572,11 @@ def _table(doc, columns, rows):
             cell.text = str(value)
             if j:
                 cell.paragraphs[0].alignment = WD_ALIGN_PARAGRAPH.RIGHT
-    for row in t.rows:
+    whole = len(rows) <= KEEP_WHOLE_ROWS
+    for i, row in enumerate(t.rows):
         for cell in row.cells:
             for p in cell.paragraphs:
+                p.paragraph_format.keep_with_next = keep_together and (whole or i == 0)
                 for r in p.runs:
                     r.font.size = Pt(9)
     return t
@@ -628,8 +660,11 @@ def build_report(store, layer, title, findings, charts=(), tags=None, conn=None,
         info = store.info.get(tags, {})
         status = info.get("status") or {}
         tagged = status.get("tagged", len(store.sets[tags]))
-        pool = (f"{info.get('with_narrative', 0):,} complaints with a published narrative "
-                f"among the {info.get('selected', 0):,} selected")
+        selected, with_text = info.get("selected", 0), info.get("with_narrative", 0)
+        pool = (f"{with_text:,} selected complaints, all with a published narrative"
+                if selected == with_text else
+                f"{with_text:,} complaints with a published narrative among the "
+                f"{selected:,} selected")
         how = (f"drawn at random (seed {info.get('seed')}) from the {pool}"
                if info.get("sampled") else f"which is every one of the {pool}")
         line = (f"Root causes come from {tagged:,} complaint narratives tagged by "
@@ -648,7 +683,8 @@ def build_report(store, layer, title, findings, charts=(), tags=None, conn=None,
         doc.add_heading(c["title"], level=2)
         shape = doc.add_picture(io.BytesIO(c["png"]), width=Inches(6.0))
         shape._inline.docPr.set("descr", c["alt"][:2000])
-        _table(doc, c["columns"], c["rows"])
+        doc.paragraphs[-1].paragraph_format.keep_with_next = True
+        _table(doc, c["columns"], c["rows"], keep_together=True)
         src = c["source"]
         note = (f"Source: {src}, query in the method section." if src in store.tables
                 else f"Source: {src}, root-cause tags (coverage above).")
@@ -657,9 +693,7 @@ def build_report(store, layer, title, findings, charts=(), tags=None, conn=None,
     if tags:
         doc.add_heading("Example complaints", level=1)
         if quotes:
-            _para(doc, "One complaint for each of the most common root causes, picked by "
-                       "code at random among those tagged with it. Excerpts as published; "
-                       "XXXX marks the CFPB's redactions.", size=9, color=INK_2)
+            _para(doc, QUOTE_NOTE, size=9, color=INK_2)
         else:
             _para(doc, "No tagged narrative was long enough to quote.", size=9, color=INK_2)
         for code, cid, text in quotes:

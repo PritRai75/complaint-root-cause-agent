@@ -492,3 +492,52 @@ def test_sample_report_on_fake_data(run, monkeypatch, tmp_path, capsys, tags):
     text = "\n".join(p.text for p in Document(str(out)).paragraphs)
     assert "with 5 complaints" in text and "100.0% of credit card complaints" in text
     assert ("Example complaints" in text) is bool(tags)
+
+
+# ---------- layout (session 6, after the first real report) ----------
+
+def test_long_bar_labels_wrap_in_the_chart_only(run):
+    name = "Problem with a company's investigation into an existing problem"
+    assert rp.wrap(name) == "Problem with a company's\ninvestigation into an …"
+    assert rp.wrap("Advertising and marketing, including promotional offers") == \
+        "Advertising and marketing,\nincluding promotional offers"
+    assert rp.wrap("Fees or interest") == "Fees or interest"
+    run.sql(f"SELECT '{name.replace(chr(39), chr(39) * 2)}' AS issue, 2369 AS n "
+            "UNION ALL SELECT 'Fees or interest', 6824")
+    c = rp.clean_and_chart(run.store, "rows_1", "Issues", x="issue", y="n")
+    chart = run.store.charts[c["handle"]]
+    assert chart["rows"][1][0] == name and name in chart["alt"]
+
+
+def test_coverage_line_when_every_selected_complaint_has_a_narrative(run):
+    t = tg.tag_root_causes(run.conn, run.guard, run.tagger,
+                           "SELECT complaint_id FROM narratives_v", run.store)
+    rp.build_report(run.store, run.layer, "All", ["8 narratives."], tags=t["handle"],
+                    conn=run.conn, text_conn=run.text)
+    text, _ = doc_text(run.store)
+    assert "which is every one of the 8 selected complaints, all with a published " \
+           "narrative." in text
+    assert "among the 8 selected" not in text
+
+
+def test_each_chart_keeps_with_its_table_and_quotes_carry_the_note(run):
+    built(run)
+    text, doc = doc_text(run.store)
+    pictures = [p for p in doc.paragraphs if p._p.xpath(".//pic:pic")]
+    assert len(pictures) == 2
+    assert all(p.paragraph_format.keep_with_next for p in pictures)
+    for table in doc.tables:                      # both have at most 7 rows + header
+        assert all(p.paragraph_format.keep_with_next
+                   for row in table.rows for cell in row.cells for p in cell.paragraphs)
+        assert table.rows[0]._tr.xpath("./w:trPr/w:tblHeader")
+    assert rp.QUOTE_NOTE in text
+
+
+def test_a_long_table_keeps_only_its_header_with_the_chart(run):
+    run.sql(" UNION ALL ".join(f"SELECT 'c{i:02d}' AS cat, {i + 1} AS n" for i in range(10)))
+    c = rp.clean_and_chart(run.store, "rows_1", "Ten", x="cat", y="n")
+    rp.build_report(run.store, run.layer, "Ten", ["10 categories."], charts=[c["handle"]])
+    _, doc = doc_text(run.store)
+    (table,) = doc.tables
+    keeps = [row.cells[0].paragraphs[0].paragraph_format.keep_with_next for row in table.rows]
+    assert keeps == [True] + [False] * 10
