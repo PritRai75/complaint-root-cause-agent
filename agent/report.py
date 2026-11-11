@@ -80,7 +80,7 @@ QUOTE_NOTE = ("One complaint for each of the most common root causes, picked by 
               "random among those tagged with it, never by company. Excerpts are as "
               "published: company names and any claims about the law are the consumer's "
               "own words, and XXXX marks the CFPB's redactions.")
-LEGAL = re.compile(r"\b(illegal\w*|unlawful\w*|violat\w*|broke the law|breach\w* of the law)\b",
+LEGAL = re.compile(r"\b(illegal\w*|unlawful\w*|broke the law|breach\w* of the law)\b",
                    re.IGNORECASE)
 
 
