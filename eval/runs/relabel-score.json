@@ -1,0 +1,297 @@
+{
+ "set": "relabel",
+ "n": 30,
+ "agree": 27,
+ "share": 0.9,
+ "wilson95": [
+  0.7438,
+  0.9654
+ ],
+ "kappa": 0.8802,
+ "by_product": {
+  "Credit card": {
+   "n": 15,
+   "agree": 14
+  },
+  "Checking or savings account": {
+   "n": 15,
+   "agree": 13
+  }
+ },
+ "misses_matching_first_runner_up": 2,
+ "second_uncertain": 3,
+ "gap_days_at_draw": 0.62,
+ "rows": [
+  {
+   "ref": "B01",
+   "test_ref": "T013",
+   "product": "Credit card",
+   "first": "dispute_mishandled",
+   "second": "dispute_mishandled",
+   "first_runner_up": null,
+   "second_uncertain": false
+  },
+  {
+   "ref": "B02",
+   "test_ref": "T151",
+   "product": "Checking or savings account",
+   "first": "fraud_claim",
+   "second": "fraud_claim",
+   "first_runner_up": null,
+   "second_uncertain": false
+  },
+  {
+   "ref": "B03",
+   "test_ref": "T042",
+   "product": "Checking or savings account",
+   "first": "third_party",
+   "second": "third_party",
+   "first_runner_up": "unclear",
+   "second_uncertain": false
+  },
+  {
+   "ref": "B04",
+   "test_ref": "T095",
+   "product": "Credit card",
+   "first": "account_restricted",
+   "second": "account_restricted",
+   "first_runner_up": null,
+   "second_uncertain": false
+  },
+  {
+   "ref": "B05",
+   "test_ref": "T034",
+   "product": "Credit card",
+   "first": "account_restricted",
+   "second": "account_restricted",
+   "first_runner_up": "credit_reporting",
+   "second_uncertain": false
+  },
+  {
+   "ref": "B06",
+   "test_ref": "T049",
+   "product": "Checking or savings account",
+   "first": "fraud_claim",
+   "second": "fraud_claim",
+   "first_runner_up": "credit_reporting",
+   "second_uncertain": false
+  },
+  {
+   "ref": "B07",
+   "test_ref": "T174",
+   "product": "Checking or savings account",
+   "first": "fraud_claim",
+   "second": "fraud_claim",
+   "first_runner_up": "unclear",
+   "second_uncertain": true
+  },
+  {
+   "ref": "B08",
+   "test_ref": "T003",
+   "product": "Credit card",
+   "first": "servicing_error",
+   "second": "servicing_error",
+   "first_runner_up": null,
+   "second_uncertain": false
+  },
+  {
+   "ref": "B09",
+   "test_ref": "T185",
+   "product": "Checking or savings account",
+   "first": "terms_not_honored",
+   "second": "servicing_error",
+   "first_runner_up": "servicing_error",
+   "second_uncertain": false
+  },
+  {
+   "ref": "B10",
+   "test_ref": "T077",
+   "product": "Credit card",
+   "first": "credit_reporting",
+   "second": "third_party",
+   "first_runner_up": null,
+   "second_uncertain": true
+  },
+  {
+   "ref": "B11",
+   "test_ref": "T079",
+   "product": "Credit card",
+   "first": "servicing_error",
+   "second": "servicing_error",
+   "first_runner_up": "fee_charged",
+   "second_uncertain": false
+  },
+  {
+   "ref": "B12",
+   "test_ref": "T125",
+   "product": "Credit card",
+   "first": "fraud_claim",
+   "second": "fraud_claim",
+   "first_runner_up": "account_restricted",
+   "second_uncertain": true
+  },
+  {
+   "ref": "B13",
+   "test_ref": "T199",
+   "product": "Checking or savings account",
+   "first": "fraud_claim",
+   "second": "fraud_claim",
+   "first_runner_up": null,
+   "second_uncertain": false
+  },
+  {
+   "ref": "B14",
+   "test_ref": "T131",
+   "product": "Credit card",
+   "first": "servicing_error",
+   "second": "servicing_error",
+   "first_runner_up": null,
+   "second_uncertain": false
+  },
+  {
+   "ref": "B15",
+   "test_ref": "T006",
+   "product": "Credit card",
+   "first": "fraud_claim",
+   "second": "fraud_claim",
+   "first_runner_up": null,
+   "second_uncertain": false
+  },
+  {
+   "ref": "B16",
+   "test_ref": "T037",
+   "product": "Checking or savings account",
+   "first": "unclear",
+   "second": "unclear",
+   "first_runner_up": "third_party",
+   "second_uncertain": false
+  },
+  {
+   "ref": "B17",
+   "test_ref": "T063",
+   "product": "Credit card",
+   "first": "account_restricted",
+   "second": "account_restricted",
+   "first_runner_up": null,
+   "second_uncertain": false
+  },
+  {
+   "ref": "B18",
+   "test_ref": "T060",
+   "product": "Credit card",
+   "first": "third_party",
+   "second": "third_party",
+   "first_runner_up": "fraud_claim",
+   "second_uncertain": false
+  },
+  {
+   "ref": "B19",
+   "test_ref": "T053",
+   "product": "Credit card",
+   "first": "servicing_error",
+   "second": "servicing_error",
+   "first_runner_up": null,
+   "second_uncertain": false
+  },
+  {
+   "ref": "B20",
+   "test_ref": "T155",
+   "product": "Checking or savings account",
+   "first": "account_restricted",
+   "second": "account_restricted",
+   "first_runner_up": null,
+   "second_uncertain": false
+  },
+  {
+   "ref": "B21",
+   "test_ref": "T080",
+   "product": "Credit card",
+   "first": "credit_reporting",
+   "second": "credit_reporting",
+   "first_runner_up": "third_party",
+   "second_uncertain": false
+  },
+  {
+   "ref": "B22",
+   "test_ref": "T038",
+   "product": "Checking or savings account",
+   "first": "fraud_claim",
+   "second": "fraud_claim",
+   "first_runner_up": null,
+   "second_uncertain": false
+  },
+  {
+   "ref": "B23",
+   "test_ref": "T184",
+   "product": "Checking or savings account",
+   "first": "servicing_error",
+   "second": "servicing_error",
+   "first_runner_up": null,
+   "second_uncertain": false
+  },
+  {
+   "ref": "B24",
+   "test_ref": "T087",
+   "product": "Checking or savings account",
+   "first": "dispute_mishandled",
+   "second": "dispute_mishandled",
+   "first_runner_up": null,
+   "second_uncertain": false
+  },
+  {
+   "ref": "B25",
+   "test_ref": "T130",
+   "product": "Checking or savings account",
+   "first": "dispute_mishandled",
+   "second": "dispute_mishandled",
+   "first_runner_up": "fraud_claim",
+   "second_uncertain": false
+  },
+  {
+   "ref": "B26",
+   "test_ref": "T109",
+   "product": "Checking or savings account",
+   "first": "fraud_claim",
+   "second": "fraud_claim",
+   "first_runner_up": null,
+   "second_uncertain": false
+  },
+  {
+   "ref": "B27",
+   "test_ref": "T092",
+   "product": "Credit card",
+   "first": "fee_charged",
+   "second": "fee_charged",
+   "first_runner_up": "terms_not_honored",
+   "second_uncertain": false
+  },
+  {
+   "ref": "B28",
+   "test_ref": "T143",
+   "product": "Checking or savings account",
+   "first": "fraud_claim",
+   "second": "unclear",
+   "first_runner_up": "unclear",
+   "second_uncertain": false
+  },
+  {
+   "ref": "B29",
+   "test_ref": "T168",
+   "product": "Checking or savings account",
+   "first": "account_restricted",
+   "second": "account_restricted",
+   "first_runner_up": null,
+   "second_uncertain": false
+  },
+  {
+   "ref": "B30",
+   "test_ref": "T093",
+   "product": "Credit card",
+   "first": "terms_not_honored",
+   "second": "terms_not_honored",
+   "first_runner_up": null,
+   "second_uncertain": false
+  }
+ ],
+ "scored_at": "2026-11-11T14:01:35Z"
+}
