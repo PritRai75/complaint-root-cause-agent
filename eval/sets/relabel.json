@@ -1,0 +1,209 @@
+{
+ "set": "relabel",
+ "source": "test",
+ "per_product": 15,
+ "seed": 20261117,
+ "excluded_refs": [
+  "T022",
+  "T024",
+  "T041",
+  "T061",
+  "T065",
+  "T071",
+  "T116",
+  "T126",
+  "T154",
+  "T157",
+  "T160",
+  "T161",
+  "T166",
+  "T193"
+ ],
+ "excluded_why": "discussed by reference in session 3",
+ "drawn_at": "2026-11-11T07:34:25Z",
+ "first_labels_commit": "e7efa08",
+ "gap_days_at_draw": 0.62,
+ "code_commit": "604d377",
+ "items": [
+  {
+   "ref": "B01",
+   "test_ref": "T013",
+   "complaint_id": 19042160,
+   "product": "Credit card"
+  },
+  {
+   "ref": "B02",
+   "test_ref": "T151",
+   "complaint_id": 18933288,
+   "product": "Checking or savings account"
+  },
+  {
+   "ref": "B03",
+   "test_ref": "T042",
+   "complaint_id": 22581740,
+   "product": "Checking or savings account"
+  },
+  {
+   "ref": "B04",
+   "test_ref": "T095",
+   "complaint_id": 21054477,
+   "product": "Credit card"
+  },
+  {
+   "ref": "B05",
+   "test_ref": "T034",
+   "complaint_id": 18979336,
+   "product": "Credit card"
+  },
+  {
+   "ref": "B06",
+   "test_ref": "T049",
+   "complaint_id": 21491095,
+   "product": "Checking or savings account"
+  },
+  {
+   "ref": "B07",
+   "test_ref": "T174",
+   "complaint_id": 18546327,
+   "product": "Checking or savings account"
+  },
+  {
+   "ref": "B08",
+   "test_ref": "T003",
+   "complaint_id": 19967185,
+   "product": "Credit card"
+  },
+  {
+   "ref": "B09",
+   "test_ref": "T185",
+   "complaint_id": 21272197,
+   "product": "Checking or savings account"
+  },
+  {
+   "ref": "B10",
+   "test_ref": "T077",
+   "complaint_id": 24028029,
+   "product": "Credit card"
+  },
+  {
+   "ref": "B11",
+   "test_ref": "T079",
+   "complaint_id": 19660667,
+   "product": "Credit card"
+  },
+  {
+   "ref": "B12",
+   "test_ref": "T125",
+   "complaint_id": 19619189,
+   "product": "Credit card"
+  },
+  {
+   "ref": "B13",
+   "test_ref": "T199",
+   "complaint_id": 23434086,
+   "product": "Checking or savings account"
+  },
+  {
+   "ref": "B14",
+   "test_ref": "T131",
+   "complaint_id": 20041144,
+   "product": "Credit card"
+  },
+  {
+   "ref": "B15",
+   "test_ref": "T006",
+   "complaint_id": 23071729,
+   "product": "Credit card"
+  },
+  {
+   "ref": "B16",
+   "test_ref": "T037",
+   "complaint_id": 19067039,
+   "product": "Checking or savings account"
+  },
+  {
+   "ref": "B17",
+   "test_ref": "T063",
+   "complaint_id": 19352651,
+   "product": "Credit card"
+  },
+  {
+   "ref": "B18",
+   "test_ref": "T060",
+   "complaint_id": 23129988,
+   "product": "Credit card"
+  },
+  {
+   "ref": "B19",
+   "test_ref": "T053",
+   "complaint_id": 19125653,
+   "product": "Credit card"
+  },
+  {
+   "ref": "B20",
+   "test_ref": "T155",
+   "complaint_id": 18532123,
+   "product": "Checking or savings account"
+  },
+  {
+   "ref": "B21",
+   "test_ref": "T080",
+   "complaint_id": 23050375,
+   "product": "Credit card"
+  },
+  {
+   "ref": "B22",
+   "test_ref": "T038",
+   "complaint_id": 18679364,
+   "product": "Checking or savings account"
+  },
+  {
+   "ref": "B23",
+   "test_ref": "T184",
+   "complaint_id": 20211506,
+   "product": "Checking or savings account"
+  },
+  {
+   "ref": "B24",
+   "test_ref": "T087",
+   "complaint_id": 19627825,
+   "product": "Checking or savings account"
+  },
+  {
+   "ref": "B25",
+   "test_ref": "T130",
+   "complaint_id": 20362171,
+   "product": "Checking or savings account"
+  },
+  {
+   "ref": "B26",
+   "test_ref": "T109",
+   "complaint_id": 20810154,
+   "product": "Checking or savings account"
+  },
+  {
+   "ref": "B27",
+   "test_ref": "T092",
+   "complaint_id": 23220338,
+   "product": "Credit card"
+  },
+  {
+   "ref": "B28",
+   "test_ref": "T143",
+   "complaint_id": 20528923,
+   "product": "Checking or savings account"
+  },
+  {
+   "ref": "B29",
+   "test_ref": "T168",
+   "complaint_id": 23445508,
+   "product": "Checking or savings account"
+  },
+  {
+   "ref": "B30",
+   "test_ref": "T093",
+   "complaint_id": 20288635,
+   "product": "Credit card"
+  }
+ ]
+}

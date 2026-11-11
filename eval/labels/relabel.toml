@@ -1,0 +1,220 @@
+# Blind re-label (30 narratives). Written by Prit.
+#
+# Label from the sheet scratch/labels_relabel.html, exactly as the first time:
+# one code by the primary_rule, uncertain = true only for a genuine coin-flip,
+# a note when torn ('vs <code>', then why). Don't open eval/labels/test.toml or
+# eval/sets/relabel.json until all items are done.
+# Check with: python -m eval.relabel check
+
+set = "relabel"
+taxonomy_version = "v1"
+
+[[item]]
+ref = "B01"
+product = "Credit card"
+code = ""
+uncertain = false
+note = ""
+
+[[item]]
+ref = "B02"
+product = "Checking or savings account"
+code = ""
+uncertain = false
+note = ""
+
+[[item]]
+ref = "B03"
+product = "Checking or savings account"
+code = ""
+uncertain = false
+note = ""
+
+[[item]]
+ref = "B04"
+product = "Credit card"
+code = ""
+uncertain = false
+note = ""
+
+[[item]]
+ref = "B05"
+product = "Credit card"
+code = ""
+uncertain = false
+note = ""
+
+[[item]]
+ref = "B06"
+product = "Checking or savings account"
+code = ""
+uncertain = false
+note = ""
+
+[[item]]
+ref = "B07"
+product = "Checking or savings account"
+code = ""
+uncertain = false
+note = ""
+
+[[item]]
+ref = "B08"
+product = "Credit card"
+code = ""
+uncertain = false
+note = ""
+
+[[item]]
+ref = "B09"
+product = "Checking or savings account"
+code = ""
+uncertain = false
+note = ""
+
+[[item]]
+ref = "B10"
+product = "Credit card"
+code = ""
+uncertain = false
+note = ""
+
+[[item]]
+ref = "B11"
+product = "Credit card"
+code = ""
+uncertain = false
+note = ""
+
+[[item]]
+ref = "B12"
+product = "Credit card"
+code = ""
+uncertain = false
+note = ""
+
+[[item]]
+ref = "B13"
+product = "Checking or savings account"
+code = ""
+uncertain = false
+note = ""
+
+[[item]]
+ref = "B14"
+product = "Credit card"
+code = ""
+uncertain = false
+note = ""
+
+[[item]]
+ref = "B15"
+product = "Credit card"
+code = ""
+uncertain = false
+note = ""
+
+[[item]]
+ref = "B16"
+product = "Checking or savings account"
+code = ""
+uncertain = false
+note = ""
+
+[[item]]
+ref = "B17"
+product = "Credit card"
+code = ""
+uncertain = false
+note = ""
+
+[[item]]
+ref = "B18"
+product = "Credit card"
+code = ""
+uncertain = false
+note = ""
+
+[[item]]
+ref = "B19"
+product = "Credit card"
+code = ""
+uncertain = false
+note = ""
+
+[[item]]
+ref = "B20"
+product = "Checking or savings account"
+code = ""
+uncertain = false
+note = ""
+
+[[item]]
+ref = "B21"
+product = "Credit card"
+code = ""
+uncertain = false
+note = ""
+
+[[item]]
+ref = "B22"
+product = "Checking or savings account"
+code = ""
+uncertain = false
+note = ""
+
+[[item]]
+ref = "B23"
+product = "Checking or savings account"
+code = ""
+uncertain = false
+note = ""
+
+[[item]]
+ref = "B24"
+product = "Checking or savings account"
+code = ""
+uncertain = false
+note = ""
+
+[[item]]
+ref = "B25"
+product = "Checking or savings account"
+code = ""
+uncertain = false
+note = ""
+
+[[item]]
+ref = "B26"
+product = "Checking or savings account"
+code = ""
+uncertain = false
+note = ""
+
+[[item]]
+ref = "B27"
+product = "Credit card"
+code = ""
+uncertain = false
+note = ""
+
+[[item]]
+ref = "B28"
+product = "Checking or savings account"
+code = ""
+uncertain = false
+note = ""
+
+[[item]]
+ref = "B29"
+product = "Checking or savings account"
+code = ""
+uncertain = false
+note = ""
+
+[[item]]
+ref = "B30"
+product = "Credit card"
+code = ""
+uncertain = false
+note = ""
