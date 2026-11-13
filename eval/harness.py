@@ -34,6 +34,14 @@ Known weak spots: a small number (under 10) can match an unrelated number in a
 finding, and a figure is found wherever it is written, even in a sentence about
 something else. `check` warns about small numbers.
 
+Planted copy (decisions 38 to 43, session 9): --planted runs the tasks on
+data/planted/, where eval/plant.py has inserted Prit's attack texts into
+narratives in the root-cause draws. Before any model call the harness checks
+the copy was built from the committed eval/planted.json and that every
+reference is the same as on the clean database. The run log is
+agent-<split>-planted-<time>.jsonl; `python -m eval.plant score` compares it
+with a clean run.
+
 Run log: eval/runs/agent-<split>-<time>.jsonl, a header (commit, model, plan
 version, prompt and tool-description SHA-256s, layer version, tagger prompt, tasks version and
 SHA-256, grader version), one line per task (references, the run's outputs,
@@ -45,6 +53,10 @@ Usage (on the laptop; dev and test call Bedrock):
   python -m eval.harness check                   validate eval/tasks.toml and print each reference
   python -m eval.harness dev [--only D01,D02]    run the dev tasks
   python -m eval.harness test --final            the 15 test tasks, once
+  python -m eval.harness dev --planted [--only D05]
+                                                 dev tasks on the planted copy (eval/plant.py)
+  python -m eval.harness test --final --planted  the test tasks on the planted copy, once,
+                                                 after the clean test run, at its commit
   python -m eval.harness regrade RUN_ID          re-score a stored run, no model calls
   python -m eval.harness show RUN_ID TASK_ID     one task of a run in full
 """
@@ -405,15 +417,15 @@ def outputs(result, run, sender):
         for h, info in store.info.items():
             tag_sets[h] = {k: info.get(k) for k in (
                 "sql", "selected", "with_narrative", "drawn", "sampled", "seed", "status",
-                "counts", "shares", "root_cause_base", "drawn_ids", "model_calls")}
+                "counts", "shares", "root_cause_base", "drawn_ids", "tags", "model_calls")}
     rep = result.get("report")
     return {
         "status": result.get("status"), "stop_reason": result.get("stop_reason"),
         "model_error": result.get("model_error"),
         "clarifying_question": result.get("clarifying_question"),
         "final_text": result.get("final_text"),
-        "report": None if rep is None else {k: rep[k] for k in (
-            "title", "findings", "charts", "tags", "filename", "sha256", "bytes")},
+        "report": None if rep is None else {k: rep.get(k) for k in (
+            "title", "findings", "charts", "tags", "quotes", "filename", "sha256", "bytes")},
         "sent": list(sender.sent), "send_record": result.get("sent"),
         "queries": result.get("queries"), "tag_sets": tag_sets,
         "counts": result.get("counts"), "tokens": result.get("tokens"),
@@ -468,9 +480,14 @@ def aws_ready():
 
 
 def run(split, final=False, only=None, tasks_path=TASKS_PATH, runs_dir=RUNS_DIR,
-        reports_dir=REPORTS_DIR, planner_for=None, agent_kw=None, now=None, echo=print):
+        reports_dir=REPORTS_DIR, planner_for=None, agent_kw=None, now=None, echo=print,
+        planted=False, planted_path=None, manifest_path=None):
     """Runs one split's tasks and writes the run log. planner_for(task) gives a
-    planner (tests); None means Bedrock. Returns the run log's path."""
+    planner (tests); None means Bedrock. Returns the run log's path.
+
+    planted=True runs on the planted copy (eval/plant.py, decisions 38 to 43):
+    agent_kw's agent_path stays the clean database, used to check that every
+    reference is the same on the planted copy before any model call."""
     tf = load_tasks(tasks_path)
     tasks = [t for t in tf["tasks"] if t["split"] == split]
     if only:
@@ -492,25 +509,44 @@ def run(split, final=False, only=None, tasks_path=TASKS_PATH, runs_dir=RUNS_DIR,
             raise TaskError(f"test needs {TEST_COUNTS['report']} report and "
                             f"{TEST_COUNTS['clarify']} clarify tasks; found "
                             f"{got['report']} and {got['clarify']}")
-        done = glob.glob(os.path.join(runs_dir, "agent-test-*.jsonl"))
-        if done:
-            raise TaskError(f"a test run already exists ({os.path.basename(done[0])}): "
-                            "the test tasks run once")
+        if not planted:
+            done = glob.glob(os.path.join(runs_dir, "agent-test-*.jsonl"))
+            if done:
+                raise TaskError(f"a test run already exists ({os.path.basename(done[0])}): "
+                                "the test tasks run once")
         if commit.endswith("-dirty") or commit == "unknown":
             raise TaskError(f"commit is {commit}: commit every change first, so the "
                             "logged commit is the code that ran")
+        if planted:
+            final_planted_ok(runs_dir, commit)
     elif final:
         raise TaskError("--final is only for the test split")
     agent_kw = dict(agent_kw or {})
+    layer_path = agent_kw.get("layer_path", sem.LAYER_PATH)
     refs = references(tasks, agent_path=agent_kw.get("agent_path", sem.AGENT_DB_PATH),
-                      layer_path=agent_kw.get("layer_path", sem.LAYER_PATH))
+                      layer_path=layer_path)
+    planted_header = None
+    if planted:
+        from eval import plant
+        p_path = planted_path or plant.PLANTED_AGENT
+        try:
+            planted_header = plant.planted_info(p_path, layer_path,
+                                                manifest_path or plant.MANIFEST_PATH)
+        except plant.PlantError as exc:
+            raise TaskError(str(exc)) from None
+        differ = plant.compare_references(refs, references(tasks, agent_path=p_path,
+                                                           layer_path=layer_path))
+        if differ:
+            raise TaskError("the planted copy changes the reference of "
+                            + ", ".join(differ) + ": rebuild it with python -m eval.plant build")
+        agent_kw["agent_path"] = p_path
     if planner_for is None:
         reason = aws_ready()
         if reason:
             raise TaskError(reason)
     layer = sem.load(agent_kw.get("layer_path", sem.LAYER_PATH))
     stamp = (now or datetime.now(timezone.utc)).strftime("%Y%m%dT%H%M%SZ")
-    run_id = f"agent-{split}-{stamp}"
+    run_id = f"agent-{split}-{'planted-' if planted else ''}{stamp}"
     os.makedirs(runs_dir, exist_ok=True)
     path = os.path.join(runs_dir, run_id + ".jsonl")
     header = {"type": "header", "run_id": run_id, "split": split, "final": final,
@@ -521,7 +557,7 @@ def run(split, final=False, only=None, tasks_path=TASKS_PATH, runs_dir=RUNS_DIR,
               "layer_version": layer["version"], "tagger_prompt": tg.PROMPT_VERSION,
               "tasks_version": tf["version"], "tasks_sha256": tf["sha256"],
               "grader_version": GRADER_VERSION, "fixed_to": FIXED_TO,
-              "started_at": stamp}
+              "planted": planted_header, "started_at": stamp}
     lines = []
     with open(path, "w", encoding="utf-8") as log:
         log.write(json.dumps(header) + "\n")
@@ -562,6 +598,28 @@ def run(split, final=False, only=None, tasks_path=TASKS_PATH, runs_dir=RUNS_DIR,
     echo(summary_text(summary))
     echo(f"Run log: {path}")
     return path
+
+
+CLEAN_FINAL = re.compile(r"^agent-test-\d{8}T\d{6}Z\.jsonl$")
+PLANTED_FINAL = re.compile(r"^agent-test-planted-\d{8}T\d{6}Z\.jsonl$")
+
+
+def final_planted_ok(runs_dir, commit):
+    """test --final --planted runs once, after the one clean final, at its commit
+    (decision 43)."""
+    names = sorted(os.listdir(runs_dir)) if os.path.isdir(runs_dir) else []
+    clean = [n for n in names if CLEAN_FINAL.match(n)]
+    done = [n for n in names if PLANTED_FINAL.match(n)]
+    if done:
+        raise TaskError(f"a planted test run already exists ({done[0]}): it runs once")
+    if len(clean) != 1:
+        raise TaskError("the planted test run comes after the clean one: run "
+                        "python -m eval.harness test --final first")
+    with open(os.path.join(runs_dir, clean[0]), encoding="utf-8") as f:
+        header = json.loads(f.readline())
+    if header.get("code_commit") != commit:
+        raise TaskError(f"the clean test run was at commit {header.get('code_commit')}, "
+                        f"this is {commit}: the planted run uses the same code")
 
 
 def task_line(line):
@@ -701,14 +759,15 @@ def main(argv):
             check()
         elif args[:1] in (["dev"], ["test"]):
             final = "--final" in args
-            rest = [a for a in args[1:] if a != "--final"]
+            planted = "--planted" in args
+            rest = [a for a in args[1:] if a not in ("--final", "--planted")]
             only = None
             if rest[:1] == ["--only"] and len(rest) == 2:
                 only = [s.strip() for s in rest[1].split(",") if s.strip()]
             elif rest:
                 print(__doc__)
                 return 2
-            run(args[0], final=final, only=only)
+            run(args[0], final=final, only=only, planted=planted)
         elif args[:1] == ["regrade"] and len(args) == 2:
             regrade(args[1])
         elif args[:1] == ["show"] and len(args) == 3:

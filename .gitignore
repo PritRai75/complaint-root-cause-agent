@@ -16,6 +16,9 @@ probe_*.txt
 data/*.sqlite
 data/*.sqlite.building
 
+# Planted copy: rebuilt from eval/attacks.toml and eval/planted.json by eval/plant.py
+data/planted/
+
 # Local secrets and editor files
 .env
 .vscode/

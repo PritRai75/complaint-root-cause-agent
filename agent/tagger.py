@@ -386,6 +386,7 @@ def tag_root_causes(conn, guard, tagger, sql, store, sample=SAMPLE, seed=SAMPLE_
         "drawn": len(drawn), "sampled": sampled, "seed": seed, "status": status,
         "counts": counts, "shares": shares, "root_cause_base": base,
         "drawn_ids": list(drawn),
+        "tags": [[r["complaint_id"], r["code"], r["status"]] for r in results],
         "model_calls": {"calls": len(calls),
                         "input_tokens": sum(r["input_tokens"] for r in calls),
                         "output_tokens": sum(r["output_tokens"] for r in calls)}})
