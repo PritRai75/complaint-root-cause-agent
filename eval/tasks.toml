@@ -51,7 +51,7 @@
 
 version = "tasks-1"
 
-# ---------- dev tasks (written by Claude at Prit's request, session 8; not counted) ----------
+# ---------- dev tasks (session 8; not counted) ----------
 
 [[task]]
 id = "D01"
@@ -108,3 +108,161 @@ split = "dev"
 kind = "clarify"
 question = """How did the number of checking account complaints in 2026 compare with 2025?"""
 note = """Data not here: the snapshot covers 2026 only, so the agent should ask instead of building a report."""
+
+# ---------- test tasks (run once with --final) ----------
+# Windows: complaints_v Jan to Aug, responses_v Jan to Jun, narratives_v Jan to Jul.
+# Company and issue names sit in _ columns (shown, not graded): text_found needs
+# the whole stored value as one phrase, which a correct finding can easily miss.
+
+[[task]]
+id = "N01"
+split = "test"
+kind = "report"
+question = """How many checking or savings account complaints did the CFPB receive in August 2026?"""
+figures = """SELECT COUNT(*) AS complaints FROM complaints_v
+WHERE product = 'Checking or savings account' AND month = '2026-08'"""
+note = """Volume at the window edge: August is the last month of complaints_v and is not in responses_v or narratives_v, so the planner must pick the right table."""
+
+[[task]]
+id = "N02"
+split = "test"
+kind = "report"
+question = """Are credit card complaints or checking and savings account complaints more likely to come with a published consumer narrative? Give the share for each product."""
+figures = """SELECT product AS _product, 100.0 * SUM(has_narrative) / COUNT(*) AS narrative_coverage
+FROM complaints_v WHERE month <= '2026-07' GROUP BY product"""
+note = """Defined metric narrative_coverage with its own window (month <= 2026-07). No window in the question, so the agent must take it from the metric; a Jan to Aug denominator would be wrong because August has no narratives. Products in _product: both shares are graded, so naming them is not needed for the grade."""
+
+[[task]]
+id = "N03"
+split = "test"
+kind = "report"
+question = """Compare checking or savings account complaints received from January to April 2026 with those received from May to August 2026. Did the number go up or down, and by how many?"""
+figures = """SELECT jan_apr, may_aug, may_aug - jan_apr AS change FROM (
+  SELECT SUM(month BETWEEN '2026-01' AND '2026-04') AS jan_apr,
+         SUM(month BETWEEN '2026-05' AND '2026-08') AS may_aug
+  FROM complaints_v WHERE product = 'Checking or savings account')"""
+direction = "up"
+direction_of = "change"
+note = """Change between two four-month periods, not two single months as in D03, and the other product. Direction written before seeing the data: check refuses it if the data says otherwise, and then it is flipped to match."""
+
+[[task]]
+id = "N04"
+split = "test"
+kind = "report"
+question = """In which month from January to June 2026 was the timely response rate for credit card complaints at its lowest, and what was the rate that month?"""
+figures = """SELECT month, 100.0 * SUM(timely) / COUNT(*) AS timely_rate FROM responses_v
+WHERE product = 'Credit card' GROUP BY month ORDER BY timely_rate ASC, month LIMIT 1"""
+note = """Defined timely_response_rate grouped by month, then the minimum: a grouping and a ranking that D02 doesn't have. The month is graded as text ('2026-05' also matches 'May'). Only the lowest row is the reference; a tie in the rate is very unlikely with these denominators, so no alternatives."""
+
+[[task]]
+id = "N05"
+split = "test"
+kind = "report"
+question = """How do credit card and checking or savings account complaints compare on the share that were closed with monetary relief?"""
+figures = [
+"""SELECT product AS _product, 100.0 * SUM(monetary_relief) / SUM(closed) AS monetary_relief_rate
+FROM responses_v GROUP BY product""",
+"""SELECT product AS _product, 100.0 * SUM(monetary_relief) / COUNT(*) AS monetary_relief_share
+FROM responses_v GROUP BY product""",
+]
+note = """Monetary relief for both products. Two denominators are accepted: the defined monetary_relief_rate (out of closed complaints) and the share of all final responses, which is what 'the share that were closed with monetary relief' says read literally. On the real data they round differently for credit cards, so without the second SQL a literal reading would fail. relief_rate (monetary plus non-monetary) is still a wrong answer: the question names monetary relief. No window in the question: the only one that fits is responses_v's, Jan to Jun."""
+
+[[task]]
+id = "N06"
+split = "test"
+kind = "report"
+question = """Which five companies received the most checking or savings account complaints from January to August 2026, and how many complaints did each receive?"""
+figures = """SELECT company AS _company, COUNT(*) AS complaints FROM complaints_v
+WHERE product = 'Checking or savings account'
+GROUP BY company ORDER BY complaints DESC, company LIMIT 5"""
+note = """Top-N companies. Names are in _company (shown, not graded), so only the five counts are graded. A tie at the fifth place needs no alternative: tied companies have the same count, so the graded cells are the same either way. Limitation: this can't catch a count written next to the wrong company (README list)."""
+
+[[task]]
+id = "N07"
+split = "test"
+kind = "report"
+question = """Which three issues did consumers select most often when filing credit card complaints from January to August 2026, and what share of those complaints did each account for?"""
+figures = """SELECT issue AS _issue, 100.0 * COUNT(*) / SUM(COUNT(*)) OVER () AS share
+FROM complaints_v WHERE product = 'Credit card'
+GROUP BY issue ORDER BY COUNT(*) DESC, issue LIMIT 3"""
+note = """complaint_share by the issue column, the consumer's own menu choice. Close in wording to D05 but a different measure: this should be answered with SQL, with no tag_root_causes call. The window function is evaluated before LIMIT, so each share is out of all credit card complaints. Issue names in _issue; a tie at third place gives the same share, so no alternatives."""
+
+[[task]]
+id = "N08"
+split = "test"
+kind = "report"
+question = """Across both products, which month between January and August 2026 had the most complaints, and how many were received that month?"""
+figures = """SELECT month, COUNT(*) AS complaints FROM complaints_v
+GROUP BY month ORDER BY complaints DESC, month LIMIT 1"""
+note = """Peak month over both products together, with only the peak row as the reference. The month is graded as text. If check shows two months tied for the peak, add the other month's row as an alternative SQL."""
+
+[[task]]
+id = "N09"
+split = "test"
+kind = "report"
+question = """What share of published checking or savings account narratives mention overdraft, and how many narratives is that?"""
+figures = [
+"""SELECT SUM(text_has(complaint_id, 'overdraft*')) AS mentions,
+  100.0 * SUM(text_has(complaint_id, 'overdraft*')) / COUNT(*) AS share
+FROM narratives_v WHERE product = 'Checking or savings account'""",
+"""SELECT SUM(text_has(complaint_id, 'overdraft')) AS mentions,
+  100.0 * SUM(text_has(complaint_id, 'overdraft')) / COUNT(*) AS share
+FROM narratives_v WHERE product = 'Checking or savings account'""",
+]
+note = """Word filter plus a share of narratives. The question uses the singular, so a plural-only search ('overdrafts') isn't a fair reading. 'overdraft' matches the whole word only (not overdrafts, overdrafted), while 'overdraft*' matches every ending; both are fair readings of 'mention overdraft', so both are accepted. No window in the question: narratives cover Jan to Jul. The denominator is narratives, not complaints."""
+
+[[task]]
+id = "N10"
+split = "test"
+kind = "report"
+question = """For each product, how many published narratives from January to July 2026 mention fraud, and what share of that product's narratives is that?"""
+figures = [
+"""SELECT product AS _product, SUM(text_has(complaint_id, 'fraud*')) AS mentions,
+  100.0 * SUM(text_has(complaint_id, 'fraud*')) / COUNT(*) AS share
+FROM narratives_v GROUP BY product""",
+"""SELECT product AS _product, SUM(text_has(complaint_id, 'fraud')) AS mentions,
+  100.0 * SUM(text_has(complaint_id, 'fraud')) / COUNT(*) AS share
+FROM narratives_v GROUP BY product""",
+]
+note = """Word filter grouped by product, with a per-product denominator. 'mention fraud' could fairly include fraudulent and fraudster ('fraud*') or mean the word itself ('fraud'), so both are accepted. Each SQL is graded whole: all four cells must come from the same reading."""
+
+[[task]]
+id = "N11"
+split = "test"
+kind = "report"
+question = """What are the three most common root causes in checking or savings account complaints, and what share of the tagged narratives does each account for?"""
+population = """SELECT complaint_id FROM narratives_v
+WHERE product = 'Checking or savings account'"""
+causes = 3
+note = """Root cause on the other product from D05, with no window in the question: the agent must use the whole narratives window (Jan to Jul). Adding month <= '2026-07' draws the same narratives; any narrower window does not. New population: about 200 uncached tagger calls in the final run."""
+
+[[task]]
+id = "N12"
+split = "test"
+kind = "report"
+question = """What were the two most common root causes in Synchrony's credit card complaints from January to July 2026, and what share of the tagged narratives did each account for?"""
+population = """SELECT complaint_id FROM narratives_v
+WHERE product = 'Credit card' AND company = 'SYNCHRONY FINANCIAL'"""
+causes = 2
+note = """Root cause for one company the request names, so a company-level report is right here. The agent has to find the stored company name itself. Before the final run, confirm with check that 'SYNCHRONY FINANCIAL' is the only stored name containing SYNCHRONY in card narratives; if there are others, use company IN (...) with all of them. If Synchrony has 200 or fewer card narratives in the window, every one is tagged and there is no sampling. New population: up to 200 uncached tagger calls."""
+
+[[task]]
+id = "A01"
+split = "test"
+kind = "clarify"
+question = """How many auto loan complaints mentioned repossession in the first half of 2026?"""
+note = """Data not here, other product: the layer holds credit cards and checking or savings accounts only. Not mortgages, because the session 6 smoke runs already asked about mortgage complaints. The word filter is bait: text_has would run fine on the wrong products."""
+
+[[task]]
+id = "A02"
+split = "test"
+kind = "clarify"
+question = """Which bank has been the worst for credit card customers this year?"""
+note = """Two readings that would give different reports: 'worst' could mean most complaints, lowest timely response rate or lowest relief rate, and 'per customer' would need data that isn't here. The failure this tests is quietly picking complaint volume and reporting it."""
+
+[[task]]
+id = "A03"
+split = "test"
+kind = "clarify"
+question = """Which ZIP codes in California had the most checking account complaints from January to August 2026?"""
+note = """Data not here: ZIP codes were dropped at ingest (decision 2); only state is kept. The tempting wrong answer is a report on California as a whole, or by company, without asking."""
