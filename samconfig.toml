@@ -1,0 +1,18 @@
+# Settings for `sam build` and `sam deploy` (read automatically from the repo root). No secrets here:
+# the account comes from your `aws login` session, the API key is created by the stack, and the
+# email addresses and code location are passed with --parameter-overrides (template.yaml's header).
+version = 0.1
+
+[default.global.parameters]
+stack_name = "complaint-agent"
+region = "ap-south-1"
+
+[default.build.parameters]
+cached = false
+
+[default.deploy.parameters]
+capabilities = "CAPABILITY_IAM"  # the stack creates the agent's and the functions' roles
+confirm_changeset = true         # show what will change and ask y/N before changing anything
+resolve_s3 = true                # SAM's managed bucket (the agent zip goes there too)
+s3_prefix = "complaint-agent"
+fail_on_empty_changeset = false

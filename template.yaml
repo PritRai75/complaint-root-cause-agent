@@ -1,0 +1,374 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: >-
+  Complaint root-cause agent: a REST API with an API key (submit and status functions)
+  in front of a LangGraph agent on Bedrock AgentCore Runtime. Each run writes its status,
+  result and Word report to a private bucket and emails the report to one fixed address.
+
+# Deploy from the repo root (session 10; samconfig.toml holds the stack name and region):
+#   python -m deploy.package build && python -m deploy.package upload
+#   sam build
+#   sam deploy --parameter-overrides CodeBucket=$(cat build/code-bucket.txt) \
+#     CodeKey=$(cat build/code-key.txt) ReportTo=$REPORT_TO ReportFrom=$REPORT_FROM
+# The agent zip (code, ARM64 dependencies, the two databases) is uploaded by deploy/package.py,
+# because SAM doesn't package AgentCore code; a new zip has a new key, so the runtime updates.
+
+Parameters:
+  CodeBucket:
+    Type: String
+    Description: Bucket holding the agent zip (SAM's managed bucket; build/code-bucket.txt).
+  CodeKey:
+    Type: String
+    AllowedPattern: "^complaint-agent/agent-[0-9a-f]{16}\\.zip$"
+    Description: The agent zip's key (build/code-key.txt), named by its SHA-256.
+  ReportTo:
+    Type: String
+    Description: The one address reports are emailed to (a verified SES identity).
+  ReportFrom:
+    Type: String
+    Description: The sending address (a verified SES identity).
+  PlannerModel:
+    Type: String
+    Default: anthropic.claude-sonnet-4-6
+    Description: >-
+      The model's name without "global."; agent/tagger.py calls "global." + this name
+      (planner and tagger). tests/test_deploy.py checks they match.
+  DailyRuns:
+    Type: Number
+    Default: 3
+    MinValue: 1
+    MaxValue: 20
+    Description: Agent runs the API may start per UTC day (cost cap; a root-cause run is about $3.50).
+  DailyRequests:
+    Type: Number
+    Default: 500
+    Description: API requests per day for the key, polling included.
+
+Resources:
+  # ---------- results ----------
+
+  ResultsBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      OwnershipControls:
+        Rules:
+          - ObjectOwnership: BucketOwnerEnforced
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      LifecycleConfiguration:
+        Rules:
+          - Id: expire-runs
+            Status: Enabled
+            Prefix: runs/
+            ExpirationInDays: 30
+          - Id: expire-day-markers
+            Status: Enabled
+            Prefix: days/
+            ExpirationInDays: 7
+
+  ResultsBucketTlsOnly:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref ResultsBucket
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: DenyPlainHttp
+            Effect: Deny
+            Principal: "*"
+            Action: s3:*
+            Resource:
+              - !GetAtt ResultsBucket.Arn
+              - !Sub "${ResultsBucket.Arn}/*"
+            Condition:
+              Bool:
+                aws:SecureTransport: "false"
+
+  # ---------- the agent on AgentCore Runtime ----------
+
+  # The agent's role: its logs, the planner and tagger model through the global profile (the same
+  # three statements as Project 1, from the Bedrock user guide), its own runs' files, sending from
+  # the one identity to the one recipient, reading its code zip, and the runtime's workload token.
+  AgentRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: bedrock-agentcore.amazonaws.com
+            Action: sts:AssumeRole
+            Condition:
+              StringEquals:
+                aws:SourceAccount: !Ref AWS::AccountId
+              ArnLike:
+                aws:SourceArn: !Sub arn:${AWS::Partition}:bedrock-agentcore:${AWS::Region}:${AWS::AccountId}:*
+      Policies:
+        - PolicyName: logs
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Sid: RuntimeLogs
+                Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                  - logs:DescribeLogStreams
+                Resource:
+                  - !Sub arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/bedrock-agentcore/runtimes/*
+                  - !Sub arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/bedrock-agentcore/runtimes/*:log-stream:*
+              - Sid: RuntimeLogGroups
+                Effect: Allow
+                Action: logs:DescribeLogGroups
+                Resource: !Sub arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:*
+        - PolicyName: bedrock
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Sid: ModelProfileInRegion
+                Effect: Allow
+                Action: bedrock:InvokeModel
+                Resource: !Sub arn:${AWS::Partition}:bedrock:${AWS::Region}:${AWS::AccountId}:inference-profile/global.${PlannerModel}
+                Condition:
+                  StringEquals:
+                    aws:RequestedRegion: !Ref AWS::Region
+              - Sid: ModelInRegion
+                Effect: Allow
+                Action: bedrock:InvokeModel
+                Resource: !Sub arn:${AWS::Partition}:bedrock:${AWS::Region}::foundation-model/${PlannerModel}
+                Condition:
+                  StringEquals:
+                    aws:RequestedRegion: !Ref AWS::Region
+                    bedrock:InferenceProfileArn: !Sub arn:${AWS::Partition}:bedrock:${AWS::Region}:${AWS::AccountId}:inference-profile/global.${PlannerModel}
+              - Sid: ModelGlobal
+                Effect: Allow
+                Action: bedrock:InvokeModel
+                Resource: !Sub arn:${AWS::Partition}:bedrock:::foundation-model/${PlannerModel}
+                Condition:
+                  StringEquals:
+                    aws:RequestedRegion: unspecified
+                    bedrock:InferenceProfileArn: !Sub arn:${AWS::Partition}:bedrock:${AWS::Region}:${AWS::AccountId}:inference-profile/global.${PlannerModel}
+        - PolicyName: runs
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Sid: WriteRunFiles
+                Effect: Allow
+                Action: s3:PutObject
+                Resource: !Sub "${ResultsBucket.Arn}/runs/*"
+              - Sid: ReadOwnCode
+                Effect: Allow
+                Action: s3:GetObject
+                Resource: !Sub arn:${AWS::Partition}:s3:::${CodeBucket}/${CodeKey}
+              - Sid: SendOneWay
+                Effect: Allow
+                Action: ses:SendEmail
+                Resource:
+                  - !Sub arn:${AWS::Partition}:ses:${AWS::Region}:${AWS::AccountId}:identity/${ReportFrom}
+                  - !Sub arn:${AWS::Partition}:ses:${AWS::Region}:${AWS::AccountId}:identity/${ReportTo}
+              - Sid: WorkloadToken
+                Effect: Allow
+                Action:
+                  - bedrock-agentcore:GetWorkloadAccessToken
+                  - bedrock-agentcore:GetWorkloadAccessTokenForJWT
+                  - bedrock-agentcore:GetWorkloadAccessTokenForUserId
+                Resource:
+                  - !Sub arn:${AWS::Partition}:bedrock-agentcore:${AWS::Region}:${AWS::AccountId}:workload-identity-directory/default
+                  - !Sub arn:${AWS::Partition}:bedrock-agentcore:${AWS::Region}:${AWS::AccountId}:workload-identity-directory/default/workload-identity/complaint_agent-*
+
+  AgentRuntime:
+    Type: AWS::BedrockAgentCore::Runtime
+    Properties:
+      AgentRuntimeName: complaint_agent
+      Description: LangGraph complaint root-cause agent (FastAPI, background runs)
+      AgentRuntimeArtifact:
+        CodeConfiguration:
+          Code:
+            S3:
+              Bucket: !Ref CodeBucket
+              Prefix: !Ref CodeKey
+          Runtime: PYTHON_3_13
+          EntryPoint:
+            - main.py
+      NetworkConfiguration:
+        NetworkMode: PUBLIC
+      RoleArn: !GetAtt AgentRole.Arn
+      LifecycleConfiguration:
+        IdleRuntimeSessionTimeout: 900
+        MaxLifetime: 3600
+      EnvironmentVariables:
+        RESULTS_BUCKET: !Ref ResultsBucket
+        REPORT_TO: !Ref ReportTo
+        REPORT_FROM: !Ref ReportFrom
+
+  # ---------- the API ----------
+
+  SubmitLogs:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      RetentionInDays: 14
+
+  StatusLogs:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      RetentionInDays: 14
+
+  SubmitRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: submit
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Sid: WriteOwnLogs
+                Effect: Allow
+                Action:
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource: !GetAtt SubmitLogs.Arn
+              - Sid: RunFiles
+                Effect: Allow
+                Action:
+                  - s3:GetObject
+                  - s3:PutObject
+                Resource:
+                  - !Sub "${ResultsBucket.Arn}/runs/*"
+                  - !Sub "${ResultsBucket.Arn}/days/*"
+              - Sid: CountRuns
+                Effect: Allow
+                Action: s3:ListBucket
+                Resource: !GetAtt ResultsBucket.Arn
+                Condition:
+                  StringLike:
+                    s3:prefix: days/*
+              - Sid: StartAgent
+                Effect: Allow
+                Action: bedrock-agentcore:InvokeAgentRuntime
+                Resource:
+                  - !GetAtt AgentRuntime.AgentRuntimeArn
+                  - !Sub "${AgentRuntime.AgentRuntimeArn}/runtime-endpoint/DEFAULT"
+
+  StatusRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: status
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Sid: WriteOwnLogs
+                Effect: Allow
+                Action:
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource: !GetAtt StatusLogs.Arn
+              - Sid: ReadRunFiles
+                Effect: Allow
+                Action: s3:GetObject
+                Resource: !Sub "${ResultsBucket.Arn}/runs/*"
+
+  AgentApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: v1
+      EndpointConfiguration:
+        Type: REGIONAL
+      Auth:
+        ApiKeyRequired: true
+        UsagePlan:
+          CreateUsagePlan: PER_API
+          Description: Complaint agent, one key
+          Throttle:
+            RateLimit: 1
+            BurstLimit: 2
+          Quota:
+            Limit: !Ref DailyRequests
+            Period: DAY
+
+  SubmitFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: Checks the request and the caps, then starts one agent run
+      CodeUri: deploy/front/
+      Handler: handlers.submit
+      Runtime: python3.13
+      Architectures:
+        - arm64
+      MemorySize: 256
+      Timeout: 28
+      Role: !GetAtt SubmitRole.Arn
+      LoggingConfig:
+        LogGroup: !Ref SubmitLogs
+      Environment:
+        Variables:
+          RESULTS_BUCKET: !Ref ResultsBucket
+          AGENT_RUNTIME_ARN: !GetAtt AgentRuntime.AgentRuntimeArn
+          DAILY_RUNS: !Ref DailyRuns
+      Events:
+        Submit:
+          Type: Api
+          Properties:
+            RestApiId: !Ref AgentApi
+            Path: /runs
+            Method: post
+
+  StatusFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: Returns a run's status, findings and a link to its report
+      CodeUri: deploy/front/
+      Handler: handlers.status
+      Runtime: python3.13
+      Architectures:
+        - arm64
+      MemorySize: 256
+      Timeout: 10
+      Role: !GetAtt StatusRole.Arn
+      LoggingConfig:
+        LogGroup: !Ref StatusLogs
+      Environment:
+        Variables:
+          RESULTS_BUCKET: !Ref ResultsBucket
+      Events:
+        Status:
+          Type: Api
+          Properties:
+            RestApiId: !Ref AgentApi
+            Path: /runs/{run_id}
+            Method: get
+
+Outputs:
+  ApiUrl:
+    Description: POST /runs with {"question"}; GET /runs/{run_id}. Header x-api-key.
+    Value: !Sub https://${AgentApi}.execute-api.${AWS::Region}.${AWS::URLSuffix}/v1
+  ApiKeyId:
+    Description: The key's ID, not its value (aws apigateway get-api-key --api-key ID --include-value)
+    Value: !Ref AgentApiApiKey
+  AgentRuntimeArn:
+    Value: !GetAtt AgentRuntime.AgentRuntimeArn
+  ResultsBucketName:
+    Value: !Ref ResultsBucket

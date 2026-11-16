@@ -22,3 +22,7 @@ data/planted/
 # Local secrets and editor files
 .env
 .vscode/
+
+# Deploy builds: the agent zip (python -m deploy.package build) and SAM's output
+build/
+.aws-sam/
