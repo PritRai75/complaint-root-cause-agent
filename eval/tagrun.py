@@ -63,7 +63,7 @@ def wilson(k, n, z=1.96):
     d = 1 + z * z / n
     c = (p + z * z / (2 * n)) / d
     h = z * math.sqrt(p * (1 - p) / n + z * z / (4 * n * n)) / d
-    return (c - h, c + h)
+    return (max(0.0, c - h), min(1.0, c + h))   # clamped: never prints -0.0 or 100.0+
 
 
 def score(rows):
