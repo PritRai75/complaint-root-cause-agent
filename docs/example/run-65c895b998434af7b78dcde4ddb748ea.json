@@ -1,0 +1,36 @@
+{
+ "run_id": "run-65c895b998434af7b78dcde4ddb748ea",
+ "status": "sent",
+ "finished_at": "2026-11-16T08:09:39Z",
+ "seconds": 303.1,
+ "has_report": true,
+ "question": "What are the most common root causes in credit card complaints about fees or interest from January to June 2026?",
+ "clarifying_question": null,
+ "final_text": "The report is ready — it covers the top root causes across 4,944 fee- and interest-related credit card complaints from January to June 2026, based on a tagged sample of 200 narratives.",
+ "stop_reason": null,
+ "counts": {
+  "turns": 4,
+  "tool_calls": 4,
+  "tag_runs": 1,
+  "failed_calls": 0,
+  "nudges": 0
+ },
+ "sent": {
+  "sender": "ses",
+  "message_id": "010901a1e3679844-8c234f2b-d8ee-4316-a8c8-5b023a6f53bc-000000"
+ },
+ "report": {
+  "title": "Root Causes in Credit Card Complaints About Fees or Interest, Jan–Jun 2026",
+  "findings": [
+   "There were 4,944 credit card complaints mentioning fees or interest with a published narrative from January to June 2026, from which 200 were randomly sampled and tagged.",
+   "The two leading root causes together account for over half of tagged narratives: 'Offer or terms not honored' (28.2%) and 'Fee or interest charged or not waived' (26.2%) of tagged narratives.",
+   "Account servicing errors were the third most common root cause, cited in 15.4% of tagged narratives, followed by fraud or scam claims mishandled at 11.8%.",
+   "Transaction disputes mishandled (8.2%) and accounts closed, frozen, or restricted (7.2%) were also notable root causes among tagged narratives.",
+   "Credit reporting issues accounted for 3.1% of tagged narratives, the least common identified root cause in this group."
+  ],
+  "filename": "complaint-report-20261116T080938Z.docx",
+  "bytes": 97164,
+  "sha256": "7c726a9a90170456be7bdc007bc86cd588616f96c2c4894e56f756c746ce40cd"
+ },
+ "report_url_expires_in": 3600
+}
