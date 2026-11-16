@@ -558,6 +558,27 @@ def test_template_agent_role_writes_only_run_files_and_sends_one_way(template):
                    for s in by_sid.values())
 
 
+def test_template_status_role_can_tell_missing_from_forbidden(template):
+    """S3 returns NoSuchKey for a missing object only to callers with s3:ListBucket;
+    without it, an unknown run ID came back as AccessDenied and the status function
+    crashed (502) in the S10 smoke check."""
+    by_sid = {s["Sid"]: s for s in statements(template, "StatusRole")}
+    assert by_sid["MissingMeansNotFound"]["Action"] == "s3:ListBucket"
+    assert by_sid["MissingMeansNotFound"]["Resource"] == {"GetAtt": "ResultsBucket.Arn"}
+    assert "Condition" not in by_sid["MissingMeansNotFound"]
+
+
+def test_status_crashes_rather_than_hiding_access_denied():
+    """AccessDenied is not read as 'no such run': a real permission error must show."""
+    s3 = FakeS3()
+
+    def denied(Bucket, Key):
+        raise client_error("AccessDenied")
+    s3.get_object = denied
+    with pytest.raises(Exception):
+        fh.status({"pathParameters": {"run_id": RID}}, None, clients=Clients(s3=s3), environ=ENV)
+
+
 def test_template_api_needs_a_key_and_caps_runs(template):
     api = template["Resources"]["AgentApi"]["Properties"]
     assert api["Auth"]["ApiKeyRequired"] is True

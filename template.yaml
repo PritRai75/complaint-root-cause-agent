@@ -290,6 +290,12 @@ Resources:
                 Effect: Allow
                 Action: s3:GetObject
                 Resource: !Sub "${ResultsBucket.Arn}/runs/*"
+              # Without list permission S3 answers a missing object with AccessDenied, not NoSuchKey,
+              # so an unknown run ID crashed the function (502) instead of returning 404 (S10 smoke).
+              - Sid: MissingMeansNotFound
+                Effect: Allow
+                Action: s3:ListBucket
+                Resource: !GetAtt ResultsBucket.Arn
 
   AgentApi:
     Type: AWS::Serverless::Api
