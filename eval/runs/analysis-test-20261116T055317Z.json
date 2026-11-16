@@ -1,0 +1,726 @@
+{
+ "type": "tag_analysis",
+ "run_id": "test-20261116T055317Z",
+ "set": "test",
+ "final": true,
+ "log_sha256": "65a4b77e8f362b5aff32ce2d3a5748266e6e1a42bf9b891bca834ddc98a3f047",
+ "run_commit": "a870cf1",
+ "analysis_commit": "a870cf1",
+ "prompt_version": "tag-1",
+ "taxonomy_version": "v1",
+ "exact_agreement": {
+  "k": 163,
+  "n": 200,
+  "wilson95": [
+   0.755,
+   0.863
+  ]
+ },
+ "runner_up": {
+  "misses": 37,
+  "with_runner_up_note": 34,
+  "match_runner_up": 23,
+  "by_product": {
+   "Checking or savings account": {
+    "misses": 13,
+    "match_runner_up": 9
+   },
+   "Credit card": {
+    "misses": 24,
+    "match_runner_up": 14
+   }
+  },
+  "by_label": {
+   "account_restricted": {
+    "misses": 1,
+    "match_runner_up": 1
+   },
+   "credit_reporting": {
+    "misses": 2,
+    "match_runner_up": 2
+   },
+   "dispute_mishandled": {
+    "misses": 2,
+    "match_runner_up": 2
+   },
+   "fee_charged": {
+    "misses": 4,
+    "match_runner_up": 3
+   },
+   "other": {
+    "misses": 3,
+    "match_runner_up": 0
+   },
+   "servicing_error": {
+    "misses": 12,
+    "match_runner_up": 8
+   },
+   "terms_not_honored": {
+    "misses": 1,
+    "match_runner_up": 1
+   },
+   "third_party": {
+    "misses": 9,
+    "match_runner_up": 4
+   },
+   "unclear": {
+    "misses": 3,
+    "match_runner_up": 2
+   }
+  },
+  "items": [
+   {
+    "ref": "T005",
+    "complaint_id": 18903437,
+    "product": "Checking or savings account",
+    "label": "third_party",
+    "tag": "dispute_mishandled",
+    "runner_up": null,
+    "match": false
+   },
+   {
+    "ref": "T010",
+    "complaint_id": 21022192,
+    "product": "Credit card",
+    "label": "fee_charged",
+    "tag": "terms_not_honored",
+    "runner_up": "terms_not_honored",
+    "match": true
+   },
+   {
+    "ref": "T012",
+    "complaint_id": 18423197,
+    "product": "Credit card",
+    "label": "fee_charged",
+    "tag": "servicing_error",
+    "runner_up": "servicing_error",
+    "match": true
+   },
+   {
+    "ref": "T016",
+    "complaint_id": 18607997,
+    "product": "Credit card",
+    "label": "credit_reporting",
+    "tag": "terms_not_honored",
+    "runner_up": "terms_not_honored",
+    "match": true
+   },
+   {
+    "ref": "T021",
+    "complaint_id": 21635515,
+    "product": "Credit card",
+    "label": "third_party",
+    "tag": "terms_not_honored",
+    "runner_up": "dispute_mishandled",
+    "match": false
+   },
+   {
+    "ref": "T022",
+    "complaint_id": 19971988,
+    "product": "Checking or savings account",
+    "label": "third_party",
+    "tag": "fraud_claim",
+    "runner_up": "fraud_claim",
+    "match": true
+   },
+   {
+    "ref": "T032",
+    "complaint_id": 18681560,
+    "product": "Credit card",
+    "label": "third_party",
+    "tag": "credit_reporting",
+    "runner_up": "unclear",
+    "match": false
+   },
+   {
+    "ref": "T033",
+    "complaint_id": 21630432,
+    "product": "Credit card",
+    "label": "servicing_error",
+    "tag": "account_restricted",
+    "runner_up": "credit_reporting",
+    "match": false
+   },
+   {
+    "ref": "T042",
+    "complaint_id": 22581740,
+    "product": "Checking or savings account",
+    "label": "third_party",
+    "tag": "dispute_mishandled",
+    "runner_up": "unclear",
+    "match": false
+   },
+   {
+    "ref": "T060",
+    "complaint_id": 23129988,
+    "product": "Credit card",
+    "label": "third_party",
+    "tag": "fraud_claim",
+    "runner_up": "fraud_claim",
+    "match": true
+   },
+   {
+    "ref": "T065",
+    "complaint_id": 22363815,
+    "product": "Credit card",
+    "label": "other",
+    "tag": "account_restricted",
+    "runner_up": null,
+    "match": false
+   },
+   {
+    "ref": "T070",
+    "complaint_id": 20142034,
+    "product": "Checking or savings account",
+    "label": "servicing_error",
+    "tag": "account_restricted",
+    "runner_up": "account_restricted",
+    "match": true
+   },
+   {
+    "ref": "T076",
+    "complaint_id": 19451176,
+    "product": "Credit card",
+    "label": "fee_charged",
+    "tag": "terms_not_honored",
+    "runner_up": "servicing_error",
+    "match": false
+   },
+   {
+    "ref": "T079",
+    "complaint_id": 19660667,
+    "product": "Credit card",
+    "label": "servicing_error",
+    "tag": "terms_not_honored",
+    "runner_up": "fee_charged",
+    "match": false
+   },
+   {
+    "ref": "T081",
+    "complaint_id": 22783371,
+    "product": "Credit card",
+    "label": "terms_not_honored",
+    "tag": "fee_charged",
+    "runner_up": "fee_charged",
+    "match": true
+   },
+   {
+    "ref": "T086",
+    "complaint_id": 22620436,
+    "product": "Credit card",
+    "label": "servicing_error",
+    "tag": "account_restricted",
+    "runner_up": "account_restricted",
+    "match": true
+   },
+   {
+    "ref": "T088",
+    "complaint_id": 23072561,
+    "product": "Checking or savings account",
+    "label": "account_restricted",
+    "tag": "fraud_claim",
+    "runner_up": "fraud_claim",
+    "match": true
+   },
+   {
+    "ref": "T092",
+    "complaint_id": 23220338,
+    "product": "Credit card",
+    "label": "fee_charged",
+    "tag": "terms_not_honored",
+    "runner_up": "terms_not_honored",
+    "match": true
+   },
+   {
+    "ref": "T097",
+    "complaint_id": 19119578,
+    "product": "Checking or savings account",
+    "label": "servicing_error",
+    "tag": "account_restricted",
+    "runner_up": "account_restricted",
+    "match": true
+   },
+   {
+    "ref": "T112",
+    "complaint_id": 18514829,
+    "product": "Credit card",
+    "label": "third_party",
+    "tag": "dispute_mishandled",
+    "runner_up": "dispute_mishandled",
+    "match": true
+   },
+   {
+    "ref": "T114",
+    "complaint_id": 21392495,
+    "product": "Credit card",
+    "label": "servicing_error",
+    "tag": "fee_charged",
+    "runner_up": "credit_reporting",
+    "match": false
+   },
+   {
+    "ref": "T116",
+    "complaint_id": 23091510,
+    "product": "Checking or savings account",
+    "label": "servicing_error",
+    "tag": "account_restricted",
+    "runner_up": "account_restricted",
+    "match": true
+   },
+   {
+    "ref": "T119",
+    "complaint_id": 21837807,
+    "product": "Credit card",
+    "label": "unclear",
+    "tag": "fee_charged",
+    "runner_up": "servicing_error",
+    "match": false
+   },
+   {
+    "ref": "T133",
+    "complaint_id": 20124721,
+    "product": "Credit card",
+    "label": "dispute_mishandled",
+    "tag": "account_restricted",
+    "runner_up": "account_restricted",
+    "match": true
+   },
+   {
+    "ref": "T142",
+    "complaint_id": 22995823,
+    "product": "Credit card",
+    "label": "servicing_error",
+    "tag": "account_restricted",
+    "runner_up": "fee_charged",
+    "match": false
+   },
+   {
+    "ref": "T148",
+    "complaint_id": 22322962,
+    "product": "Credit card",
+    "label": "credit_reporting",
+    "tag": "fraud_claim",
+    "runner_up": "fraud_claim",
+    "match": true
+   },
+   {
+    "ref": "T149",
+    "complaint_id": 22218102,
+    "product": "Credit card",
+    "label": "unclear",
+    "tag": "dispute_mishandled",
+    "runner_up": "dispute_mishandled",
+    "match": true
+   },
+   {
+    "ref": "T154",
+    "complaint_id": 18827430,
+    "product": "Credit card",
+    "label": "unclear",
+    "tag": "credit_reporting",
+    "runner_up": "credit_reporting",
+    "match": true
+   },
+   {
+    "ref": "T156",
+    "complaint_id": 24148120,
+    "product": "Checking or savings account",
+    "label": "third_party",
+    "tag": "fraud_claim",
+    "runner_up": "fraud_claim",
+    "match": true
+   },
+   {
+    "ref": "T160",
+    "complaint_id": 24277809,
+    "product": "Checking or savings account",
+    "label": "other",
+    "tag": "terms_not_honored",
+    "runner_up": null,
+    "match": false
+   },
+   {
+    "ref": "T166",
+    "complaint_id": 19944801,
+    "product": "Credit card",
+    "label": "other",
+    "tag": "terms_not_honored",
+    "runner_up": "fee_charged",
+    "match": false
+   },
+   {
+    "ref": "T170",
+    "complaint_id": 23093083,
+    "product": "Checking or savings account",
+    "label": "third_party",
+    "tag": "servicing_error",
+    "runner_up": "dispute_mishandled",
+    "match": false
+   },
+   {
+    "ref": "T176",
+    "complaint_id": 23525985,
+    "product": "Credit card",
+    "label": "dispute_mishandled",
+    "tag": "fraud_claim",
+    "runner_up": "fraud_claim",
+    "match": true
+   },
+   {
+    "ref": "T177",
+    "complaint_id": 22536886,
+    "product": "Checking or savings account",
+    "label": "servicing_error",
+    "tag": "fraud_claim",
+    "runner_up": "fraud_claim",
+    "match": true
+   },
+   {
+    "ref": "T190",
+    "complaint_id": 22975923,
+    "product": "Credit card",
+    "label": "servicing_error",
+    "tag": "other",
+    "runner_up": "other",
+    "match": true
+   },
+   {
+    "ref": "T194",
+    "complaint_id": 20381029,
+    "product": "Checking or savings account",
+    "label": "servicing_error",
+    "tag": "other",
+    "runner_up": "other",
+    "match": true
+   },
+   {
+    "ref": "T196",
+    "complaint_id": 21571672,
+    "product": "Checking or savings account",
+    "label": "servicing_error",
+    "tag": "account_restricted",
+    "runner_up": "account_restricted",
+    "match": true
+   }
+  ]
+ },
+ "issue_column": {
+  "scored": 200,
+  "groups": 18,
+  "groups_with_2plus_causes": 13,
+  "items_in_those_groups": 195,
+  "issue_only_bound": {
+   "k": 101,
+   "n": 200,
+   "wilson95": [
+    0.436,
+    0.574
+   ]
+  },
+  "tagger_exact": {
+   "k": 163,
+   "n": 200,
+   "wilson95": [
+    0.755,
+    0.863
+   ]
+  },
+  "rows": [
+   {
+    "product": "Checking or savings account",
+    "issue": "Managing an account",
+    "n": 60,
+    "causes": 9,
+    "majority": 27,
+    "majority_labels": [
+     "fraud_claim"
+    ],
+    "labels": {
+     "fraud_claim": 27,
+     "account_restricted": 10,
+     "servicing_error": 7,
+     "dispute_mishandled": 5,
+     "third_party": 4,
+     "terms_not_honored": 4,
+     "fee_charged": 1,
+     "other": 1,
+     "unclear": 1
+    },
+    "tagger_agree": 53
+   },
+   {
+    "product": "Credit card",
+    "issue": "Problem with a purchase shown on your statement",
+    "n": 37,
+    "causes": 5,
+    "majority": 17,
+    "majority_labels": [
+     "dispute_mishandled"
+    ],
+    "labels": {
+     "dispute_mishandled": 17,
+     "fraud_claim": 16,
+     "third_party": 2,
+     "unclear": 1,
+     "servicing_error": 1
+    },
+    "tagger_agree": 34
+   },
+   {
+    "product": "Credit card",
+    "issue": "Fees or interest",
+    "n": 16,
+    "causes": 4,
+    "majority": 7,
+    "majority_labels": [
+     "fee_charged"
+    ],
+    "labels": {
+     "fee_charged": 7,
+     "terms_not_honored": 4,
+     "servicing_error": 4,
+     "unclear": 1
+    },
+    "tagger_agree": 11
+   },
+   {
+    "product": "Checking or savings account",
+    "issue": "Problem with a lender or other company charging your account",
+    "n": 15,
+    "causes": 6,
+    "majority": 7,
+    "majority_labels": [
+     "fraud_claim"
+    ],
+    "labels": {
+     "fraud_claim": 7,
+     "dispute_mishandled": 3,
+     "servicing_error": 2,
+     "unclear": 1,
+     "other": 1,
+     "third_party": 1
+    },
+    "tagger_agree": 12
+   },
+   {
+    "product": "Checking or savings account",
+    "issue": "Closing an account",
+    "n": 12,
+    "causes": 2,
+    "majority": 10,
+    "majority_labels": [
+     "account_restricted"
+    ],
+    "labels": {
+     "account_restricted": 10,
+     "servicing_error": 2
+    },
+    "tagger_agree": 11
+   },
+   {
+    "product": "Credit card",
+    "issue": "Closing your account",
+    "n": 12,
+    "causes": 6,
+    "majority": 4,
+    "majority_labels": [
+     "account_restricted"
+    ],
+    "labels": {
+     "account_restricted": 4,
+     "servicing_error": 3,
+     "fraud_claim": 2,
+     "terms_not_honored": 1,
+     "dispute_mishandled": 1,
+     "other": 1
+    },
+    "tagger_agree": 7
+   },
+   {
+    "product": "Credit card",
+    "issue": "Getting a credit card",
+    "n": 11,
+    "causes": 5,
+    "majority": 5,
+    "majority_labels": [
+     "credit_reporting"
+    ],
+    "labels": {
+     "credit_reporting": 5,
+     "third_party": 2,
+     "fraud_claim": 2,
+     "account_restricted": 1,
+     "unclear": 1
+    },
+    "tagger_agree": 6
+   },
+   {
+    "product": "Credit card",
+    "issue": "Other features, terms, or problems",
+    "n": 8,
+    "causes": 5,
+    "majority": 3,
+    "majority_labels": [
+     "terms_not_honored"
+    ],
+    "labels": {
+     "terms_not_honored": 3,
+     "other": 2,
+     "credit_reporting": 1,
+     "fee_charged": 1,
+     "servicing_error": 1
+    },
+    "tagger_agree": 5
+   },
+   {
+    "product": "Credit card",
+    "issue": "Problem when making payments",
+    "n": 8,
+    "causes": 2,
+    "majority": 7,
+    "majority_labels": [
+     "servicing_error"
+    ],
+    "labels": {
+     "servicing_error": 7,
+     "unclear": 1
+    },
+    "tagger_agree": 7
+   },
+   {
+    "product": "Checking or savings account",
+    "issue": "Problem caused by your funds being low",
+    "n": 6,
+    "causes": 3,
+    "majority": 4,
+    "majority_labels": [
+     "fee_charged"
+    ],
+    "labels": {
+     "fee_charged": 4,
+     "credit_reporting": 1,
+     "servicing_error": 1
+    },
+    "tagger_agree": 5
+   },
+   {
+    "product": "Checking or savings account",
+    "issue": "Opening an account",
+    "n": 5,
+    "causes": 4,
+    "majority": 2,
+    "majority_labels": [
+     "account_restricted"
+    ],
+    "labels": {
+     "account_restricted": 2,
+     "fraud_claim": 1,
+     "other": 1,
+     "third_party": 1
+    },
+    "tagger_agree": 4
+   },
+   {
+    "product": "Credit card",
+    "issue": "Trouble using your card",
+    "n": 3,
+    "causes": 2,
+    "majority": 2,
+    "majority_labels": [
+     "account_restricted"
+    ],
+    "labels": {
+     "account_restricted": 2,
+     "servicing_error": 1
+    },
+    "tagger_agree": 2
+   },
+   {
+    "product": "Credit card",
+    "issue": "Struggling to pay your bill",
+    "n": 2,
+    "causes": 2,
+    "majority": 1,
+    "majority_labels": [
+     "credit_reporting",
+     "unclear"
+    ],
+    "labels": {
+     "credit_reporting": 1,
+     "unclear": 1
+    },
+    "tagger_agree": 2
+   },
+   {
+    "product": "Checking or savings account",
+    "issue": "Credit monitoring or identity theft protection services",
+    "n": 1,
+    "causes": 1,
+    "majority": 1,
+    "majority_labels": [
+     "dispute_mishandled"
+    ],
+    "labels": {
+     "dispute_mishandled": 1
+    },
+    "tagger_agree": 1
+   },
+   {
+    "product": "Checking or savings account",
+    "issue": "Improper use of your report",
+    "n": 1,
+    "causes": 1,
+    "majority": 1,
+    "majority_labels": [
+     "credit_reporting"
+    ],
+    "labels": {
+     "credit_reporting": 1
+    },
+    "tagger_agree": 1
+   },
+   {
+    "product": "Credit card",
+    "issue": "Advertising and marketing, including promotional offers",
+    "n": 1,
+    "causes": 1,
+    "majority": 1,
+    "majority_labels": [
+     "fee_charged"
+    ],
+    "labels": {
+     "fee_charged": 1
+    },
+    "tagger_agree": 0
+   },
+   {
+    "product": "Credit card",
+    "issue": "Improper use of your report",
+    "n": 1,
+    "causes": 1,
+    "majority": 1,
+    "majority_labels": [
+     "account_restricted"
+    ],
+    "labels": {
+     "account_restricted": 1
+    },
+    "tagger_agree": 1
+   },
+   {
+    "product": "Credit card",
+    "issue": "Incorrect information on your report",
+    "n": 1,
+    "causes": 1,
+    "majority": 1,
+    "majority_labels": [
+     "credit_reporting"
+    ],
+    "labels": {
+     "credit_reporting": 1
+    },
+    "tagger_agree": 1
+   }
+  ]
+ }
+}
