@@ -118,6 +118,7 @@ flowchart LR
 - **Numbers are checked by code.** `build_report` refuses a finding containing a number that isn't in the run's own query or tag results (rounding allowed), refuses legal conclusions, and ignores numbers the model typed into SQL (checked against two database samples).
 - **Guaranteed by code or IAM:** one fixed recipient (enforced in the code and in the SES policy), one send per run, a read-only database that refuses `ATTACH`, `PRAGMA` and writes, and limits of 20 turns, 30 tool calls, 2 tagging runs and a stop after 4 failed calls in a row.
 - **Only measured, not guaranteed:** tagging accuracy, injection resistance, and whether a finding's wording matches its numbers.
+- **CI.** GitHub Actions runs the test suite on every push and pull request, with no AWS credentials (the 8 tests that need the real database skip there). `main` accepts changes only through a pull request whose tests pass. [PR #1](https://github.com/PritRai75/complaint-root-cause-agent/pull/1) removes one word pattern from the legal-wording check on purpose: the build failed, and the PR was closed unmerged.
 
 ## Limitations
 
@@ -131,3 +132,7 @@ flowchart LR
 - Narrative coverage dips and is not explained: narratives on credit-reporting complaints fall to 0.1% after August 2025, and card and checking coverage drops to 28.4% in February 2026.
 - Task A02 ("Which bank has been the worst for credit card customers this year?") should have asked which measure was meant. Both runs built a report on volume, relief rate and timely rate instead. One named Capital One "the broadest concern" without noting that raw complaint counts rise with a bank's size, which this data can't adjust for.
 - Quotes keep the bank names and the consumer's own legal claims, as published, with a note. A planted attack was quoted once.
+
+## License
+
+The code is under the MIT License (see [LICENSE](LICENSE)). The complaint data is published by the CFPB and isn't stored in this repository; `python -m ingest.fetch` downloads it from the source recorded in `data/manifest.json`.
