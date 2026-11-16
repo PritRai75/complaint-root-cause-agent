@@ -85,10 +85,10 @@ def real_run(api, key, question, out=print, sleep=time.sleep, clock=time.monoton
             out("Gave up waiting (45 minutes).")
             return 1
     os.makedirs(OUT, exist_ok=True)
+    url = st.pop("report_url", None)          # a signed link with a session token: never saved
     with open(os.path.join(OUT, f"{run_id}.json"), "w", encoding="utf-8") as f:
         json.dump(st, f, indent=1, ensure_ascii=False)
-    url = st.pop("report_url", None)
-    out(json.dumps({k: v for k, v in st.items()}, indent=1, ensure_ascii=False))
+    out(json.dumps(st, indent=1, ensure_ascii=False))
     if url:
         with urllib.request.urlopen(url, timeout=60) as resp:
             data = resp.read()

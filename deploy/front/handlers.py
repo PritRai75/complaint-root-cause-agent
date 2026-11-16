@@ -200,6 +200,9 @@ def status(event, context, clients=CLIENTS, environ=None):
     for k in FINAL_FIELDS:
         if k in result and k not in body:
             body[k] = result[k]
+    sent = result.get("sent")
+    if isinstance(sent, dict):           # sender kind, message ID or AWS error code; no addresses
+        body["sent"] = {k: sent[k] for k in ("sender", "message_id", "error") if k in sent}
     report = result.get("report")
     if report:
         body["report"] = {k: report.get(k) for k in ("title", "findings", "filename", "bytes",

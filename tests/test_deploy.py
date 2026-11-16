@@ -359,6 +359,44 @@ def test_status_of_a_finished_run_links_the_report():
                              "bytes": 10, "sha256": "s"}
     assert out["report_url"].endswith(f"runs/{RID}/report.docx?expires=3600")
     assert out["question"] == "q" and "queries" not in out
+    assert "sent" not in out
+
+
+def test_status_reports_the_send_without_addresses():
+    c = Clients()
+    c.s3.put_object(Bucket="results", Key=f"runs/{RID}/status.json", Body=json.dumps(
+        {"run_id": RID, "status": "send_failed", "has_report": True}))
+    c.s3.put_object(Bucket="results", Key=f"runs/{RID}/result.json", Body=json.dumps(
+        {"report": {"title": "T", "findings": [], "filename": "r.docx"},
+         "sent": {"sender": "ses", "error": "AccessDeniedException", "to": "x@example.com"}}))
+    out = json.loads(fh.status({"pathParameters": {"run_id": RID}}, None, clients=c,
+                               environ=ENV)["body"])
+    assert out["sent"] == {"sender": "ses", "error": "AccessDeniedException"}
+
+
+def test_smoke_never_saves_the_signed_link(tmp_path, monkeypatch):
+    from deploy import smoke
+    answers = iter([(202, {"run_id": RID, "status": "queued"}),
+                    (200, {"run_id": RID, "status": "running"}),
+                    (200, {"run_id": RID, "status": "sent",
+                           "report_url": "https://signed.example/x?X-Amz-Security-Token=t"})])
+    monkeypatch.setattr(smoke, "call", lambda *a, **k: next(answers))
+
+    class Resp(io.BytesIO):
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *a):
+            return False
+    monkeypatch.setattr(smoke.urllib.request, "urlopen", lambda url, timeout: Resp(b"DOCX"))
+    monkeypatch.setattr(smoke, "OUT", str(tmp_path))
+    lines = []
+    assert smoke.real_run("https://api", "k", "q", out=lines.append, sleep=lambda s: None,
+                          clock=iter(range(100)).__next__) == 0
+    saved = (tmp_path / f"{RID}.json").read_text()
+    assert "Security-Token" not in saved and "report_url" not in saved
+    assert (tmp_path / f"{RID}.docx").read_bytes() == b"DOCX"
+    assert not any("Security-Token" in l for l in lines)
 
 
 def test_status_of_a_clarifying_question():
@@ -545,6 +583,11 @@ def test_template_has_no_wildcard_actions_or_open_resources(template):
             actions = s["Action"] if isinstance(s["Action"], list) else [s["Action"]]
             assert all("*" not in a for a in actions), (role, s["Sid"])
             resources = s["Resource"] if isinstance(s["Resource"], list) else [s["Resource"]]
+            if s["Sid"] == "SendOneWay":       # "*" only with both address conditions
+                assert s["Condition"]["StringEquals"]["ses:FromAddress"] == {"Ref": "ReportFrom"}
+                assert s["Condition"]["ForAllValues:StringEquals"]["ses:Recipients"] == [
+                    {"Ref": "ReportTo"}]
+                continue
             assert all(r != "*" for r in resources), (role, s["Sid"])
 
 
@@ -552,8 +595,9 @@ def test_template_agent_role_writes_only_run_files_and_sends_one_way(template):
     by_sid = {s["Sid"]: s for s in statements(template, "AgentRole")}
     assert by_sid["WriteRunFiles"]["Action"] == "s3:PutObject"
     assert by_sid["WriteRunFiles"]["Resource"] == {"Sub": "${ResultsBucket.Arn}/runs/*"}
-    assert by_sid["SendOneWay"]["Action"] == "ses:SendEmail"
-    assert len(by_sid["SendOneWay"]["Resource"]) == 2
+    assert by_sid["SendOneWay"]["Action"] == ["ses:SendEmail", "ses:SendRawEmail"]
+    assert set(by_sid["SendOneWay"]["Condition"]) == {"StringEquals",
+                                                      "ForAllValues:StringEquals"}
     assert not any("s3:GetObject" in str(s["Action"]) and "ResultsBucket" in str(s["Resource"])
                    for s in by_sid.values())
 

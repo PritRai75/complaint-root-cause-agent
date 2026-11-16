@@ -169,12 +169,21 @@ Resources:
                 Effect: Allow
                 Action: s3:GetObject
                 Resource: !Sub arn:${AWS::Partition}:s3:::${CodeBucket}/${CodeKey}
+              # Pinned by the addresses, not by identity ARNs (S10: the identity-ARN form was refused
+              # with AccessDeniedException on the first real send). The conditions make IAM enforce
+              # the code's guarantee: from the one sender, to the one recipient and nobody else.
               - Sid: SendOneWay
                 Effect: Allow
-                Action: ses:SendEmail
-                Resource:
-                  - !Sub arn:${AWS::Partition}:ses:${AWS::Region}:${AWS::AccountId}:identity/${ReportFrom}
-                  - !Sub arn:${AWS::Partition}:ses:${AWS::Region}:${AWS::AccountId}:identity/${ReportTo}
+                Action:
+                  - ses:SendEmail
+                  - ses:SendRawEmail
+                Resource: "*"
+                Condition:
+                  StringEquals:
+                    ses:FromAddress: !Ref ReportFrom
+                  ForAllValues:StringEquals:
+                    ses:Recipients:
+                      - !Ref ReportTo
               - Sid: WorkloadToken
                 Effect: Allow
                 Action:
