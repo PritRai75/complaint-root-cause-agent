@@ -1,0 +1,18 @@
+[
+  {"name": "complaint_id", "type": "INTEGER", "mode": "REQUIRED"},
+  {"name": "date_received", "type": "DATE", "mode": "REQUIRED"},
+  {"name": "product", "type": "STRING", "mode": "REQUIRED"},
+  {"name": "sub_product", "type": "STRING", "mode": "NULLABLE"},
+  {"name": "issue", "type": "STRING", "mode": "REQUIRED"},
+  {"name": "sub_issue", "type": "STRING", "mode": "NULLABLE"},
+  {"name": "company", "type": "STRING", "mode": "REQUIRED"},
+  {"name": "state", "type": "STRING", "mode": "NULLABLE"},
+  {"name": "tags", "type": "STRING", "mode": "NULLABLE"},
+  {"name": "submitted_via", "type": "STRING", "mode": "NULLABLE"},
+  {"name": "date_sent_to_company", "type": "DATE", "mode": "NULLABLE"},
+  {"name": "company_response", "type": "STRING", "mode": "NULLABLE"},
+  {"name": "company_public_response", "type": "STRING", "mode": "NULLABLE"},
+  {"name": "timely_response", "type": "STRING", "mode": "NULLABLE"},
+  {"name": "has_narrative", "type": "INTEGER", "mode": "REQUIRED"},
+  {"name": "source_file", "type": "STRING", "mode": "REQUIRED"}
+]
