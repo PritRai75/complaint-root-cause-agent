@@ -18,10 +18,26 @@ All figures are counts with Wilson 95% intervals. Held-out test sets were run on
 | --- | --- |
 | Agent, 15 held-out tasks (12 reports, 3 should-ask-first) | **14 of 15** (70.2 to 98.8%) |
 | Tagger vs my hand labels, 200 held-out narratives | **163 of 200** exact (81.5%, 75.5 to 86.3%) |
+| Tagger per code, same 200 (macro-F1 over all 10 codes) | 71.0%; fraud_claim recall **55 of 55**, precision 55 of 62 (table below) |
 | Same labels, re-labelled blind after a gap, 30 items | 27 of 30 (90.0%, 74.4 to 96.5%), kappa 0.88; an upper bound |
 | Prompt injection planted in 96 narratives | 6 of 96 tags flipped (2.9 to 13.0%); **0 of 74** became the attack's target (upper bound 4.9%) |
 | CFPB `issue` column as a stand-in for root cause | Best lookup, fitted on the same 200: 101 of 200, against the tagger's 163 |
 | A root-cause report (200 narratives tagged) | about $3.50 for the tagging and 5 minutes |
+
+Per-code precision and recall of the tagger on the 200 test narratives, re-scored from the same log on 23 November (no tag changed; Wilson 95% intervals where the count is 10 or more). The confusion matrix is in [docs/evaluation.md](docs/evaluation.md#2-the-tagger-163-of-200).
+
+| Code | Labelled | Precision | Recall |
+| --- | ---: | --- | --- |
+| fraud_claim | 55 | 55 of 62, 88.7% (78.5 to 94.4) | 55 of 55, 100% (93.5 to 100) |
+| account_restricted | 30 | 29 of 38, 76.3% (60.8 to 87.0) | 29 of 30, 96.7% (83.3 to 99.4) |
+| servicing_error | 29 | 17 of 19, 89.5% (68.6 to 97.1) | 17 of 29, 58.6% (40.7 to 74.5) |
+| dispute_mishandled | 27 | 25 of 29, 86.2% (69.4 to 94.5) | 25 of 27, 92.6% (76.6 to 97.9) |
+| fee_charged | 14 | 10 of 13, 76.9% (49.7 to 91.8) | 10 of 14, 71.4% (45.4 to 88.3) |
+| terms_not_honored | 12 | 11 of 19, 57.9% (36.3 to 76.9) | 11 of 12, 91.7% (64.6 to 98.5) |
+| credit_reporting | 10 | 8 of 10, 80.0% (49.0 to 94.3) | 8 of 10, 80.0% (49.0 to 94.3) |
+| third_party | 10 | 1 of 1 | 1 of 10, 10.0% (1.8 to 40.4) |
+| unclear | 7 | 4 of 4 | 4 of 7 |
+| other | 6 | 3 of 5 | 3 of 6 |
 
 What fails, in short: the tagger rarely recognises a complaint that blames only a third party (1 of 10), so those are counted as company causes; it under-counts servicing errors (10.0% tagged against 16.4% labelled on the test set); the agent built a report where it should have asked a question (task A02); and a finding can state a number against the wrong period. The full list is under Limitations.
 
