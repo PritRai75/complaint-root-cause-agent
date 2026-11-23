@@ -1,0 +1,475 @@
+{
+ "type": "per_class",
+ "run_id": "test-20261116T055317Z",
+ "set": "test",
+ "final": true,
+ "log_sha256": "65a4b77e8f362b5aff32ce2d3a5748266e6e1a42bf9b891bca834ddc98a3f047",
+ "run_commit": "a870cf1",
+ "analysis_commit": "8a55555",
+ "prompt_version": "tag-1",
+ "taxonomy_version": "v1",
+ "min_support": 10,
+ "exact_agreement": {
+  "k": 163,
+  "n": 200,
+  "wilson95": [
+   0.755,
+   0.863
+  ]
+ },
+ "scored": 200,
+ "tagged": 200,
+ "right": 163,
+ "macro_f1": 0.7099,
+ "macro_f1_codes": 10,
+ "micro": {
+  "precision": {
+   "k": 163,
+   "n": 200,
+   "value": 0.815,
+   "low_support": false,
+   "wilson95": [
+    0.755,
+    0.863
+   ]
+  },
+  "recall": {
+   "k": 163,
+   "n": 200,
+   "value": 0.815,
+   "low_support": false,
+   "wilson95": [
+    0.755,
+    0.863
+   ]
+  },
+  "f1": 0.815
+ },
+ "rows": [
+  {
+   "code": "fraud_claim",
+   "labelled": 55,
+   "tagged": 62,
+   "right": 55,
+   "precision": {
+    "k": 55,
+    "n": 62,
+    "value": 0.8871,
+    "low_support": false,
+    "wilson95": [
+     0.785,
+     0.944
+    ]
+   },
+   "recall": {
+    "k": 55,
+    "n": 55,
+    "value": 1.0,
+    "low_support": false,
+    "wilson95": [
+     0.935,
+     1.0
+    ]
+   },
+   "f1": 0.9402,
+   "count_bias": 1.127
+  },
+  {
+   "code": "dispute_mishandled",
+   "labelled": 27,
+   "tagged": 29,
+   "right": 25,
+   "precision": {
+    "k": 25,
+    "n": 29,
+    "value": 0.8621,
+    "low_support": false,
+    "wilson95": [
+     0.694,
+     0.945
+    ]
+   },
+   "recall": {
+    "k": 25,
+    "n": 27,
+    "value": 0.9259,
+    "low_support": false,
+    "wilson95": [
+     0.766,
+     0.979
+    ]
+   },
+   "f1": 0.8929,
+   "count_bias": 1.074
+  },
+  {
+   "code": "servicing_error",
+   "labelled": 29,
+   "tagged": 19,
+   "right": 17,
+   "precision": {
+    "k": 17,
+    "n": 19,
+    "value": 0.8947,
+    "low_support": false,
+    "wilson95": [
+     0.686,
+     0.971
+    ]
+   },
+   "recall": {
+    "k": 17,
+    "n": 29,
+    "value": 0.5862,
+    "low_support": false,
+    "wilson95": [
+     0.407,
+     0.745
+    ]
+   },
+   "f1": 0.7083,
+   "count_bias": 0.655
+  },
+  {
+   "code": "account_restricted",
+   "labelled": 30,
+   "tagged": 38,
+   "right": 29,
+   "precision": {
+    "k": 29,
+    "n": 38,
+    "value": 0.7632,
+    "low_support": false,
+    "wilson95": [
+     0.608,
+     0.87
+    ]
+   },
+   "recall": {
+    "k": 29,
+    "n": 30,
+    "value": 0.9667,
+    "low_support": false,
+    "wilson95": [
+     0.833,
+     0.994
+    ]
+   },
+   "f1": 0.8529,
+   "count_bias": 1.267
+  },
+  {
+   "code": "terms_not_honored",
+   "labelled": 12,
+   "tagged": 19,
+   "right": 11,
+   "precision": {
+    "k": 11,
+    "n": 19,
+    "value": 0.5789,
+    "low_support": false,
+    "wilson95": [
+     0.363,
+     0.769
+    ]
+   },
+   "recall": {
+    "k": 11,
+    "n": 12,
+    "value": 0.9167,
+    "low_support": false,
+    "wilson95": [
+     0.646,
+     0.985
+    ]
+   },
+   "f1": 0.7097,
+   "count_bias": 1.583
+  },
+  {
+   "code": "fee_charged",
+   "labelled": 14,
+   "tagged": 13,
+   "right": 10,
+   "precision": {
+    "k": 10,
+    "n": 13,
+    "value": 0.7692,
+    "low_support": false,
+    "wilson95": [
+     0.497,
+     0.918
+    ]
+   },
+   "recall": {
+    "k": 10,
+    "n": 14,
+    "value": 0.7143,
+    "low_support": false,
+    "wilson95": [
+     0.454,
+     0.883
+    ]
+   },
+   "f1": 0.7407,
+   "count_bias": 0.929
+  },
+  {
+   "code": "credit_reporting",
+   "labelled": 10,
+   "tagged": 10,
+   "right": 8,
+   "precision": {
+    "k": 8,
+    "n": 10,
+    "value": 0.8,
+    "low_support": false,
+    "wilson95": [
+     0.49,
+     0.943
+    ]
+   },
+   "recall": {
+    "k": 8,
+    "n": 10,
+    "value": 0.8,
+    "low_support": false,
+    "wilson95": [
+     0.49,
+     0.943
+    ]
+   },
+   "f1": 0.8,
+   "count_bias": 1.0
+  },
+  {
+   "code": "third_party",
+   "labelled": 10,
+   "tagged": 1,
+   "right": 1,
+   "precision": {
+    "k": 1,
+    "n": 1,
+    "value": 1.0,
+    "low_support": true
+   },
+   "recall": {
+    "k": 1,
+    "n": 10,
+    "value": 0.1,
+    "low_support": false,
+    "wilson95": [
+     0.018,
+     0.404
+    ]
+   },
+   "f1": 0.1818,
+   "count_bias": 0.1
+  },
+  {
+   "code": "other",
+   "labelled": 6,
+   "tagged": 5,
+   "right": 3,
+   "precision": {
+    "k": 3,
+    "n": 5,
+    "value": 0.6,
+    "low_support": true
+   },
+   "recall": {
+    "k": 3,
+    "n": 6,
+    "value": 0.5,
+    "low_support": true
+   },
+   "f1": 0.5455,
+   "count_bias": 0.833
+  },
+  {
+   "code": "unclear",
+   "labelled": 7,
+   "tagged": 4,
+   "right": 4,
+   "precision": {
+    "k": 4,
+    "n": 4,
+    "value": 1.0,
+    "low_support": true
+   },
+   "recall": {
+    "k": 4,
+    "n": 7,
+    "value": 0.5714,
+    "low_support": true
+   },
+   "f1": 0.7273,
+   "count_bias": 0.571
+  }
+ ],
+ "matrix": {
+  "fraud_claim": {
+   "fraud_claim": 55,
+   "dispute_mishandled": 0,
+   "servicing_error": 0,
+   "account_restricted": 0,
+   "terms_not_honored": 0,
+   "fee_charged": 0,
+   "credit_reporting": 0,
+   "third_party": 0,
+   "other": 0,
+   "unclear": 0,
+   "(not tagged)": 0
+  },
+  "dispute_mishandled": {
+   "fraud_claim": 1,
+   "dispute_mishandled": 25,
+   "servicing_error": 0,
+   "account_restricted": 1,
+   "terms_not_honored": 0,
+   "fee_charged": 0,
+   "credit_reporting": 0,
+   "third_party": 0,
+   "other": 0,
+   "unclear": 0,
+   "(not tagged)": 0
+  },
+  "servicing_error": {
+   "fraud_claim": 1,
+   "dispute_mishandled": 0,
+   "servicing_error": 17,
+   "account_restricted": 7,
+   "terms_not_honored": 1,
+   "fee_charged": 1,
+   "credit_reporting": 0,
+   "third_party": 0,
+   "other": 2,
+   "unclear": 0,
+   "(not tagged)": 0
+  },
+  "account_restricted": {
+   "fraud_claim": 1,
+   "dispute_mishandled": 0,
+   "servicing_error": 0,
+   "account_restricted": 29,
+   "terms_not_honored": 0,
+   "fee_charged": 0,
+   "credit_reporting": 0,
+   "third_party": 0,
+   "other": 0,
+   "unclear": 0,
+   "(not tagged)": 0
+  },
+  "terms_not_honored": {
+   "fraud_claim": 0,
+   "dispute_mishandled": 0,
+   "servicing_error": 0,
+   "account_restricted": 0,
+   "terms_not_honored": 11,
+   "fee_charged": 1,
+   "credit_reporting": 0,
+   "third_party": 0,
+   "other": 0,
+   "unclear": 0,
+   "(not tagged)": 0
+  },
+  "fee_charged": {
+   "fraud_claim": 0,
+   "dispute_mishandled": 0,
+   "servicing_error": 1,
+   "account_restricted": 0,
+   "terms_not_honored": 3,
+   "fee_charged": 10,
+   "credit_reporting": 0,
+   "third_party": 0,
+   "other": 0,
+   "unclear": 0,
+   "(not tagged)": 0
+  },
+  "credit_reporting": {
+   "fraud_claim": 1,
+   "dispute_mishandled": 0,
+   "servicing_error": 0,
+   "account_restricted": 0,
+   "terms_not_honored": 1,
+   "fee_charged": 0,
+   "credit_reporting": 8,
+   "third_party": 0,
+   "other": 0,
+   "unclear": 0,
+   "(not tagged)": 0
+  },
+  "third_party": {
+   "fraud_claim": 3,
+   "dispute_mishandled": 3,
+   "servicing_error": 1,
+   "account_restricted": 0,
+   "terms_not_honored": 1,
+   "fee_charged": 0,
+   "credit_reporting": 1,
+   "third_party": 1,
+   "other": 0,
+   "unclear": 0,
+   "(not tagged)": 0
+  },
+  "other": {
+   "fraud_claim": 0,
+   "dispute_mishandled": 0,
+   "servicing_error": 0,
+   "account_restricted": 1,
+   "terms_not_honored": 2,
+   "fee_charged": 0,
+   "credit_reporting": 0,
+   "third_party": 0,
+   "other": 3,
+   "unclear": 0,
+   "(not tagged)": 0
+  },
+  "unclear": {
+   "fraud_claim": 0,
+   "dispute_mishandled": 1,
+   "servicing_error": 0,
+   "account_restricted": 0,
+   "terms_not_honored": 0,
+   "fee_charged": 1,
+   "credit_reporting": 1,
+   "third_party": 0,
+   "other": 0,
+   "unclear": 4,
+   "(not tagged)": 0
+  }
+ },
+ "spotlight": {
+  "code": "fraud_claim",
+  "precision": {
+   "k": 55,
+   "n": 62,
+   "value": 0.8871,
+   "low_support": false,
+   "wilson95": [
+    0.785,
+    0.944
+   ]
+  },
+  "recall": {
+   "k": 55,
+   "n": 55,
+   "value": 1.0,
+   "low_support": false,
+   "wilson95": [
+    0.935,
+    1.0
+   ]
+  },
+  "f1": 0.9402,
+  "false_positives_by_label": {
+   "third_party": 3,
+   "account_restricted": 1,
+   "credit_reporting": 1,
+   "dispute_mishandled": 1,
+   "servicing_error": 1
+  },
+  "misses_by_tag": {}
+ },
+ "image": "docs/img/confusion-test-20261116T055317Z.png"
+}

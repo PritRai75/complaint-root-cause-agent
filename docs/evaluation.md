@@ -25,22 +25,32 @@ How the planner got here: `plan-2` scored 4 of 6 on the dev tasks, because it an
 
 `test-20261116T055317Z`, run once at `a870cf1` with the prompt `tag-1` and taxonomy v1, both frozen after dev (dev: 82 of 90, a fresh repeat moved 0 of 90 tags). Claude Sonnet 4.6, one narrative per call, a forced `record_root_cause` call with the codes as an enum. $3.51 and 301 seconds; one narrative was cut for length.
 
-**Exact agreement with my labels: 163 of 200 (81.5%, 75.5 to 86.3%).** Checking 87 of 100, credit card 76 of 100. Exact agreement is the only accuracy figure; nothing else is scored.
+**Exact agreement with my labels: 163 of 200 (81.5%, 75.5 to 86.3%).** Checking 87 of 100, credit card 76 of 100. Exact match is the only scoring rule: a tag is right only when it equals my label, with no partial credit. The per-code figures below split that same comparison by code.
 
-| Code | Labelled | Tagged | Correct |
-| --- | ---: | ---: | ---: |
-| fraud_claim | 55 | 62 | 55 |
-| account_restricted | 30 | 38 | 29 |
-| servicing_error | 29 | 19 | 17 |
-| dispute_mishandled | 27 | 29 | 25 |
-| fee_charged | 14 | 13 | 10 |
-| terms_not_honored | 12 | 19 | 11 |
-| credit_reporting | 10 | 10 | 8 |
-| third_party | 10 | 1 | 1 |
-| unclear | 7 | 4 | 4 |
-| other | 6 | 5 | 3 |
+**Per-code precision and recall.** Added on 23 November 2026 from the same log (`python -m eval.per_class eval/runs/test-20261116T055317Z.jsonl`, output in `eval/runs/per-class-test-20261116T055317Z.json`). No tag changed and nothing was run again. The rules were set after the test run's totals were known, so this is a breakdown of the result, not a separate pre-registered measure. Precision of a code = right / tagged with it; recall = right / labelled with it. Wilson 95% intervals are shown only when the count below the line is 10 or more; smaller ones are marked low support. F1 gets no interval.
 
-Biggest confusions: servicing_error tagged as account_restricted (7), third_party tagged as dispute_mishandled (3) or fraud_claim (3), fee_charged tagged as terms_not_honored (3).
+| Code | Labelled | Tagged | Right | Precision | Recall | F1 |
+| --- | ---: | ---: | ---: | --- | --- | ---: |
+| fraud_claim | 55 | 62 | 55 | 88.7% (78.5 to 94.4) | 100.0% (93.5 to 100.0) | 94.0% |
+| account_restricted | 30 | 38 | 29 | 76.3% (60.8 to 87.0) | 96.7% (83.3 to 99.4) | 85.3% |
+| servicing_error | 29 | 19 | 17 | 89.5% (68.6 to 97.1) | 58.6% (40.7 to 74.5) | 70.8% |
+| dispute_mishandled | 27 | 29 | 25 | 86.2% (69.4 to 94.5) | 92.6% (76.6 to 97.9) | 89.3% |
+| fee_charged | 14 | 13 | 10 | 76.9% (49.7 to 91.8) | 71.4% (45.4 to 88.3) | 74.1% |
+| terms_not_honored | 12 | 19 | 11 | 57.9% (36.3 to 76.9) | 91.7% (64.6 to 98.5) | 71.0% |
+| credit_reporting | 10 | 10 | 8 | 80.0% (49.0 to 94.3) | 80.0% (49.0 to 94.3) | 80.0% |
+| third_party | 10 | 1 | 1 | 1 of 1 (low support) | 10.0% (1.8 to 40.4) | 18.2% |
+| unclear | 7 | 4 | 4 | 4 of 4 (low support) | 4 of 7 (low support) | 72.7% |
+| other | 6 | 5 | 3 | 3 of 5 (low support) | 3 of 6 (low support) | 54.5% |
+
+Macro-F1 over all 10 codes is 71.0%; over the 7 root causes alone it is 80.6%. The gap is mostly `third_party`. Micro-F1 is 81.5%, the same as exact agreement, because all 200 narratives got a tag.
+
+![Confusion matrix of the tagger test run](img/confusion-test-20261116T055317Z.png)
+
+Rows are my labels, columns the tagger's codes; the numbers are counts and the shading is each cell's share of its row. Biggest confusions: servicing_error tagged as account_restricted (7), third_party tagged as dispute_mishandled (3) or fraud_claim (3), fee_charged tagged as terms_not_honored (3).
+
+**fraud_claim.** Every narrative I labelled fraud_claim was tagged fraud_claim: recall 55 of 55 (93.5 to 100%). Precision is 55 of 62 (78.5 to 94.4%). Of the 7 extra fraud tags, 3 are narratives I labelled third_party, and 1 each account_restricted, credit_reporting, dispute_mishandled and servicing_error. Those 3 are a third of third_party's 9 misses; another 3 went to dispute_mishandled.
+
+**How this links to the share biases below.** For each code, tagged / labelled = recall / precision. Above 1 the code is over-counted: terms_not_honored 1.58 (precision 57.9%), account_restricted 1.27 (76.3%), fraud_claim 1.13. Below 1 it is under-counted: servicing_error 0.66, where recall is 58.6% and 7 of its 12 misses went to account_restricted; third_party 0.10. These are the same errors that move the shares in the table further down.
 
 **Where the misses are.** 37 misses. While labelling I marked 81 narratives with a runner-up code ("vs <code>"). 34 of the 37 misses are on those flagged items (the tagger agreed on 47 of 81 flagged, and on 116 of 119 unflagged). 23 of the 37 misses are exactly the runner-up I had named. The rule was fixed first: a miss counts as matching the runner-up only when the tagger's code equals the one code after "vs". This describes the misses; it is not a score.
 
