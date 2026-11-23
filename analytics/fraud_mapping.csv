@@ -1,0 +1,104 @@
+product,issue,sub_issue,fraud,kind,borderline,reason
+Checking or savings account,Managing an account,Deposits and withdrawals,no,,no,"Mixed: holds, missing deposits and withdrawals; some scams likely, not separable."
+Checking or savings account,Managing an account,Problem using a debit or ATM card,no,,no,"Mixed: includes compromised-card fraud, but also disputes and blocked cards (S3 reading: R06, R31, R58 fraud; R08, R45 disputes; R20, R59 restrictions)."
+Checking or savings account,Problem with a lender or other company charging your account,Transaction was not authorized,yes,unauthorized_transaction,no,The consumer says they did not authorise the transaction.
+Checking or savings account,Managing an account,Funds not handled or disbursed as instructed,no,,no,"Mixed: mishandled transfers; some scams likely, not separable."
+Checking or savings account,Closing an account,Company closed your account,no,,no,Not a fraud or scam category.
+Checking or savings account,Managing an account,Banking errors,no,,no,Not a fraud or scam category.
+Checking or savings account,Closing an account,Funds not received from closed account,no,,no,Not a fraud or scam category.
+Checking or savings account,Managing an account,Problem accessing account,no,,no,Not a fraud or scam category.
+Checking or savings account,Managing an account,Problem making or receiving payments,no,,no,"Mixed: payment problems; P2P scams may be filed here, not separable."
+Checking or savings account,Opening an account,Unable to open an account,no,,no,Not a fraud or scam category.
+Checking or savings account,Problem caused by your funds being low,Overdrafts and overdraft fees,no,,no,Not a fraud or scam category.
+Checking or savings account,Opening an account,Account opened without my consent or knowledge,yes,new_account,no,An account opened in the consumer's name without their knowledge: new-account (identity) fraud.
+Checking or savings account,Problem with a lender or other company charging your account,Money was taken from your account on the wrong day or for the wrong amount,no,,no,Not a fraud or scam category.
+Checking or savings account,Opening an account,Didn't receive terms that were advertised,no,,no,Not a fraud or scam category.
+Checking or savings account,Closing an account,Can't close your account,no,,no,Not a fraud or scam category.
+Checking or savings account,Problem caused by your funds being low,Non-sufficient funds and associated fees,no,,no,Not a fraud or scam category.
+Checking or savings account,Managing an account,Cashing a check,no,,no,Not a fraud or scam category.
+Checking or savings account,Managing an account,Fee problem,no,,no,Not a fraud or scam category.
+Checking or savings account,Problem with a lender or other company charging your account,Can't stop withdrawals from your account,no,,yes,Debits the consumer once authorised and tried to stop; a payment-authorisation problem rather than fraud.
+Checking or savings account,Problem caused by your funds being low,Late or other fees,no,,no,Not a fraud or scam category.
+Checking or savings account,Problem caused by your funds being low,Bounced checks or returned payments,no,,no,Not a fraud or scam category.
+Checking or savings account,Opening an account,Confusing or missing disclosures,no,,no,Not a fraud or scam category.
+Checking or savings account,Managing an account,Deposits or withdrawals,no,,no,Not a fraud or scam category.
+Checking or savings account,Closing an account,Fees charged for closing account,no,,no,Not a fraud or scam category.
+Checking or savings account,Problem with a company's investigation into an existing problem,Their investigation did not fix an error on your report,no,,no,Not a fraud or scam category.
+Checking or savings account,Incorrect information on your report,Information belongs to someone else,no,,yes,Covers identity theft and mixed credit files alike; the category can't separate them.
+Checking or savings account,Incorrect information on your report,Account information incorrect,no,,no,Not a fraud or scam category.
+Checking or savings account,Incorrect information on your report,Account status incorrect,no,,no,Not a fraud or scam category.
+Checking or savings account,Managing an account,Problem with renewal,no,,no,Not a fraud or scam category.
+Checking or savings account,Problem with fraud alerts or security freezes,,no,,yes,"About fraud-protection tools, not a fraud event; many filers are fraud victims, but the category doesn't say so."
+Checking or savings account,Managing an account,Problem with fees or penalties,no,,no,Not a fraud or scam category.
+Checking or savings account,Problem with a company's investigation into an existing problem,Problem with personal statement of dispute,no,,no,Not a fraud or scam category.
+Checking or savings account,Problem with a company's investigation into an existing problem,Difficulty submitting a dispute or getting information about a dispute over the phone,no,,no,Not a fraud or scam category.
+Checking or savings account,Improper use of your report,Credit inquiries on your report that you don't recognize,no,,yes,"Can be applications made in the consumer's name, or inquiries they forgot or dispute; not separable."
+Checking or savings account,Problem with a company's investigation into an existing problem,Was not notified of investigation status or results,no,,no,Not a fraud or scam category.
+Checking or savings account,Improper use of your report,Reporting company used your report improperly,no,,no,Not a fraud or scam category.
+Checking or savings account,Problem with a company's investigation into an existing problem,Investigation took more than 30 days,no,,no,Not a fraud or scam category.
+Checking or savings account,Unable to get your credit report or credit score,Other problem getting your report or credit score,no,,no,Not a fraud or scam category.
+Checking or savings account,Credit monitoring or identity theft protection services,Billing dispute for services,no,,no,"A problem with a monitoring or identity-protection product, not a fraud event."
+Checking or savings account,Credit monitoring or identity theft protection services,Didn't receive services that were advertised,no,,no,"A problem with a monitoring or identity-protection product, not a fraud event."
+Checking or savings account,Credit monitoring or identity theft protection services,Problem canceling credit monitoring or identify theft protection service,no,,no,"A problem with a monitoring or identity-protection product, not a fraud event."
+Checking or savings account,Incorrect information on your report,Personal information incorrect,no,,no,Not a fraud or scam category.
+Checking or savings account,Credit monitoring or identity theft protection services,Received unwanted marketing or advertising,no,,no,"A problem with a monitoring or identity-protection product, not a fraud event."
+Checking or savings account,Incorrect information on your report,Information is missing that should be on the report,no,,no,Not a fraud or scam category.
+Checking or savings account,Credit monitoring or identity theft protection services,Problem with product or service terms changing,no,,no,"A problem with a monitoring or identity-protection product, not a fraud event."
+Checking or savings account,Incorrect information on your report,Old information reappears or never goes away,no,,no,Not a fraud or scam category.
+Checking or savings account,Unable to get your credit report or credit score,Problem getting your free annual credit report,no,,no,Not a fraud or scam category.
+Checking or savings account,Improper use of your report,Received unsolicited financial product or insurance offers after opting out,no,,no,Not a fraud or scam category.
+Credit card,Problem with a purchase shown on your statement,Credit card company isn't resolving a dispute about a purchase on your statement,no,,no,"Merchant disputes over purchases the consumer made; scams with a fake seller may sit here, not separable."
+Credit card,Getting a credit card,Card opened without my consent or knowledge,yes,new_account,no,A card opened in the consumer's name without their knowledge: new-account (identity) fraud.
+Credit card,Problem with a purchase shown on your statement,Card was charged for something you did not purchase with the card,yes,unauthorized_transaction,no,The consumer says they did not make the purchase.
+Credit card,Fees or interest,Problem with fees,no,,no,Not a fraud or scam category.
+Credit card,Closing your account,Company closed your account,no,,no,Not a fraud or scam category.
+Credit card,"Other features, terms, or problems",Other problem,no,,no,Not a fraud or scam category.
+Credit card,Problem when making payments,Problem during payment process,no,,no,Not a fraud or scam category.
+Credit card,"Other features, terms, or problems",Problem with rewards from credit card,no,,no,Not a fraud or scam category.
+Credit card,Incorrect information on your report,Account status incorrect,no,,no,Not a fraud or scam category.
+Credit card,Fees or interest,Charged too much interest,no,,no,Not a fraud or scam category.
+Credit card,Trouble using your card,Can't use card to make purchases,no,,no,Not a fraud or scam category.
+Credit card,"Advertising and marketing, including promotional offers",Didn't receive advertised or promotional terms,no,,no,Not a fraud or scam category.
+Credit card,Incorrect information on your report,Account information incorrect,no,,no,Not a fraud or scam category.
+Credit card,Problem with a company's investigation into an existing problem,Their investigation did not fix an error on your report,no,,no,Not a fraud or scam category.
+Credit card,"Advertising and marketing, including promotional offers",Confusing or misleading advertising about the credit card,no,,no,Not a fraud or scam category.
+Credit card,Getting a credit card,Application denied,no,,no,Not a fraud or scam category.
+Credit card,Closing your account,Can't close your account,no,,no,Not a fraud or scam category.
+Credit card,"Other features, terms, or problems",Problem with customer service,no,,no,Not a fraud or scam category.
+Credit card,Struggling to pay your bill,Credit card company won't work with you while you're going through financial hardship,no,,no,Not a fraud or scam category.
+Credit card,Trouble using your card,Credit card company won't increase or decrease your credit limit,no,,no,Not a fraud or scam category.
+Credit card,Fees or interest,Unexpected increase in interest rate,no,,no,Not a fraud or scam category.
+Credit card,Incorrect information on your report,Information belongs to someone else,no,,yes,Covers identity theft and mixed credit files alike; the category can't separate them.
+Credit card,Problem with a company's investigation into an existing problem,Was not notified of investigation status or results,no,,no,Not a fraud or scam category.
+Credit card,"Other features, terms, or problems",Problem with balance transfer,no,,no,Not a fraud or scam category.
+Credit card,Problem with a purchase shown on your statement,Overcharged for something you did purchase with the card,no,,no,Not a fraud or scam category.
+Credit card,Problem when making payments,You never received your bill or did not know a payment was due,no,,no,Not a fraud or scam category.
+Credit card,Getting a credit card,Delay in processing application,no,,no,Not a fraud or scam category.
+Credit card,Getting a credit card,Problem getting a working replacement card,no,,no,Not a fraud or scam category.
+Credit card,"Other features, terms, or problems",Privacy issues,no,,no,"Data handling and privacy, not a fraud event."
+Credit card,Getting a credit card,Sent card you never applied for,yes,new_account,yes,Usually an application made in the consumer's name; can also be an unsolicited card from the issuer.
+Credit card,Problem with a company's investigation into an existing problem,Problem with personal statement of dispute,no,,no,Not a fraud or scam category.
+Credit card,Improper use of your report,Reporting company used your report improperly,no,,no,Not a fraud or scam category.
+Credit card,"Other features, terms, or problems",Add-on products and services,no,,no,Not a fraud or scam category.
+Credit card,Improper use of your report,Credit inquiries on your report that you don't recognize,no,,yes,"Can be applications made in the consumer's name, or inquiries they forgot or dispute; not separable."
+Credit card,Problem with a company's investigation into an existing problem,Difficulty submitting a dispute or getting information about a dispute over the phone,no,,no,Not a fraud or scam category.
+Credit card,Incorrect information on your report,Old information reappears or never goes away,no,,no,Not a fraud or scam category.
+Credit card,Problem with a company's investigation into an existing problem,Investigation took more than 30 days,no,,no,Not a fraud or scam category.
+Credit card,"Other features, terms, or problems",Credit card company forcing arbitration,no,,no,Not a fraud or scam category.
+Credit card,"Other features, terms, or problems",Problem with cash advances,no,,no,Not a fraud or scam category.
+Credit card,Struggling to pay your bill,Problem lowering your monthly payments,no,,no,Not a fraud or scam category.
+Credit card,Problem with fraud alerts or security freezes,,no,,yes,"About fraud-protection tools, not a fraud event; many filers are fraud victims, but the category doesn't say so."
+Credit card,Credit monitoring or identity theft protection services,Billing dispute for services,no,,no,"A problem with a monitoring or identity-protection product, not a fraud event."
+Credit card,Trouble using your card,Account sold or transferred to another company,no,,no,Not a fraud or scam category.
+Credit card,Incorrect information on your report,Information is missing that should be on the report,no,,no,Not a fraud or scam category.
+Credit card,Credit monitoring or identity theft protection services,Problem canceling credit monitoring or identify theft protection service,no,,no,"A problem with a monitoring or identity-protection product, not a fraud event."
+Credit card,Incorrect information on your report,Personal information incorrect,no,,no,Not a fraud or scam category.
+Credit card,Struggling to pay your bill,Filed for bankruptcy,no,,no,Not a fraud or scam category.
+Credit card,Incorrect information on your report,Public record information inaccurate,no,,no,Not a fraud or scam category.
+Credit card,Unable to get your credit report or credit score,Other problem getting your report or credit score,no,,no,Not a fraud or scam category.
+Credit card,"Other features, terms, or problems",Problem with convenience check,no,,no,Not a fraud or scam category.
+Credit card,Credit monitoring or identity theft protection services,Didn't receive services that were advertised,no,,no,"A problem with a monitoring or identity-protection product, not a fraud event."
+Credit card,Credit monitoring or identity theft protection services,Problem with product or service terms changing,no,,no,"A problem with a monitoring or identity-protection product, not a fraud event."
+Credit card,Credit monitoring or identity theft protection services,Received unwanted marketing or advertising,no,,no,"A problem with a monitoring or identity-protection product, not a fraud event."
+Credit card,Improper use of your report,Report provided to employer without your written authorization,no,,no,Not a fraud or scam category.
+Credit card,Improper use of your report,Received unsolicited financial product or insurance offers after opting out,no,,no,Not a fraud or scam category.

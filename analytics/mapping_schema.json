@@ -1,0 +1,9 @@
+[
+  {"name": "product", "type": "STRING", "mode": "REQUIRED"},
+  {"name": "issue", "type": "STRING", "mode": "REQUIRED"},
+  {"name": "sub_issue", "type": "STRING", "mode": "NULLABLE"},
+  {"name": "fraud", "type": "STRING", "mode": "REQUIRED"},
+  {"name": "kind", "type": "STRING", "mode": "NULLABLE"},
+  {"name": "borderline", "type": "STRING", "mode": "REQUIRED"},
+  {"name": "reason", "type": "STRING", "mode": "REQUIRED"}
+]
