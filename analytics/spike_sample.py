@@ -9,9 +9,11 @@ narrative, and draws 25 of them at random with seed 20261123 (all of them if
 there are fewer). Writes:
 
   analytics/results/q5_sample_ids.csv   IDs, product, issue, sub-issue (committed)
+  analytics/results/q5_pool.csv         the company-month, pool size, number drawn, seed
   scratch/q5_reading.md                 the narratives to read (gitignored)
 
-The note on what drove the spike goes in analytics/q5_note.md, written by Prit.
+How each narrative was read goes in analytics/q5_tally.csv (item, complaint ID,
+read_as, note); findings.md reports the counts.
 """
 import csv
 import os
@@ -24,6 +26,7 @@ from analytics import mapping
 DB_PATH = "data/complaints.sqlite"
 SPIKES_PATH = "analytics/results/q3_spikes.csv"
 IDS_PATH = "analytics/results/q5_sample_ids.csv"
+POOL_PATH = "analytics/results/q5_pool.csv"
 READING_PATH = "scratch/q5_reading.md"
 SEED = 20261123
 N = 25
@@ -80,6 +83,10 @@ def main(argv):
         w = csv.writer(f, lineterminator="\n")
         w.writerow(["complaint_id", "date_received", "product", "issue", "sub_issue"])
         w.writerows(r[:5] for r in picked)
+    with open(POOL_PATH, "w", encoding="utf-8", newline="") as f:
+        w = csv.writer(f, lineterminator="\n")
+        w.writerow(["company", "month", "fraud_with_narrative", "drawn", "seed"])
+        w.writerow([company, month, len(pool), len(picked), SEED])
     os.makedirs(os.path.dirname(READING_PATH), exist_ok=True)
     with open(READING_PATH, "w", encoding="utf-8", newline="\n") as f:
         f.write(f"# Question 5 reading: {company}, {month[:7]}\n\n")
@@ -90,6 +97,7 @@ def main(argv):
     print(f"Biggest spike: {company}, {month[:7]}; {len(pool)} fraud complaints with a "
           f"narrative; drew {len(picked)}")
     print(f"Written: {IDS_PATH}")
+    print(f"Written: {POOL_PATH}")
     print(f"Written: {READING_PATH}")
     return 0
 

@@ -41,6 +41,17 @@ Per-code precision and recall of the tagger on the 200 test narratives, re-score
 
 What fails, in short: the tagger rarely recognises a complaint that blames only a third party (1 of 10), so those are counted as company causes; it under-counts servicing errors (10.0% tagged against 16.4% labelled on the test set); the agent built a report where it should have asked a question (task A02); and a finding can state a number against the wrong period. The full list is under Limitations.
 
+## Fraud complaint trends (BigQuery + Looker Studio)
+
+A separate investigation of the same data in BigQuery SQL, in [analytics/](analytics/). Fraud complaints (unauthorized transactions and accounts opened without consent) are defined by a mapping of issue categories written before any query, and every query result is recomputed independently in pandas.
+
+- Fraud complaints were a steady 14.5% of the 125,220 complaints, between 14.0% and 15.0% in every month from January to August 2026.
+- The biggest month-on-month spike, Capital One in May, came from Discover Bank's complaints moving under Capital One's name from April. Counted together, the two companies' fraud complaints don't spike at all.
+- Fraud complaints about credit cards get relief more often than others (33.6% against 25.1%), but monetary relief less often (13.5% against 16.4%).
+- Of 25 fraud complaints read from that month, 18 describe fraud; the rest are merchant or subscription disputes filed as unauthorized.
+
+Findings with intervals and caveats: [analytics/findings.md](analytics/findings.md). Dashboard: [analytics/dashboard.md](analytics/dashboard.md).
+
 ## Example
 
 A question sent to the deployed API on 16 November 2026, and what the status endpoint returned (a real run: 303 seconds, one email sent, nothing edited). The report is [docs/example/complaint-report-20261116T080938Z.docx](docs/example/complaint-report-20261116T080938Z.docx).

@@ -1,0 +1,26 @@
+item,complaint_id,read_as,note
+1,21831603,unauthorized_transaction,
+2,21851248,new_account,
+3,21858553,unauthorized_transaction,
+4,21861044,not_fraud,approved for a different card than shown at application
+5,21882285,not_fraud,subscription cancellation dispute
+6,21901866,not_fraud,debt-settlement service paid for but not delivered
+7,21983397,unauthorized_transaction,
+8,22075937,new_account,
+9,22112984,unauthorized_transaction,
+10,22116241,scam,screen-share caller posing as a fraud check
+11,22148879,new_account,
+12,22175695,not_fraud,returns and refunds dispute with a merchant
+13,22220190,new_account,
+14,22225396,unauthorized_transaction,
+15,22380306,new_account,
+16,22383704,new_account,
+17,22391253,scam,payment directed by a scammer
+18,22447885,not_fraud,contractor charged the full job before approval; borderline
+19,22452303,new_account,
+20,22454963,unauthorized_transaction,
+21,22521547,not_fraud,membership enrolment and termination fee
+22,22567695,new_account,
+23,22648516,new_account,
+24,22666349,not_fraud,subscription dispute; a Discover appeal letter
+25,22751469,new_account,
