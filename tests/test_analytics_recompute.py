@@ -172,7 +172,7 @@ def test_recompute_end_to_end_and_missing_file(tmp_path):
     res.mkdir()
     f = rc.flag(rc.load_complaints(str(db)), mapping.load(str(mp)))
     frames = {"q0": rc.q0(f, len(df)), "q1": rc.q1(f), "q2": rc.q2(f), "q2b": rc.q2b(f),
-              "q3": rc.q3(f), "q4": rc.q4(f)}
+              "q3": rc.q3(f), "q4": rc.q4(f), "q6": rc.q6(f)}
     for name, (fname, _, floats) in rc.RESULTS.items():
         if name != "q4":
             write_bq_csv(res / fname, frames[name], floats)
@@ -202,3 +202,14 @@ def test_spike_sample_draws_seeded_fraud_narratives(tmp_path, monkeypatch):
     spikes.write_text("company,month,is_biggest\nA,2026-08-01,true\n")
     with pytest.raises(ss.SampleError, match="after narratives stop"):
         ss.biggest(str(spikes))
+
+
+def test_q6_picks_discover_names_and_capital_one():
+    f = rc.flag(frame([("DISCOVER BANK", 1, FRAUD, 3, "C", "Yes"),
+                       ("Discover Financial Services", 2, OTHER, 2, "C", "Yes"),
+                       ("CAPITAL ONE FINANCIAL CORPORATION", 4, FRAUD, 5, "C", "Yes"),
+                       ("CITIBANK, N.A.", 4, FRAUD, 9, "C", "Yes")]), FMAP)
+    g = rc.q6(f).set_index(["company", "month"])
+    assert len(g) == 3 and ("CITIBANK, N.A.", "2026-04-01") not in g.index
+    assert g.loc[("DISCOVER BANK", "2026-01-01")]["fraud"] == 3
+    assert g.loc[("Discover Financial Services", "2026-02-01")]["fraud"] == 0

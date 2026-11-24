@@ -37,6 +37,7 @@ RESULTS = {
            {"mean_prev3": 3, "sd_used": 3, "threshold": 3, "excess": 3}),
     "q4": ("q4_response.csv", ["product", "is_fraud"],
            {"timely_rate": 4, "relief_rate": 4, "monetary_relief_rate": 4}),
+    "q6": ("q6_discover_followup.csv", ["company", "product", "month"], {}),
 }
 
 
@@ -158,6 +159,14 @@ def q4(f):
     return g
 
 
+def q6(f):
+    """Follow-up written after Q3: Discover-named companies and Capital One by month."""
+    d = f[f["company"].str.upper().str.contains("DISCOVER")
+          | (f["company"] == "CAPITAL ONE FINANCIAL CORPORATION")]
+    return d.groupby(["month", "company", "product"]).agg(
+        complaints=("complaint_id", "size"), fraud=("is_fraud", "sum")).reset_index()
+
+
 def _norm(v):
     """A CSV cell or a pandas value as text for exact comparison."""
     if v is None or (isinstance(v, float) and pd.isna(v)) or v == "":
@@ -208,7 +217,7 @@ def recompute(db_path=DB_PATH, results_dir=RESULTS_DIR, mapping_path=mapping.MAP
     df = load_complaints(db_path)
     f = flag(df, fmap)
     frames = {"q0": q0(f, len(df)), "q1": q1(f), "q2": q2(f), "q2b": q2b(f), "q3": q3(f),
-              "q4": q4(f)}
+              "q4": q4(f), "q6": q6(f)}
     bad = 0
     for name, (fname, _, _) in RESULTS.items():
         path = os.path.join(results_dir, fname)
