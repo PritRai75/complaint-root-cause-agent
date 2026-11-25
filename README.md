@@ -46,11 +46,11 @@ What fails, in short: the tagger rarely recognises a complaint that blames only 
 A separate investigation of the same data in BigQuery SQL, in [analytics/](analytics/). Fraud complaints (unauthorized transactions and accounts opened without consent) are defined by a mapping of issue categories written before any query, and every query result is recomputed independently in pandas.
 
 - Fraud complaints were a steady 14.5% of the 125,220 complaints, between 14.0% and 15.0% in every month from January to August 2026.
-- The biggest month-on-month spike, Capital One in May, came from Discover Bank's complaints moving under Capital One's name from April. Counted together, the two companies' fraud complaints don't spike at all.
+- The biggest spike the spike rule flagged, Capital One in May, goes away when Discover Bank is counted with Capital One: Discover Bank's complaints stop after March and Capital One's rise from April. Counted together, the two companies' fraud complaints don't spike at all.
 - Fraud complaints about credit cards get relief more often than others (33.6% against 25.1%), but monetary relief less often (13.5% against 16.4%).
 - Of 25 fraud complaints read from that month, 18 describe fraud; the rest are merchant or subscription disputes filed as unauthorized.
 
-Findings with intervals and caveats: [analytics/findings.md](analytics/findings.md). Dashboard: [analytics/dashboard.md](analytics/dashboard.md).
+Findings with intervals and caveats: [analytics/findings.md](analytics/findings.md). Dashboard: [live, view only](https://datastudio.google.com/reporting/c32d379f-a561-48ed-9675-499d8d86a38d), built as described in [analytics/dashboard.md](analytics/dashboard.md).
 
 ## Example
 
