@@ -1,0 +1,104 @@
+product,issue,sub_issue,complaints,narratives
+Checking or savings account,Managing an account,Deposits and withdrawals,11637,4150
+Checking or savings account,Managing an account,Problem using a debit or ATM card,9765,2991
+Checking or savings account,Problem with a lender or other company charging your account,Transaction was not authorized,7048,2682
+Checking or savings account,Managing an account,Funds not handled or disbursed as instructed,4078,1558
+Checking or savings account,Closing an account,Company closed your account,3713,1381
+Checking or savings account,Managing an account,Banking errors,2827,978
+Checking or savings account,Closing an account,Funds not received from closed account,2817,1056
+Checking or savings account,Managing an account,Problem accessing account,2688,953
+Checking or savings account,Managing an account,Problem making or receiving payments,2593,908
+Checking or savings account,Opening an account,Unable to open an account,1947,603
+Checking or savings account,Problem caused by your funds being low,Overdrafts and overdraft fees,1800,704
+Checking or savings account,Opening an account,Account opened without my consent or knowledge,1485,406
+Checking or savings account,Problem with a lender or other company charging your account,Money was taken from your account on the wrong day or for the wrong amount,1212,484
+Checking or savings account,Opening an account,Didn't receive terms that were advertised,1210,424
+Checking or savings account,Closing an account,Can't close your account,1151,421
+Checking or savings account,Problem caused by your funds being low,Non-sufficient funds and associated fees,774,333
+Checking or savings account,Managing an account,Cashing a check,720,241
+Checking or savings account,Managing an account,Fee problem,594,200
+Checking or savings account,Problem with a lender or other company charging your account,Can't stop withdrawals from your account,462,183
+Checking or savings account,Problem caused by your funds being low,Late or other fees,394,161
+Checking or savings account,Problem caused by your funds being low,Bounced checks or returned payments,313,140
+Checking or savings account,Opening an account,Confusing or missing disclosures,227,84
+Checking or savings account,Managing an account,Deposits or withdrawals,194,72
+Checking or savings account,Closing an account,Fees charged for closing account,163,69
+Checking or savings account,Problem with a company's investigation into an existing problem,Their investigation did not fix an error on your report,93,28
+Checking or savings account,Incorrect information on your report,Information belongs to someone else,64,13
+Checking or savings account,Incorrect information on your report,Account information incorrect,55,12
+Checking or savings account,Incorrect information on your report,Account status incorrect,55,20
+Checking or savings account,Managing an account,Problem with renewal,53,8
+Checking or savings account,Problem with fraud alerts or security freezes,,36,18
+Checking or savings account,Managing an account,Problem with fees or penalties,26,4
+Checking or savings account,Problem with a company's investigation into an existing problem,Problem with personal statement of dispute,26,8
+Checking or savings account,Problem with a company's investigation into an existing problem,Difficulty submitting a dispute or getting information about a dispute over the phone,25,8
+Checking or savings account,Improper use of your report,Credit inquiries on your report that you don't recognize,19,4
+Checking or savings account,Problem with a company's investigation into an existing problem,Was not notified of investigation status or results,19,3
+Checking or savings account,Improper use of your report,Reporting company used your report improperly,18,3
+Checking or savings account,Problem with a company's investigation into an existing problem,Investigation took more than 30 days,10,4
+Checking or savings account,Unable to get your credit report or credit score,Other problem getting your report or credit score,10,4
+Checking or savings account,Credit monitoring or identity theft protection services,Billing dispute for services,8,5
+Checking or savings account,Credit monitoring or identity theft protection services,Didn't receive services that were advertised,4,3
+Checking or savings account,Credit monitoring or identity theft protection services,Problem canceling credit monitoring or identify theft protection service,4,2
+Checking or savings account,Incorrect information on your report,Personal information incorrect,4,1
+Checking or savings account,Credit monitoring or identity theft protection services,Received unwanted marketing or advertising,3,1
+Checking or savings account,Incorrect information on your report,Information is missing that should be on the report,3,0
+Checking or savings account,Credit monitoring or identity theft protection services,Problem with product or service terms changing,2,2
+Checking or savings account,Incorrect information on your report,Old information reappears or never goes away,2,1
+Checking or savings account,Unable to get your credit report or credit score,Problem getting your free annual credit report,2,1
+Checking or savings account,Improper use of your report,Received unsolicited financial product or insurance offers after opting out,1,0
+Credit card,Problem with a purchase shown on your statement,Credit card company isn't resolving a dispute about a purchase on your statement,17084,5465
+Credit card,Getting a credit card,Card opened without my consent or knowledge,5207,1351
+Credit card,Problem with a purchase shown on your statement,Card was charged for something you did not purchase with the card,4172,1445
+Credit card,Fees or interest,Problem with fees,4129,1508
+Credit card,Closing your account,Company closed your account,3325,1103
+Credit card,"Other features, terms, or problems",Other problem,3298,1127
+Credit card,Problem when making payments,Problem during payment process,2871,986
+Credit card,"Other features, terms, or problems",Problem with rewards from credit card,2162,725
+Credit card,Incorrect information on your report,Account status incorrect,2089,286
+Credit card,Fees or interest,Charged too much interest,1987,685
+Credit card,Trouble using your card,Can't use card to make purchases,1748,701
+Credit card,"Advertising and marketing, including promotional offers",Didn't receive advertised or promotional terms,1712,602
+Credit card,Incorrect information on your report,Account information incorrect,1280,266
+Credit card,Problem with a company's investigation into an existing problem,Their investigation did not fix an error on your report,1227,254
+Credit card,"Advertising and marketing, including promotional offers",Confusing or misleading advertising about the credit card,1215,488
+Credit card,Getting a credit card,Application denied,1186,293
+Credit card,Closing your account,Can't close your account,991,385
+Credit card,"Other features, terms, or problems",Problem with customer service,816,308
+Credit card,Struggling to pay your bill,Credit card company won't work with you while you're going through financial hardship,801,215
+Credit card,Trouble using your card,Credit card company won't increase or decrease your credit limit,712,210
+Credit card,Fees or interest,Unexpected increase in interest rate,708,258
+Credit card,Incorrect information on your report,Information belongs to someone else,695,170
+Credit card,Problem with a company's investigation into an existing problem,Was not notified of investigation status or results,646,61
+Credit card,"Other features, terms, or problems",Problem with balance transfer,518,175
+Credit card,Problem with a purchase shown on your statement,Overcharged for something you did purchase with the card,500,177
+Credit card,Problem when making payments,You never received your bill or did not know a payment was due,448,129
+Credit card,Getting a credit card,Delay in processing application,400,126
+Credit card,Getting a credit card,Problem getting a working replacement card,389,137
+Credit card,"Other features, terms, or problems",Privacy issues,359,118
+Credit card,Getting a credit card,Sent card you never applied for,278,80
+Credit card,Problem with a company's investigation into an existing problem,Problem with personal statement of dispute,253,80
+Credit card,Improper use of your report,Reporting company used your report improperly,227,52
+Credit card,"Other features, terms, or problems",Add-on products and services,185,65
+Credit card,Improper use of your report,Credit inquiries on your report that you don't recognize,165,54
+Credit card,Problem with a company's investigation into an existing problem,Difficulty submitting a dispute or getting information about a dispute over the phone,161,56
+Credit card,Incorrect information on your report,Old information reappears or never goes away,118,31
+Credit card,Problem with a company's investigation into an existing problem,Investigation took more than 30 days,82,31
+Credit card,"Other features, terms, or problems",Credit card company forcing arbitration,80,31
+Credit card,"Other features, terms, or problems",Problem with cash advances,78,19
+Credit card,Struggling to pay your bill,Problem lowering your monthly payments,78,20
+Credit card,Problem with fraud alerts or security freezes,,69,32
+Credit card,Credit monitoring or identity theft protection services,Billing dispute for services,66,27
+Credit card,Trouble using your card,Account sold or transferred to another company,58,17
+Credit card,Incorrect information on your report,Information is missing that should be on the report,54,14
+Credit card,Credit monitoring or identity theft protection services,Problem canceling credit monitoring or identify theft protection service,41,12
+Credit card,Incorrect information on your report,Personal information incorrect,41,11
+Credit card,Struggling to pay your bill,Filed for bankruptcy,34,10
+Credit card,Incorrect information on your report,Public record information inaccurate,33,6
+Credit card,Unable to get your credit report or credit score,Other problem getting your report or credit score,29,7
+Credit card,"Other features, terms, or problems",Problem with convenience check,20,4
+Credit card,Credit monitoring or identity theft protection services,Didn't receive services that were advertised,11,6
+Credit card,Credit monitoring or identity theft protection services,Problem with product or service terms changing,11,5
+Credit card,Credit monitoring or identity theft protection services,Received unwanted marketing or advertising,8,4
+Credit card,Improper use of your report,Report provided to employer without your written authorization,6,4
+Credit card,Improper use of your report,Received unsolicited financial product or insurance offers after opting out,5,3

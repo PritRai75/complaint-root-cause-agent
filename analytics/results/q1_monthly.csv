@@ -1,0 +1,17 @@
+month,product,complaints,fraud,unauthorized_transaction,new_account,fraud_share,fraud_change
+2026-01-01,Checking or savings account,7916,1130,918,212,0.1427,
+2026-02-01,Checking or savings account,6559,901,726,175,0.1374,-229
+2026-03-01,Checking or savings account,7822,1095,915,180,0.14,194
+2026-04-01,Checking or savings account,7674,1154,971,183,0.1504,59
+2026-05-01,Checking or savings account,7197,1074,908,166,0.1492,-80
+2026-06-01,Checking or savings account,7671,1053,862,191,0.1373,-21
+2026-07-01,Checking or savings account,7963,1112,924,188,0.1396,59
+2026-08-01,Checking or savings account,7552,1014,824,190,0.1343,-98
+2026-01-01,Credit card,9516,1458,573,885,0.1532,
+2026-02-01,Credit card,7401,1194,476,718,0.1613,-264
+2026-03-01,Credit card,8325,1178,517,661,0.1415,-16
+2026-04-01,Credit card,8229,1175,519,656,0.1428,-3
+2026-05-01,Credit card,7919,1169,507,662,0.1476,-6
+2026-06-01,Credit card,7453,1067,507,560,0.1432,-102
+2026-07-01,Credit card,8027,1199,529,670,0.1494,132
+2026-08-01,Credit card,7996,1217,544,673,0.1522,18

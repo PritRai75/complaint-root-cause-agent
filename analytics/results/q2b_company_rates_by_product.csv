@@ -1,0 +1,11 @@
+product,rate_rank,company,complaints,fraud,fraud_rate
+Checking or savings account,1,"Fidelity National Information Services, Inc. (FNIS)",471,176,0.3737
+Checking or savings account,2,"Early Warning Services, LLC",481,139,0.289
+Checking or savings account,3,Chime Financial Inc,5504,1328,0.2413
+Checking or savings account,4,FinCo Services Inc DBA Current,543,124,0.2284
+Checking or savings account,5,"Paypal Holdings, Inc",1178,204,0.1732
+Credit card,1,Experian Information Solutions Inc.,1254,653,0.5207
+Credit card,2,"EQUIFAX, INC.",1087,534,0.4913
+Credit card,3,"TRANSUNION INTERMEDIATE HOLDINGS, INC.",1298,637,0.4908
+Credit card,4,Chime Financial Inc,764,251,0.3285
+Credit card,5,Resurgent Capital Services L.P.,201,61,0.3035

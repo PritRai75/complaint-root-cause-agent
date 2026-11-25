@@ -1,0 +1,5 @@
+product,is_fraud,complaints,final_responses,timely,closed,relief,monetary_relief,timely_rate,relief_rate,monetary_relief_rate
+Checking or savings account,false,38432,38394,38121,38340,7083,5011,0.9929,0.1847,0.1307
+Checking or savings account,true,6407,6400,6341,6389,1152,860,0.9908,0.1803,0.1346
+Credit card,false,41602,41502,40846,41357,10364,6790,0.9842,0.2506,0.1642
+Credit card,true,7241,7223,7128,7205,2421,972,0.9868,0.336,0.1349

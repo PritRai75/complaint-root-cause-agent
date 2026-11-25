@@ -1,0 +1,26 @@
+complaint_id,date_received,product,issue,sub_issue
+21831603,2026-05-03,Credit card,Problem with a purchase shown on your statement,Card was charged for something you did not purchase with the card
+21851248,2026-05-04,Credit card,Getting a credit card,Card opened without my consent or knowledge
+21858553,2026-05-04,Credit card,Problem with a purchase shown on your statement,Card was charged for something you did not purchase with the card
+21861044,2026-05-04,Credit card,Getting a credit card,Sent card you never applied for
+21882285,2026-05-05,Credit card,Problem with a purchase shown on your statement,Card was charged for something you did not purchase with the card
+21901866,2026-05-05,Checking or savings account,Problem with a lender or other company charging your account,Transaction was not authorized
+21983397,2026-05-07,Credit card,Problem with a purchase shown on your statement,Card was charged for something you did not purchase with the card
+22075937,2026-05-11,Credit card,Getting a credit card,Card opened without my consent or knowledge
+22112984,2026-05-12,Checking or savings account,Problem with a lender or other company charging your account,Transaction was not authorized
+22116241,2026-05-12,Credit card,Problem with a purchase shown on your statement,Card was charged for something you did not purchase with the card
+22148879,2026-05-13,Credit card,Getting a credit card,Card opened without my consent or knowledge
+22175695,2026-05-13,Checking or savings account,Problem with a lender or other company charging your account,Transaction was not authorized
+22220190,2026-05-14,Credit card,Getting a credit card,Sent card you never applied for
+22225396,2026-05-15,Checking or savings account,Problem with a lender or other company charging your account,Transaction was not authorized
+22380306,2026-05-20,Credit card,Getting a credit card,Card opened without my consent or knowledge
+22383704,2026-05-20,Credit card,Getting a credit card,Card opened without my consent or knowledge
+22391253,2026-05-20,Checking or savings account,Problem with a lender or other company charging your account,Transaction was not authorized
+22447885,2026-05-21,Credit card,Problem with a purchase shown on your statement,Card was charged for something you did not purchase with the card
+22452303,2026-05-21,Credit card,Getting a credit card,Card opened without my consent or knowledge
+22454963,2026-05-22,Checking or savings account,Problem with a lender or other company charging your account,Transaction was not authorized
+22521547,2026-05-24,Credit card,Problem with a purchase shown on your statement,Card was charged for something you did not purchase with the card
+22567695,2026-05-26,Credit card,Getting a credit card,Card opened without my consent or knowledge
+22648516,2026-05-28,Checking or savings account,Opening an account,Account opened without my consent or knowledge
+22666349,2026-05-28,Credit card,Problem with a purchase shown on your statement,Card was charged for something you did not purchase with the card
+22751469,2026-05-31,Credit card,Getting a credit card,Card opened without my consent or knowledge
