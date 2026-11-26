@@ -72,11 +72,12 @@ def test_matching_rounds_and_reads_percentages():
     assert not found("14.6", vals) and not found("188", vals) and not found("13", vals)
 
 
-def test_every_number_in_findings_comes_from_a_result_file():
-    with open(FINDINGS, encoding="utf-8") as f:
+@pytest.mark.parametrize("path", [FINDINGS, "tableau/README.md"])
+def test_every_number_in_findings_comes_from_a_result_file(path):
+    with open(path, encoding="utf-8") as f:
         text = f.read()
     missing = unmatched(text, candidates())
-    assert missing == [], f"numbers not found in analytics/results/: {missing}"
+    assert missing == [], f"numbers in {path} not found in analytics/results/: {missing}"
 
 
 def test_derive_reproduces_the_committed_derived_csv(tmp_path):
