@@ -1,0 +1,4 @@
+product,test_items,test_fraud_issue,test_fraud_issue_fraud_claim,test_other_issue,other_fraud_claim,share,share_low,share_high,other_tagged_fraud_claim,other_tagged_right,pool_other_issue,pool_months,est_per_month,est_low,est_high,narratives_other_issue
+Credit card,100,17,11,83,9,0.1084,0.0581,0.1934,10,9,17455,7,270.4,144.9,482.3,17559
+Checking or savings account,100,14,8,86,27,0.314,0.2256,0.4182,30,27,18172,7,815.0,585.7,1085.7,18247
+Both products,200,31,19,169,36,,,,40,36,35627,,1085.4,730.6,1568.0,35806
