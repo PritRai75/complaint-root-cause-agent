@@ -54,6 +54,8 @@ Findings with intervals and caveats: [analytics/findings.md](analytics/findings.
 
 The same investigation is also a [Tableau Public dashboard](https://public.tableau.com/app/profile/prit.raithatha/viz/fraud-complaints/Dashboard1) and [story](https://public.tableau.com/app/profile/prit.raithatha/viz/fraud-complaints/Story1), computed in Tableau from the row-level complaints and checked figure by figure against the BigQuery results: [tableau/README.md](tableau/README.md).
 
+A deep-dive memo frames the tagger and this investigation as a routing problem: fraud or scam claims in narratives filed under non-fraud issues, sized at about 1,085 a month, with pilot success metrics: [docs/deep-dive.md](docs/deep-dive.md).
+
 ## Example
 
 A question sent to the deployed API on 16 November 2026, and what the status endpoint returned (a real run: 303 seconds, one email sent, nothing edited). The report is [docs/example/complaint-report-20261116T080938Z.docx](docs/example/complaint-report-20261116T080938Z.docx).

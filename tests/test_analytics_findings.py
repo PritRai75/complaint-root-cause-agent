@@ -80,6 +80,19 @@ def test_every_number_in_findings_comes_from_a_result_file(path):
     assert missing == [], f"numbers in {path} not found in analytics/results/: {missing}"
 
 
+EVALUATION = "docs/evaluation.md"
+
+
+def test_every_number_in_the_deep_dive_comes_from_a_result_file_or_the_evaluation():
+    """The memo also quotes tagger accuracy, which lives in docs/evaluation.md."""
+    with open(EVALUATION, encoding="utf-8") as f:
+        evaluation = {Decimal(t) for t in numbers_in(f.read())}
+    with open("docs/deep-dive.md", encoding="utf-8") as f:
+        text = f.read()
+    missing = unmatched(text, candidates() | evaluation)
+    assert missing == [], f"numbers in docs/deep-dive.md not found: {missing}"
+
+
 def test_derive_reproduces_the_committed_derived_csv(tmp_path):
     rows = derive.derive()
     path = derive.write(rows, str(tmp_path))
