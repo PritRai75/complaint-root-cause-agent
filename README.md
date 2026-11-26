@@ -41,7 +41,7 @@ Per-code precision and recall of the tagger on the 200 test narratives, re-score
 
 What fails, in short: the tagger rarely recognises a complaint that blames only a third party (1 of 10), so those are counted as company causes; it under-counts servicing errors (10.0% tagged against 16.4% labelled on the test set); the agent built a report where it should have asked a question (task A02); and a finding can state a number against the wrong period. The full list is under Limitations.
 
-## Fraud complaint trends (BigQuery + Looker Studio)
+## Fraud complaint trends (BigQuery, Looker Studio and Tableau)
 
 A separate investigation of the same data in BigQuery SQL, in [analytics/](analytics/). Fraud complaints (unauthorized transactions and accounts opened without consent) are defined by a mapping of issue categories written before any query, and every query result is recomputed independently in pandas.
 
@@ -51,6 +51,8 @@ A separate investigation of the same data in BigQuery SQL, in [analytics/](analy
 - Of 25 fraud complaints read from that month, 18 describe fraud; the rest are merchant or subscription disputes filed as unauthorized.
 
 Findings with intervals and caveats: [analytics/findings.md](analytics/findings.md). Dashboard: [live, view only](https://datastudio.google.com/reporting/c32d379f-a561-48ed-9675-499d8d86a38d), built as described in [analytics/dashboard.md](analytics/dashboard.md).
+
+The same investigation is also a [Tableau Public dashboard](https://public.tableau.com/app/profile/prit.raithatha/viz/fraud-complaints/Dashboard1) and [story](https://public.tableau.com/app/profile/prit.raithatha/viz/fraud-complaints/Story1), computed in Tableau from the row-level complaints and checked figure by figure against the BigQuery results: [tableau/README.md](tableau/README.md).
 
 ## Example
 
